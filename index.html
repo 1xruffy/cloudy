@@ -341,8 +341,10 @@ function startSite(){
     box.append(el("div","skel"));
     try{await loadPayPal()}catch(r){
       if(my!==tok)return;box.innerHTML="";
-      return showErr("PayPal couldn't load",r==="timeout"?["PayPal took too long to respond. Check your connection."]:[
-        "Payment Coming soon.",
+return showErr("PayPal couldn't load",r==="timeout"?["PayPal took too long to respond. Check your connection."]:[
+        "Disable ad-blockers for this page; they often block paypal.com.",
+        "Check the Client ID belongs to an app that still exists on developer.paypal.com.",
+        "Open this page from a real URL (https://…), not by opening the file directly."],true);
     }
     if(my!==tok)return;
     box.innerHTML="";const p=sel,amt=amount;
