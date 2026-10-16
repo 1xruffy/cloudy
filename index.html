@@ -262,7 +262,7 @@ function startSite(){
 
   const yt=String(CONFIG.youtubeLink||"").match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/);
   if(yt){const f=el("iframe");f.src="https://www.youtube-nocookie.com/embed/"+yt[1]+"?rel=0";f.loading="lazy";f.title="Preview video";f.allow="encrypted-media; picture-in-picture";f.allowFullscreen=true;$("vid").append(f)}
-  else $("vid").textContent="Add a valid YouTube link in CONFIG.youtubeLink";
+  else $("vid").textContent="Youtube video coming soon.";
 
   function head(){
     const on=onSale();$("sale").style.display=on?"":"none";
