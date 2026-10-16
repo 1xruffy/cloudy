@@ -342,7 +342,7 @@ function startSite(){
     try{await loadPayPal()}catch(r){
       if(my!==tok)return;box.innerHTML="";
       return showErr("PayPal couldn't load",r==="timeout"?["PayPal took too long to respond. Check your connection."]:[
-        "Payment Coming soon."
+        "Payment Coming soon.",
     }
     if(my!==tok)return;
     box.innerHTML="";const p=sel,amt=amount;
