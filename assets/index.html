@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Store</title>
+<link rel="icon" type="image/png" href="assets/store.png">
+<style>
+:root{--bg:#000;--card:#0a0a0a;--line:#1f1f1f;--text:#f2f2f2;--mute:#8a8a8a;--accent:#fff;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--ease:cubic-bezier(.2,.7,.2,1);--spring:cubic-bezier(.2,.9,.3,1.25)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:"Inter","Segoe UI",system-ui,sans-serif;line-height:1.6;overflow-x:hidden}
+
+/* ambient background */
+body::before{content:"";position:fixed;top:-30vh;left:50%;width:80vw;height:60vh;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(255,255,255,.09),transparent);animation:breathe 6s ease-in-out infinite;pointer-events:none;z-index:0}
+@keyframes breathe{50%{opacity:.4;transform:translateX(-50%) scale(1.15)}}
+.orb{position:fixed;border-radius:50%;filter:blur(70px);opacity:.10;pointer-events:none;z-index:0;background:#fff}
+.orb.a{width:340px;height:340px;left:-100px;top:45vh;animation:drift1 18s ease-in-out infinite}
+.orb.b{width:300px;height:300px;right:-90px;top:15vh;animation:drift2 22s ease-in-out infinite}
+@keyframes drift1{50%{transform:translate(90px,-120px) scale(1.2)}}
+@keyframes drift2{50%{transform:translate(-110px,140px) scale(.85)}}
+#progress{position:fixed;top:0;left:0;height:2px;width:100%;background:#fff;transform-origin:left;transform:scaleX(0);z-index:20;opacity:.7}
+
+main,header,footer{position:relative;z-index:1}
+header{display:flex;justify-content:space-between;align-items:center;padding:22px 6vw;animation:dropIn .8s var(--ease) both}
+@keyframes dropIn{from{opacity:0;transform:translateY(-24px)}}
+.logo img{height:44px;width:auto;display:block;transition:transform .5s var(--spring),filter .4s}
+.logo img:hover{transform:rotate(-6deg) scale(1.1);filter:drop-shadow(0 0 14px rgba(255,255,255,.5))}
+footer img{height:28px;opacity:.6;margin-bottom:8px;transition:.4s}
+footer img:hover{opacity:1;transform:translateY(-4px) scale(1.1)}
+.status{display:flex;align-items:center;gap:8px;font-size:.85rem;border:1px solid var(--line);padding:6px 14px;border-radius:99px;animation:popIn .7s var(--spring) .35s both;transition:.3s}
+.status:hover{transform:scale(1.06);border-color:#444}
+@keyframes popIn{from{opacity:0;transform:scale(.6)}}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--green);animation:pulse 1.6s infinite}
+.status.updating .dot{background:var(--amber)}.status.down .dot{background:var(--red)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 currentColor}70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.status.online{color:var(--green)}.status.updating{color:var(--amber)}.status.down{color:var(--red)}
+.status span.t{color:var(--text)}
+
+/* hero */
+.hero{text-align:center;padding:9vh 6vw 4vh}
+.hero h1{font-size:clamp(2.4rem,7vw,5rem);line-height:1.05;font-weight:800;letter-spacing:-2px}
+.hero h1 .w{display:inline-block;margin:0 .12em;opacity:0;transform:translateY(40px) rotateX(-50deg);filter:blur(10px);
+  background:linear-gradient(90deg,#fff,#777,#fff);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:wordIn .9s var(--ease) forwards,shine 5s linear infinite;animation-delay:calc(var(--i)*.14s + .3s),0s}
+@keyframes wordIn{to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes shine{to{background-position:200% center}}
+.hero p{color:var(--mute);max-width:520px;margin:18px auto 0;animation:rise .9s var(--ease) .9s both}
+@keyframes rise{from{opacity:0;transform:translateY(28px)}}
+
+/* video */
+.video-wrap{max-width:860px;margin:30px auto 0;padding:0 6vw}
+.video{position:relative;aspect-ratio:16/9;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--card);transition:.4s var(--ease)}
+.video:hover{border-color:#444;box-shadow:0 0 60px rgba(255,255,255,.08);transform:scale(1.01)}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.12) 50%,transparent 70%);transform:translateX(-100%);animation:sweep 1.6s var(--ease) 1.3s 1 forwards;pointer-events:none}
+@keyframes sweep{to{transform:translateX(100%)}}
+
+/* scroll reveal */
+.reveal{opacity:0;transform:translateY(36px) scale(.98);filter:blur(6px);transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease)}
+.reveal.in{opacity:1;transform:none;filter:none}
+.video-wrap.reveal{transition-delay:.15s}
+
+/* products */
+.products{max-width:980px;margin:90px auto 60px;padding:0 6vw;text-align:center}
+.products h2{font-size:2rem;letter-spacing:-1px;display:inline-block;position:relative}
+.products h2::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:#fff;transform:scaleX(0);transform-origin:left;transition:transform .9s var(--ease) .5s}
+.products.in h2::after,.products h2.in::after{transform:scaleX(1)}
+.grid{display:grid;grid-template-columns:minmax(240px,340px);justify-content:center;gap:18px;margin-top:34px;perspective:900px}
+.card{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px 24px;text-align:left;
+  opacity:0;translate:0 40px;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transition:opacity .8s var(--ease),translate .8s var(--ease),transform .25s ease-out,border-color .35s,box-shadow .35s}
+.card.show{opacity:1;translate:0 0}
+.card:hover{translate:0 -6px;border-color:#555;box-shadow:0 14px 50px rgba(255,255,255,.07)}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.10),transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none}
+.card:hover::before{opacity:1}
+.card h3{font-size:1.1rem}.price{font-size:2.4rem;font-weight:800;margin:8px 0}
+.stock{font-size:.85rem;color:var(--mute);margin-bottom:18px}.stock b{color:var(--text);display:inline-block}.stock.low b{color:var(--amber)}.stock.out b{color:var(--red)}
+.stock.bump b{animation:bump .6s var(--spring)}
+@keyframes bump{40%{transform:scale(1.5)}}
+button.buy{position:relative;overflow:hidden;width:100%;padding:13px;border-radius:10px;border:0;background:var(--accent);color:#000;font-weight:700;font-size:1rem;cursor:pointer;transition:transform .25s var(--spring),box-shadow .25s}
+button.buy::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(0,0,0,.18),transparent);transform:skewX(-20deg);animation:glint 3.5s ease-in-out 2s infinite}
+@keyframes glint{0%,60%{left:-60%}100%{left:130%}}
+button.buy:hover{transform:scale(1.04);box-shadow:0 0 28px rgba(255,255,255,.4)}
+button.buy:active{transform:scale(.97)}
+button.buy:disabled{background:#222;color:#666;cursor:not-allowed;transform:none;box-shadow:none}
+button.buy:disabled::after{display:none}
+.ripple{position:absolute;border-radius:50%;background:rgba(0,0,0,.25);transform:scale(0);animation:ripple .65s ease-out forwards;pointer-events:none}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(0);display:flex;align-items:center;justify-content:center;z-index:10;padding:20px;opacity:0;visibility:hidden;transition:opacity .3s,backdrop-filter .4s,visibility 0s .4s}
+.modal.open{opacity:1;visibility:visible;backdrop-filter:blur(8px);transition:opacity .3s,backdrop-filter .4s,visibility 0s}
+.box{background:#0a0a0a;border:1px solid #333;border-radius:18px;padding:30px;width:100%;max-width:420px;max-height:92vh;overflow-y:auto;transform:scale(.88) translateY(30px);opacity:0;transition:transform .45s var(--spring),opacity .3s}
+.modal.open .box{transform:none;opacity:1}
+.box h3{font-size:1.4rem;margin-bottom:4px}.box .sub{color:var(--mute);margin-bottom:18px;font-size:.9rem}
+.opt{display:flex;justify-content:space-between;padding:14px 16px;border:1px solid var(--line);border-radius:10px;margin-bottom:10px;cursor:pointer;opacity:0;transform:translateX(-20px);transition:border-color .2s,background .25s,transform .25s var(--spring),box-shadow .25s}
+.modal.open .opt{animation:slideIn .5s var(--ease) forwards;animation-delay:calc(var(--i)*.09s + .15s)}
+@keyframes slideIn{to{opacity:1;transform:none}}
+.opt:hover{border-color:#777;transform:translateX(4px)}
+.opt.sel{border-color:#fff;background:#111;box-shadow:0 0 22px rgba(255,255,255,.12);animation:selPop .4s var(--spring) forwards}
+@keyframes selPop{0%{opacity:1;transform:scale(1)}40%{opacity:1;transform:scale(1.04)}100%{opacity:1;transform:none}}
+.opt.out{opacity:.4!important;pointer-events:none;animation:none!important;transform:none}
+#paypal{margin-top:16px;min-height:0}
+#paypal.on{min-height:50px;animation:rise .5s var(--ease) both}
+.close{background:none;border:0;color:var(--mute);cursor:pointer;margin-top:14px;width:100%;transition:color .2s,letter-spacing .3s}
+.close:hover{color:#fff;letter-spacing:.5px}
+.msg{margin-top:12px;font-size:.9rem;color:var(--mute);min-height:0}
+.msg:not(:empty){animation:rise .45s var(--ease) both}
+.msg.err{color:var(--red)}
+.ok{color:var(--green)}
+.loading::after{content:"";display:inline-block;width:1.2em;text-align:left;animation:dots 1.2s steps(4,end) infinite}
+@keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
+.check{display:block;margin:6px auto 10px;width:56px;height:56px}
+.check circle{fill:none;stroke:var(--green);stroke-width:3;stroke-dasharray:157;stroke-dashoffset:157;animation:draw .7s var(--ease) forwards}
+.check path{fill:none;stroke:var(--green);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:draw .45s var(--ease) .55s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+footer{text-align:center;color:#555;padding:40px;font-size:.85rem}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .card,.reveal,.hero h1 .w,.opt{opacity:1!important;transform:none!important;translate:none!important;filter:none!important}
+  .check circle,.check path{stroke-dashoffset:0!important}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="orb a"></div><div class="orb b"></div>
+
+<header>
+  <div class="logo"><img src="assets/store.png" alt="Store logo"></div>
+  <div class="status online" id="status"><div class="dot"></div><span class="t" id="statusText">Online</span></div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1 id="heroTitle">Simple. Fast. Instant.</h1>
+    <p id="heroSub">Pick a key, pay securely with PayPal and get started in seconds.</p>
+  </section>
+
+  <div class="video-wrap reveal"><div class="video" id="video"></div></div>
+
+  <section class="products reveal" id="products">
+    <h2>Choose your key</h2>
+    <div class="grid" id="grid"></div>
+  </section>
+</main>
+
+<footer class="reveal"><img src="assets/store.png" alt=""><br>&copy; <span id="year"></span></footer>
+
+<div class="modal" id="modal">
+  <div class="box">
+    <h3 id="modalTitle">Purchase</h3>
+    <div class="sub">Select a key length, then pay with PayPal.</div>
+    <div id="options"></div>
+    <div id="paypal"></div>
+    <div class="msg" id="msg"></div>
+    <button class="close" id="close">Cancel</button>
+  </div>
+</div>
+
+<script>
+/* ============ EDIT THIS SECTION ============ */
+const CONFIG = {
+  storeName: "MY STORE",
+  heroTitle: "Simple. Fast. Instant.",
+  heroSub:   "Pick a key, pay securely with PayPal and get started in seconds.",
+
+  youtubeLink: "https://www.youtube.com/watch?v=dNkJqIh7zK4",   // <-- paste your YouTube link here
+
+  // "online" | "updating" | "down"
+  status: "online",
+
+  // PayPal CLIENT ID only (never the secret). developer.paypal.com > Apps & Credentials
+  // SANDBOX client id while testing, LIVE client id for real money. Don't mix them up.
+  paypalClientId: "sb",
+  currency: "GBP",
+
+  // The one product shown on the page. Clicking it opens the 3 key options below.
+  productName: "Ocy premuim Rivals",
+
+  products: [
+    { id: "day",   name: "1 Day Key",   price: "2.00",  stock: 25 },
+    { id: "week",  name: "1 Week Key",  price: "6.00",  stock: 15 },
+    { id: "month", name: "1 Month Key", price: "12.00", stock: 8  },
+    { id: "lifetime", name: "Lifetime Key", price: "16.00", stock: 0  }
+  ]
+};
+/* ============================================ */
+
+const $ = id => document.getElementById(id);
+const sym = {GBP:"£",USD:"$",EUR:"€"}[CONFIG.currency] || "";
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Text
+document.title = CONFIG.storeName;
+$("heroSub").textContent = CONFIG.heroSub;
+$("year").textContent = new Date().getFullYear();
+$("heroTitle").innerHTML = CONFIG.heroTitle.split(" ").map((w,i)=>`<span class="w" style="--i:${i}"></span>`).join(" ");
+document.querySelectorAll("#heroTitle .w").forEach((s,i)=>s.textContent=CONFIG.heroTitle.split(" ")[i]);
+
+// Status
+const labels = {online:"Online", updating:"Updating", down:"Down"};
+const st = labels[CONFIG.status] ? CONFIG.status : "online";
+$("status").className = "status " + st;
+$("statusText").textContent = labels[st];
+const storeOpen = st === "online";
+
+// YouTube
+function ytId(u){
+  const m = u.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/);
+  return m ? m[1] : null;
+}
+const vid = ytId(CONFIG.youtubeLink);
+$("video").innerHTML = vid
+  ? `<iframe src="https://www.youtube.com/embed/${vid}?rel=0" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
+  : `<div style="display:grid;place-items:center;height:100%;color:#666">Add a valid YouTube link in CONFIG</div>`;
+
+// ---------- animation helpers ----------
+function countUp(el, to, dec=0, from=0, dur=1100){
+  if(reduced || from===to){ el.textContent = to.toFixed(dec); return; }
+  const t0 = performance.now();
+  (function tick(t){
+    const p = Math.min(1,(t-t0)/dur), e = 1-Math.pow(1-p,3);
+    el.textContent = (from+(to-from)*e).toFixed(dec);
+    if(p<1) requestAnimationFrame(tick);
+  })(t0);
+}
+// scroll reveal
+const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target);} }),{threshold:.15});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+// scroll progress bar
+addEventListener("scroll",()=>{
+  const h=document.documentElement; const p=h.scrollTop/Math.max(1,h.scrollHeight-h.clientHeight);
+  $("progress").style.transform=`scaleX(${p})`;
+},{passive:true});
+// button ripple
+function ripple(e){
+  const b=e.currentTarget, r=b.getBoundingClientRect(), d=Math.max(r.width,r.height);
+  const s=document.createElement("span"); s.className="ripple";
+  s.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;
+  b.appendChild(s); setTimeout(()=>s.remove(),700);
+}
+
+// ---------- products ----------
+let lastTotal = 0;
+function stockHtml(total){
+  const cls = total<=0 ? "out" : total<=5 ? "low" : "";
+  return `<div class="stock ${cls}">${total<=0 ? "<b>Out of stock</b>" : "<b id='stockNum'>"+lastTotal+"</b> in stock"}</div>`;
+}
+function render(){
+  const total=CONFIG.products.reduce((n,p)=>n+p.stock,0);
+  const from=Math.min(...CONFIG.products.map(p=>+p.price));
+  const disabled=!storeOpen||total<=0;
+  const prevTotal = lastTotal;
+  $("grid").innerHTML=`
+    <div class="card">
+      <h3>${CONFIG.productName}</h3>
+      <div class="price"><small style="font-size:.9rem;color:var(--mute);font-weight:400">from </small>${sym}<span id="priceNum">0.00</span></div>
+      ${stockHtml(total)}
+      <button class="buy" ${disabled?"disabled":""}>
+        ${!storeOpen ? (st==="updating"?"Updating…":"Unavailable") : total<=0 ? "Sold out" : "Purchase"}
+      </button>
+    </div>`;
+  const card=document.querySelector(".card");
+  setTimeout(()=>card.classList.add("show"),prevTotal?30:450);
+  countUp($("priceNum"),from,2,0,1200);
+  const sn=$("stockNum");
+  if(sn){
+    countUp(sn,total,0,prevTotal||0,1100);
+    if(prevTotal && prevTotal!==total) sn.parentElement.classList.add("bump");
+  }
+  lastTotal=total;
+  // spotlight + 3D tilt
+  card.addEventListener("pointermove",e=>{
+    const r=card.getBoundingClientRect(), x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+    card.style.setProperty("--mx",x*100+"%"); card.style.setProperty("--my",y*100+"%");
+    if(!reduced){ card.style.setProperty("--ry",((x-.5)*10)+"deg"); card.style.setProperty("--rx",((.5-y)*10)+"deg"); }
+  });
+  card.addEventListener("pointerleave",()=>{card.style.setProperty("--rx","0deg");card.style.setProperty("--ry","0deg")});
+  const btn=card.querySelector("button.buy");
+  btn.addEventListener("click",ripple);
+  btn.onclick=()=>openModal();
+}
+render();
+
+// ---------- modal + PayPal ----------
+let selected = null;
+const msg = (text,cls="") => { const m=$("msg"); m.className="msg "+cls; m.innerHTML=""; m.textContent=text; };
+
+function renderOptions(){
+  $("options").innerHTML = CONFIG.products.map((p,i)=>`
+    <div class="opt ${p.stock<=0?"out":""} ${selected&&selected.id===p.id?"sel":""}" data-id="${p.id}" style="--i:${i}">
+      <span>${p.name}</span><b>${sym}${p.price}</b>
+    </div>`).join("");
+  document.querySelectorAll(".opt").forEach(o=>o.onclick=()=>select(o.dataset.id));
+}
+function openModal(){
+  selected=null; $("paypal").innerHTML=""; $("paypal").classList.remove("on");
+  msg("");
+  renderOptions();
+  $("modalTitle").textContent=CONFIG.productName;
+  $("modal").classList.add("open");
+}
+function closeModal(){ $("modal").classList.remove("open"); }
+
+/* --- PayPal fixes: ID validation, one shared load promise, clear error messages --- */
+const PP_ID = String(CONFIG.paypalClientId||"").trim();
+function ppIdProblem(){
+  if(!PP_ID || /YOUR|CLIENT_ID|PASTE|XXXX/i.test(PP_ID)) return "No PayPal client ID set in CONFIG.";
+  if(!/^[A-Za-z0-9_-]{40,120}$/.test(PP_ID)) return "The PayPal client ID looks malformed. Remove spaces or extra characters.";
+  return "";
+}
+let ppPromise = null;
+function loadPayPal(){
+  if(window.paypal && window.paypal.Buttons) return Promise.resolve();
+  if(ppPromise) return ppPromise;
+  ppPromise = new Promise((res,rej)=>{
+    const s=document.createElement("script");
+    s.src=`https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(PP_ID)}&currency=${encodeURIComponent(CONFIG.currency)}&intent=capture&components=buttons`;
+    s.async=true;
+    s.onload=()=> (window.paypal && window.paypal.Buttons) ? res() : (ppPromise=null, rej(new Error("init")));
+    s.onerror=()=>{ s.remove(); ppPromise=null; rej(new Error("load")); };
+    document.head.appendChild(s);
+  });
+  return ppPromise;
+}
+async function select(id){
+  const p = CONFIG.products.find(x=>x.id===id);
+  if(!p || p.stock<=0) return;
+  selected = p;
+  document.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",o.dataset.id===id));
+  $("paypal").innerHTML=""; $("paypal").classList.remove("on");
+
+  const problem = ppIdProblem();
+  if(problem){ msg(problem,"err"); return; }
+
+  const m=$("msg"); m.className="msg loading"; m.textContent="Loading PayPal";
+  try{
+    await loadPayPal();
+  }catch(e){
+    msg("PayPal couldn't load. Check that the client ID is valid, that it matches the mode (sandbox or live), and that you're online.","err");
+    return;
+  }
+  if(selected!==p) return;             // user picked something else while loading
+  msg("");
+  try{ drawButtons(p); }
+  catch(e){ msg("PayPal buttons couldn't be shown. Please refresh and try again.","err"); }
+}
+function drawButtons(product){
+  const box=$("paypal"); box.innerHTML=""; box.classList.add("on");
+  paypal.Buttons({
+    style:{layout:"vertical",color:"white",shape:"rect",label:"pay"},
+    createOrder:(d,a)=>a.order.create({
+      purchase_units:[{description:product.name,amount:{currency_code:CONFIG.currency,value:product.price}}]
+    }),
+    onApprove:(d,a)=>a.order.capture().then(order=>{
+      product.stock=Math.max(0,product.stock-1);
+      render();
+      box.innerHTML=""; box.classList.remove("on");
+      selected=null; renderOptions();
+      const m=$("msg"); m.className="msg ok";
+      m.innerHTML=`<svg class="check" viewBox="0 0 56 56"><circle cx="28" cy="28" r="25"/><path d="M17 29l8 8 14-16"/></svg>`;
+      m.append(`Payment complete! Order ID: ${order.id}. Your ${product.name} will be delivered shortly.`);
+      // TODO: deliver the key here (do this on a server) — order.id / order.payer.email_address available
+    }),
+    onCancel:()=>msg("Payment cancelled. You haven't been charged."),
+    onError:()=>msg("Payment error. Please try again.","err")
+  }).render("#paypal").catch(()=>msg("PayPal buttons couldn't be shown. Please refresh and try again.","err"));
+}
+$("close").onclick=closeModal;
+$("modal").onclick=e=>{if(e.target.id==="modal")closeModal()};
+addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+</script>
+</body>
+</html>

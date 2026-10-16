@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mystical</title>
+<link rel="icon" type="image/png" href="assets/store.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--card:#050505;--line:#1f1f23;--ink:#fff;--dim:#a1a1aa;--mute:#6b6b75;--pur:#d58cff;--glow:rgba(128,64,140,.5);--ok:#4ade80;--warn:#fbbf24;--red:#f87171;
+--sans:"DM Sans","Helvetica Neue",Arial,system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh;
+background-image:radial-gradient(ellipse 60% 340px at 50% 0,var(--glow),transparent 70%);background-repeat:no-repeat}
+::selection{background:var(--pur);color:#000}
+a{color:inherit}button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--pur);outline-offset:3px}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 22px;border-radius:10px;font-weight:600;font-size:.95rem;border:1px solid var(--line);background:#0a0a0c;text-decoration:none;cursor:pointer;transition:background .2s,border-color .2s}
+.btn:hover{background:#141418;border-color:#33333a}
+.btn.p{background:#fff;border-color:#fff;color:#000}.btn.p:hover{background:#e4e4e7}
+
+/* nav */
+nav.bar{display:flex;align-items:center;justify-content:space-between;margin:14px auto 0;max-width:960px;height:44px;padding:0 20px;background:#000;border:1px solid var(--line);border-radius:12px;position:sticky;top:14px;z-index:20;width:calc(100% - 40px)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:.85rem;text-decoration:none}
+.mark{width:20px;height:20px;border-radius:6px;background:var(--pur);color:#000;display:grid;place-items:center;font-size:.72rem;font-weight:800}
+.logo img{height:20px;border-radius:5px}
+.links{display:flex;align-items:center;gap:20px;font-size:.75rem;font-weight:500;color:var(--dim)}
+.links a{text-decoration:none;transition:color .2s}.links a:hover{color:#fff}
+.st{display:inline-flex;align-items:center;gap:7px;color:#fff;background:#111114;padding:5px 11px;border-radius:8px;font-weight:600}
+.st i{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.st.updating i{background:var(--warn)}.st.down i{background:var(--red)}
+
+/* hero */
+.hero{text-align:center;padding:64px 0 0}
+.hero h1{font-size:clamp(2rem,5vw,2.4rem);font-weight:700;letter-spacing:-.025em;line-height:1.15}
+.hero p{margin:10px auto 0;max-width:56ch;font-size:.92rem;font-weight:500;color:#d4d4d8}
+.sale{display:inline-flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:26px;padding:8px 8px 8px 16px;border:1px solid rgba(213,140,255,.35);background:rgba(213,140,255,.08);border-radius:99px;font-size:.85rem;font-weight:600}
+.sale b{color:var(--pur)}
+.sale .t{background:#000;border:1px solid var(--line);border-radius:99px;padding:4px 12px;font-variant-numeric:tabular-nums;color:#fff}
+.stats{display:flex;justify-content:center;align-items:center;gap:clamp(24px,6vw,60px);margin:56px 0 0}
+.stats div{text-align:center}
+.stats b{display:block;font-size:clamp(2.2rem,5vw,3.2rem);line-height:1.05;letter-spacing:-.03em;font-weight:700}
+.stats span{font-size:.85rem;color:var(--dim);font-weight:500}
+.stats hr{width:1px;height:44px;border:0;background:var(--line)}
+.secure{margin:64px 0 0;text-align:center;font-size:.72rem;color:var(--dim);font-weight:500}
+.secure svg{vertical-align:-2px;margin-right:5px}
+.pays{display:flex;justify-content:center;gap:8px;margin-top:12px}
+.pay{height:20px;min-width:34px;padding:0 8px;background:#fff;color:#003087;border-radius:6px;font-size:.62rem;font-weight:700;display:grid;place-items:center;font-style:italic}
+.secure small{display:block;margin-top:10px;color:#4a4a8a;font-size:.65rem}
+
+/* products */
+.sec{padding:76px 0 0}
+h2.t{font-size:1.1rem;font-weight:700;letter-spacing:-.01em;margin-bottom:22px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.prod{position:relative;aspect-ratio:1;background:var(--card);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;text-align:left;cursor:pointer;overflow:hidden;transition:border-color .25s,transform .25s;padding:0}
+.prod:hover:not(:disabled){border-color:#4a3358;transform:translateY(-2px)}
+.prod .art{flex:1;display:grid;place-items:center;font-size:clamp(2.2rem,6vw,3.6rem);font-weight:700;letter-spacing:-.04em;background:radial-gradient(circle at 50% 45%,rgba(213,140,255,.16),transparent 62%)}
+.prod .art span{background:linear-gradient(180deg,#fff,#d58cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.prod .info{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;padding:0 14px 12px}
+.prod .nm{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+.prod .nm small{display:block;margin-top:2px;font-weight:500;color:var(--mute);text-transform:none;font-size:.7rem}
+.prod .nm small.low{color:var(--warn)}
+.prod .pr{text-align:right;font-weight:700;font-size:.95rem;font-variant-numeric:tabular-nums;line-height:1.2}
+.prod .pr s{display:block;font-size:.7rem;font-weight:500;color:var(--mute)}
+.prod .off{position:absolute;top:10px;left:10px;background:var(--pur);color:#000;font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:99px}
+.prod:disabled{cursor:not-allowed;opacity:.4}
+.vid{position:relative;aspect-ratio:16/9;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:grid;place-items:center;color:var(--dim)}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+details{border-bottom:1px solid var(--line)}details:first-of-type{border-top:1px solid var(--line)}
+summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;padding:16px 0;font-weight:600;font-size:.92rem}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--pur);font-size:1.2rem;line-height:1;transition:transform .25s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--dim);padding:0 0 16px;font-size:.88rem;max-width:62ch}
+footer{margin-top:90px;border-top:1px solid var(--line);padding:22px 0 34px;color:var(--mute);font-size:.78rem}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* dialog */
+dialog{margin:auto;width:min(420px,calc(100% - 32px));background:#08080a;color:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 30px 80px rgba(0,0,0,.8)}
+dialog::backdrop{background:rgba(0,0,0,.75);backdrop-filter:blur(4px)}
+dialog[open]{animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}}
+.dh{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.dh h3{font-size:1.25rem;letter-spacing:-.02em}.dh small{color:var(--dim)}
+.x{border:1px solid var(--line);background:none;width:32px;height:32px;border-radius:8px;cursor:pointer;color:var(--dim);flex:none}
+.x:hover{color:#fff;background:#141418}
+.dp{display:flex;align-items:baseline;gap:10px;margin:16px 0 18px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.dp b{font-size:2.2rem;letter-spacing:-.03em;line-height:1}.dp s{color:var(--mute)}
+#paypal{min-height:46px}
+.skel{height:46px;border-radius:8px;background:linear-gradient(90deg,#111,#222,#111);background-size:200% 100%;animation:sk 1.2s linear infinite}
+@keyframes sk{to{background-position:-200% 0}}
+.fine{margin-top:12px;color:var(--mute);font-size:.78rem;text-align:center}
+#msg{margin-top:10px;font-size:.88rem;color:var(--dim)}
+#msg.err{border:1px solid rgba(248,113,113,.5);background:rgba(248,113,113,.08);color:#fff;padding:12px 14px;border-radius:10px}
+#msg.err h4{color:var(--red);margin-bottom:4px}
+#msg.err ul{margin:6px 0 10px 18px;color:var(--dim)}
+.done{text-align:center}.done svg{width:56px;height:56px}
+.done circle{fill:none;stroke:var(--ok);stroke-width:3;stroke-dasharray:157;stroke-dashoffset:157;animation:dr .7s ease forwards}
+.done path{fill:none;stroke:var(--ok);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:dr .4s ease .6s forwards}
+@keyframes dr{to{stroke-dashoffset:0}}
+.done h3{font-size:1.4rem;margin:10px 0 6px}
+.done code{display:block;margin-top:12px;padding:11px;background:#000;border:1px solid var(--line);border-radius:8px;cursor:pointer;word-break:break-all;font-size:.85rem}
+
+/* maintenance */
+.gate{min-height:100vh;display:grid;place-items:center;padding:24px}
+.gcard{width:100%;max-width:400px;text-align:center;background:#050505;border:1px solid var(--line);border-radius:16px;padding:36px 28px}
+.gicon{width:52px;height:52px;margin:0 auto 20px;border-radius:14px;background:rgba(213,140,255,.12);color:var(--pur);display:grid;place-items:center}
+.gcard h1{font-size:1.6rem;letter-spacing:-.03em;line-height:1.15}
+.gcard p{color:var(--dim);margin-top:8px;font-size:.92rem}
+.gcard form{margin-top:24px;display:grid;gap:10px;text-align:left}
+.gcard label{font-size:.82rem;font-weight:600}
+.gcard input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:#0a0a0c;color:#fff;font:inherit;letter-spacing:.1em}
+.gcard input:focus{outline:none;border-color:var(--pur)}
+.gcard input.bad{border-color:var(--red);animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+#gerr{min-height:1.2em;color:var(--red);font-size:.85rem}
+
+@media(max-width:720px){.grid{grid-template-columns:1fr 1fr}.links a{display:none}}
+@media(max-width:460px){.grid{grid-template-columns:1fr}.prod{aspect-ratio:1.4}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.done circle,.done path{stroke-dashoffset:0!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<template id="gate">
+<main class="gate"><div class="gcard">
+  <div class="gicon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8V21h3.2l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg></div>
+  <h1>We're under maintenance</h1>
+  <p>The store is temporarily unavailable while we make improvements. Please check back soon.</p>
+  <form id="gform" autocomplete="off" novalidate>
+    <label for="gkey">Developer access key</label>
+    <input id="gkey" type="password" placeholder="Enter key" spellcheck="false">
+    <div id="gerr" role="alert"></div>
+    <button class="btn p" type="submit">Unlock site</button>
+  </form>
+</div></main>
+</template>
+
+<template id="site">
+<nav class="bar" aria-label="Main">
+  <a class="logo" href="#top"><span class="mark" id="mark"></span><img id="logoImg" src="assets/store.png" alt="" hidden><span id="logoText"></span></a>
+  <div class="links"><a href="#products">Store</a><a href="#demo">Preview</a><a href="#faq">FAQ</a><span class="st" id="st"><i></i><span id="stT"></span></span></div>
+</nav>
+
+<main id="top" class="wrap">
+<section class="hero">
+  <h1 id="h1"></h1>
+  <p id="sub"></p>
+  <div class="sale" id="sale"><span><b id="saleN"></b> · <span id="saleP"></span></span><span class="t" id="saleT"></span></div>
+  <div class="stats" id="stats"></div>
+  <div class="secure">
+    <div><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Secure Checkout</div>
+    <div class="pays"><span class="pay">PayPal</span></div>
+    <small>Payments are processed by PayPal</small>
+  </div>
+</section>
+
+<section class="sec" id="products">
+  <h2 class="t">Our Products</h2>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section class="sec" id="demo"><h2 class="t">Preview</h2><div class="vid" id="vid"></div></section>
+
+<section class="sec" id="faq">
+  <h2 class="t">FAQ</h2>
+  <details><summary>How do I get my key?</summary><p>When payment completes you'll see an order ID on screen. Your key is delivered shortly after.</p></details>
+  <details><summary>Is payment safe?</summary><p>Checkout runs entirely through PayPal. Your card and login details never touch this site.</p></details>
+  <details><summary>When does the sale end?</summary><p id="faqSale">Prices return to normal when the countdown reaches zero.</p></details>
+  <details><summary>Something went wrong. What now?</summary><p>Keep your order ID and contact support with it.</p></details>
+</section>
+</main>
+
+<footer><div class="wrap"><span id="fL"></span><span>&copy; <span id="yr"></span></span></div></footer>
+
+<dialog id="dlg" aria-labelledby="dName">
+  <div id="dBody">
+    <div class="dh"><div><h3 id="dName"></h3><small id="dProd"></small></div><button class="x" id="x" aria-label="Close">&#10005;</button></div>
+    <div class="dp"><b id="dNow"></b><s id="dWas"></s></div>
+    <div id="paypal"></div><div id="msg" aria-live="polite"></div>
+    <p class="fine">Secure payment by PayPal</p>
+  </div>
+</dialog>
+</template>
+
+<script>
+/* ============ EDIT THIS SECTION ============ */
+const CONFIG = {
+  maintenanceMode: false,        // true = maintenance screen, false = site is live
+  maintenanceKey: "DEV091",      // only accepted key while maintenance is on
+
+  storeName: "Mystical",
+  heroTitle: "Mystical",
+  heroSub:   "Choose a duration, pay securely with PayPal and get your key delivered right after checkout.",
+  youtubeLink: "https://www.youtube.com/watch?v=dNkJqIh7zK4",
+  status: "online",              // "online" | "updating" | "down"
+
+  // Only put numbers here that are true for your store.
+  stats: [ { value: "Instant", label: "Delivery" }, { value: "PayPal", label: "Checkout" } ],
+
+  sale: {
+    enabled: true,               // false = normal prices, no sale banner
+    name: "Halloween Sale",
+    discountPercent: 25,
+    endsAt: "2026-10-31T23:59:59" // local time; sale switches off automatically
+  },
+
+  // PayPal CLIENT ID only (never the Secret). Sandbox id for testing, Live id for real money.
+  paypalClientId: "AV2F8WwZ_X8Uk3JBe8YKFlIraydrviaQkuElMDYGsK3sGEtJHqbuOGsck-uoOoeu54L78HD3SgHfg4xg",
+  currency: "GBP",
+  paypalMe: "",                  // optional backup, e.g. "yourname"
+
+  productName: "Mystical",
+  products: [                    // price = normal price, sale is applied automatically
+    { id: "day ┃ Rivals",   name: "1 Day Key ┃ Rivals",   price: "2.00",  stock: 25 },
+    { id: "week ┃ Rivals",  name: "1 Week Key ┃ Rivals",  price: "6.00",  stock: 15 },
+    { id: "month ┃ Rivals", name: "1 Month Key ┃ Rivals", price: "12.00", stock: 8  }
+  ]
+};
+/* ============================================ */
+const $=id=>document.getElementById(id);
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const mount=id=>{const a=$("app");a.innerHTML="";a.append($(id).content.cloneNode(true))};
+const store={get:k=>{try{return sessionStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{sessionStorage.setItem(k,v)}catch(e){}}};
+const norm=s=>String(s||"").trim().toUpperCase();
+
+function showGate(){
+  document.title=CONFIG.storeName+" — Maintenance";
+  mount("gate");const i=$("gkey");i.focus();
+  $("gform").onsubmit=e=>{
+    e.preventDefault();
+    if(norm(i.value)===norm(CONFIG.maintenanceKey)){store.set("mk","1");startSite()}
+    else{$("gerr").textContent="That key isn't valid. Check it and try again.";i.classList.remove("bad");void i.offsetWidth;i.classList.add("bad");i.select()}
+  };
+}
+
+function startSite(){
+  mount("site");
+  const P=CONFIG.products,S=CONFIG.sale||{};
+  const sym={GBP:"£",USD:"$",EUR:"€"}[CONFIG.currency]||CONFIG.currency+" ";
+  const money=v=>sym+Number(v).toFixed(2);
+  const L={online:"Online",updating:"Updating",down:"Unavailable"};
+  const st=L[CONFIG.status]?CONFIG.status:"online",open=st==="online";
+  const endMs=new Date(S.endsAt).getTime();
+  const onSale=()=>S.enabled===true&&(isNaN(endMs)||Date.now()<endMs);
+  const price=p=>onSale()?(Math.round(+p.price*(100-S.discountPercent))/100).toFixed(2):(+p.price).toFixed(2);
+
+  document.title=CONFIG.storeName;
+  $("mark").textContent=CONFIG.storeName.charAt(0).toUpperCase();
+  const li=$("logoImg");li.onload=()=>{li.hidden=false;$("mark").remove()};li.src="assets/store.png";
+  $("logoText").textContent=CONFIG.storeName;$("fL").textContent=CONFIG.storeName;$("yr").textContent=new Date().getFullYear();
+  $("h1").textContent=CONFIG.heroTitle;$("sub").textContent=CONFIG.heroSub;
+  $("st").classList.add(st);$("stT").textContent=L[st];
+  const stt=$("stats");(CONFIG.stats||[]).forEach((s,i)=>{if(i)stt.append(el("hr"));const d=el("div");d.append(el("b","",s.value),el("span","",s.label));stt.append(d)});
+  if(!isNaN(endMs))$("faqSale").textContent="The "+S.name+" ends on "+new Date(endMs).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})+". Prices return to normal after that.";
+
+  const yt=String(CONFIG.youtubeLink||"").match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/);
+  if(yt){const f=el("iframe");f.src="https://www.youtube-nocookie.com/embed/"+yt[1]+"?rel=0";f.loading="lazy";f.title="Preview video";f.allow="encrypted-media; picture-in-picture";f.allowFullscreen=true;$("vid").append(f)}
+  else $("vid").textContent="Add a valid YouTube link in CONFIG.youtubeLink";
+
+  function head(){
+    const on=onSale();$("sale").style.display=on?"":"none";
+    if(on){$("saleN").textContent=S.name;$("saleP").textContent=S.discountPercent+"% off all keys"}
+  }
+  function tick(){
+    if(!onSale()){if($("sale").style.display!=="none"){head();grid()}return}
+    if(isNaN(endMs)){$("saleT").style.display="none";return}
+    const s=Math.max(0,Math.floor((endMs-Date.now())/1000)),p=n=>String(n).padStart(2,"0");
+    $("saleT").textContent="Ends in "+p(Math.floor(s/86400))+"d "+p(Math.floor(s%86400/3600))+"h "+p(Math.floor(s%3600/60))+"m "+p(s%60)+"s";
+  }
+  function grid(){
+    const box=$("grid");box.innerHTML="";const on=onSale();
+    P.forEach(p=>{
+      const out=p.stock<=0,dis=!open||out;
+      const b=el("button","prod");b.disabled=dis;b.setAttribute("aria-label",CONFIG.productName+" "+p.name);
+      if(on&&!dis)b.append(el("span","off","-"+S.discountPercent+"%"));
+      const a=el("div","art");a.append(el("span","",CONFIG.productName));
+      const info=el("div","info"),nm=el("div","nm",CONFIG.productName+" "+p.name);
+      nm.append(el("small",!out&&p.stock<=5&&open?"low":"",!open?(st==="updating"?"Store updating":"Unavailable"):out?"Sold out":p.stock<=5?"Only "+p.stock+" left":p.stock+" in stock"));
+      const pr=el("div","pr");if(on)pr.append(el("s","",money(p.price)));pr.append(document.createTextNode(money(price(p))));
+      info.append(nm,pr);b.append(a,info);b.onclick=()=>openCheckout(p);box.append(b);
+    });
+  }
+  head();grid();tick();setInterval(tick,1000);
+
+  const PP=String(CONFIG.paypalClientId||"").trim();
+  const idProblem=()=>{
+    if(!PP||/YOUR|CLIENT_ID|PASTE|XXXX/i.test(PP))return "No PayPal client ID set in CONFIG.";
+    if(PP.toLowerCase()!=="sb"&&!/^[A-Za-z0-9_-]{40,120}$/.test(PP))return "That doesn't look like a PayPal Client ID. Make sure it isn't the Secret.";
+    return "";
+  };
+  const inject=qs=>new Promise((res,rej)=>{
+    const s=document.createElement("script");s.src="https://www.paypal.com/sdk/js?"+qs;s.async=true;
+    const to=setTimeout(()=>{s.remove();rej("timeout")},15000);
+    s.onload=()=>{clearTimeout(to);window.paypal&&window.paypal.Buttons?res():rej("init")};
+    s.onerror=()=>{clearTimeout(to);s.remove();rej("blocked")};
+    document.head.append(s);
+  });
+  let ppP=null;
+  function loadPayPal(){
+    if(window.paypal&&window.paypal.Buttons)return Promise.resolve();
+    if(ppP)return ppP;
+    const id=encodeURIComponent(PP),cur=encodeURIComponent(CONFIG.currency);
+    ppP=inject(`client-id=${id}&currency=${cur}&intent=capture&components=buttons`)
+      .catch(()=>inject(`client-id=${id}&currency=${cur}`))
+      .catch(r=>{ppP=null;console.warn("PayPal SDK failed ("+r+")");throw r});
+    return ppP;
+  }
+
+  const D=$("dlg"),dHTML=$("dBody").innerHTML;let sel=null,tok=0,amount="0.00";
+  const closeD=()=>{tok++;D.close()};
+  function showErr(title,list,retry){
+    const m=$("msg");m.className="err";m.innerHTML="";m.append(el("h4","",title));
+    if(list&&list.length){const u=el("ul");list.forEach(t=>u.append(el("li","",t)));m.append(u)}
+    const row=el("div");row.style.cssText="display:flex;gap:8px;flex-wrap:wrap";
+    if(retry){const b=el("button","btn p","Retry");b.onclick=pay;row.append(b)}
+    if(CONFIG.paypalMe&&sel){const a=el("a","btn","Pay via PayPal.me");a.href=`https://www.paypal.me/${encodeURIComponent(CONFIG.paypalMe)}/${amount}${CONFIG.currency}`;a.target="_blank";a.rel="noopener";row.append(a)}
+    m.append(row);
+  }
+  function openCheckout(p){
+    if(!$("dName")){$("dBody").innerHTML=dHTML}
+    $("x").onclick=closeD;
+    sel=p;amount=price(p);
+    $("dName").textContent=CONFIG.productName+" · "+p.name;$("dProd").textContent=onSale()?S.name:"";
+    $("dNow").textContent=money(amount);$("dWas").textContent=onSale()?money(p.price):"";
+    if(!D.open)D.showModal();
+    pay();
+  }
+  D.addEventListener("click",e=>{if(e.target===D)closeD()});
+  async function pay(){
+    const my=++tok,box=$("paypal");box.innerHTML="";$("msg").className="";$("msg").innerHTML="";
+    const prob=idProblem();
+    if(prob)return showErr("PayPal isn't set up",[prob],false);
+    if(!navigator.onLine)return showErr("You're offline",["Reconnect and try again."],true);
+    box.append(el("div","skel"));
+    try{await loadPayPal()}catch(r){
+      if(my!==tok)return;box.innerHTML="";
+      return showErr("PayPal couldn't load",r==="timeout"?["PayPal took too long to respond. Check your connection."]:[
+        "Disable ad-blockers for this page; they often block paypal.com.",
+        "Check the Client ID belongs to an app that still exists on developer.paypal.com.",
+        "Open this page from a real URL (https://…), not by opening the file directly."],true);
+    }
+    if(my!==tok)return;
+    box.innerHTML="";const p=sel,amt=amount;
+    paypal.Buttons({
+      style:{layout:"vertical",color:"white",shape:"rect",label:"pay",height:46},
+      createOrder:(d,a)=>a.order.create({purchase_units:[{description:CONFIG.productName+" - "+p.name+(onSale()?" ("+S.name+")":""),amount:{currency_code:CONFIG.currency,value:amt}}]}),
+      onApprove:(d,a)=>a.order.capture().then(o=>{
+        p.stock=Math.max(0,p.stock-1);grid();
+        const b=$("dBody");b.innerHTML="";const w=el("div","done");
+        w.innerHTML='<svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="25"/><path d="M17 29l8 8 14-16"/></svg>';
+        w.append(el("h3","","Payment complete"),el("p","",`Your ${p.name} will be delivered shortly. Keep your order ID:`));
+        const c=el("code","",o.id);c.title="Click to copy";c.onclick=()=>navigator.clipboard&&navigator.clipboard.writeText(o.id).then(()=>{c.textContent="Copied";setTimeout(()=>c.textContent=o.id,1200)});
+        const cl=el("button","btn p","Done");cl.style.marginTop="16px";cl.onclick=closeD;
+        w.append(c,cl);b.append(w);
+        // TODO: deliver the key SERVER-SIDE after verifying o.id with PayPal's Orders API.
+      }),
+      onCancel:()=>{$("msg").className="";$("msg").textContent="Payment cancelled. You haven't been charged."},
+      onError:()=>showErr("Payment error",["Nothing was charged. Please try again."],true)
+    }).render("#paypal").catch(()=>showErr("PayPal buttons couldn't be shown",["Refresh the page and try again."],true));
+  }
+}
+
+if(CONFIG.maintenanceMode===true&&store.get("mk")!=="1")showGate();
+else startSite();
+</script>
+</body>
+</html>
