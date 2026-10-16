@@ -206,20 +206,21 @@ const CONFIG = {
   sale: {
     enabled: true,               // false = normal prices, no sale banner
     name: "Halloween Sale",
-    discountPercent: 25,
+    discountPercent: 50,
     endsAt: "2026-10-31T23:59:59" // local time; sale switches off automatically
   },
 
   // PayPal CLIENT ID only (never the Secret). Sandbox id for testing, Live id for real money.
   paypalClientId: "AWBY3FCmVQqK3oWx78WPQithZFeI7GBvItmrmJbdQcdMBbp1uAfLrXFlqFcinBwdvuV3J4VaxF610ywn",
   currency: "GBP",
-  paypalMe: "yourname",                  // optional backup, e.g. "yourname"
+  paypalMe: "",                  // optional backup, e.g. "yourname"
 
   productName: "Mystical",
   products: [                    // price = normal price, sale is applied automatically
     { id: "day ┃ Rivals",   name: "1 Day Key ┃ Rivals",   price: "2.00",  stock: 25 },
     { id: "week ┃ Rivals",  name: "1 Week Key ┃ Rivals",  price: "6.00",  stock: 15 },
-    { id: "month ┃ Rivals", name: "1 Month Key ┃ Rivals", price: "12.00", stock: 8  }
+    { id: "month ┃ Rivals", name: "1 Month Key ┃ Rivals", price: "12.00", stock: 8  },
+    { id: "day ┃ Overkill",   name: "1 Day Key ┃ Overkill",   price: "1",  stock: 41 }
   ]
 };
 /* ============================================ */
