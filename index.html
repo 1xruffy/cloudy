@@ -88,7 +88,7 @@ main{max-width:880px;margin:0 auto;padding:0 20px}
 .brand h1{font-size:clamp(2.8rem,10vw,5.6rem);font-weight:700;letter-spacing:-.045em;line-height:1;background:linear-gradient(100deg,#fff 20%,var(--acc) 50%,#fff 80%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sweep 7s linear infinite}
 .sub{margin-top:14px;color:var(--dim);font-weight:500}
 .nav{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:34px}
-.nav .btn{animation:up .8s both}.nav .btn:nth-child(2){animation-delay:.1s}.nav .btn:nth-child(3){animation-delay:.2s}
+.nav .btn{animation:up .8s both}.nav .btn:nth-child(2){animation-delay:.1s}.nav .btn:nth-child(3){animation-delay:.2s}.nav .btn:nth-child(4){animation-delay:.3s}
 .home{padding-bottom:70px}
 .vid{position:relative;max-width:720px;margin:36px auto 0;aspect-ratio:16/9;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#000;display:grid;place-items:center;color:var(--dim);font-size:.9rem;animation:up .9s .35s both;transition:box-shadow .3s,border-color .3s}
 .vid:hover{border-color:rgba(var(--rgb),.45);box-shadow:0 0 50px -16px var(--glow)}
@@ -194,6 +194,25 @@ body.hasbk .dtop{padding-right:190px}
 #dtoc a{display:block;color:var(--dim);text-decoration:none;padding:4px 0;cursor:pointer;transition:color .2s}#dtoc a:hover{color:var(--acc)}
 @media(max-width:1100px){.dgrid{grid-template-columns:220px minmax(0,1fr)}#dtoc{display:none}}
 @media(max-width:760px){.dgrid{grid-template-columns:1fr;gap:0}#dside{position:static;max-height:none}.dcards{grid-template-columns:1fr}body.hasbk .dtop{padding-right:0;padding-top:52px;height:auto}}
+.tags{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:18px}
+.stp{display:inline-flex;align-items:center;gap:8px;padding:6px 13px;border:1px solid var(--line);border-radius:99px;font-size:.78rem;font-weight:600;background:#000}
+.stp i{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px currentColor;color:var(--ok);animation:blink 2s infinite}
+.stp.updating i{background:#fbbf24;color:#fbbf24}.stp.down i{background:var(--red);color:var(--red)}
+@keyframes blink{50%{opacity:.35}}
+.sale{display:inline-flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:10px;padding:5px 6px 5px 14px;border:1px solid rgba(var(--rgb),.35);background:rgba(var(--rgb),.08);border-radius:99px;font-size:.8rem;font-weight:600;animation:glowp 3s ease-in-out infinite}
+@keyframes glowp{50%{box-shadow:0 0 28px -4px var(--glow)}}
+.sale b{color:var(--acc)}.sale .t{background:#000;border:1px solid var(--line);border-radius:99px;padding:3px 11px;font-variant-numeric:tabular-nums}
+.pa .off{position:absolute;top:10px;right:10px;background:var(--acc);color:#000;font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:99px;animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.1)}}
+.pr s{font-size:1rem;font-weight:500;color:var(--mute);margin-right:8px;letter-spacing:0}
+.stk{margin:-6px 0 14px;font-size:.74rem;color:var(--mute)}.stk.low{color:#fbbf24}
+.rcard{max-width:480px;margin:28px auto 0;padding:28px;background:#000;border:1px solid var(--line);border-radius:16px;animation:up .8s both;box-shadow:0 0 60px -34px var(--glow)}
+.rcard h2{font-size:1.4rem;letter-spacing:-.03em}.rcard p{color:var(--dim);font-size:.88rem;margin-top:4px}
+#rk{width:100%;padding:13px 14px;margin:18px 0 8px;border-radius:10px;border:1px solid var(--line);background:#000;color:#fff;font:inherit;letter-spacing:.12em;text-align:center;text-transform:uppercase;transition:border-color .2s,box-shadow .2s}
+#rk:focus{outline:none;border-color:rgba(var(--rgb),.6);box-shadow:0 0 24px -8px var(--glow)}
+#rk.bad{border-color:var(--red);animation:shake .35s}
+#rerr{min-height:1.4em;color:var(--red);font-size:.84rem;margin-bottom:8px}
+.rinfo{margin:16px 0 20px;text-align:left}.rinfo div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.88rem}.rinfo span{color:var(--dim)}
 @media(max-width:640px){.plans{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.done circle,.done path{stroke-dashoffset:0!important}}
 </style>
@@ -225,20 +244,39 @@ body.hasbk .dtop{padding-right:190px}
 <section class="view home" id="vHome">
   <div class="brand"><img class="logo" id="lg" src="assets/store.png" alt=""><svg class="logo" id="lgs" viewBox="0 0 64 64" hidden><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><path fill="url(#g)" d="M32 4l7 21 21 7-21 7-7 21-7-21-21-7 21-7z"/></svg><h1 id="h1"></h1></div>
   <p class="sub" id="sub"></p>
+  <div class="tags"><div class="stp" id="stp"><i></i><span></span></div><div class="sale"><span><b class="sn"></b> · <span class="sp"></span></span><span class="t stm"></span></div></div>
   <div class="nav">
     <a class="btn" href="#/purchase"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>Purchase</a>
     <a class="btn" id="docs" href="#/docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M8 13h8M8 17h8"/></svg>Documentation</a>
     <a class="btn" id="disc" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-11.5 7.2L4 20l1-4.2A8 8 0 1121 12z"/></svg>Discord</a>
+    <a class="btn" href="#/redeem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L21 2M17 6l3 3M14 9l2 2"/></svg>Redeem</a>
   </div>
   <div class="vid" id="vid"></div>
 </section>
 
 <section class="view buy" id="vBuy" hidden>
   <div class="bh"><b>SUBSCRIPTIONS</b><a class="btn sm" href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>Home</a></div>
+  <div class="box" id="stbox" hidden></div>
+  <div class="tags" style="margin:0 0 14px;justify-content:flex-start"><div class="sale"><span><b class="sn"></b> · <span class="sp"></span></span><span class="t stm"></span></div></div>
   <div class="plans" id="plans"></div>
   <div class="box"><b>Save your key after payment</b>Your order ID is shown once on this page. Keep it with your payment confirmation. Lost keys can only be reviewed through Discord support with proof of payment.</div>
   <div class="box"><b>Terms</b>You must be at least 18 and agree to our Terms of Service before buying. Digital content is delivered immediately after payment.</div>
   <p class="pw">Payments are processed by PayPal</p>
+</section>
+
+<section class="view buy" id="vRedeem" hidden>
+  <div class="bh"><b>REDEEM KEY</b><a class="btn sm" href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>Home</a></div>
+  <div class="rcard">
+    <div id="rform"><h2>Redeem your key</h2><p>Enter the key you received after payment.</p>
+      <input id="rk" placeholder="MYST-XXXX-0000" autocomplete="off" spellcheck="false"><div id="rerr" role="alert"></div>
+      <button class="btn p" id="rgo" type="button" style="width:100%">Redeem</button></div>
+    <div id="rok" class="done" hidden>
+      <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="25"/><path d="M17 29l8 8 14-16"/></svg><h3 id="rh">Key redeemed</h3>
+      <div class="rinfo"><div><span>Key</span><b id="rkey"></b></div><div><span>Type</span><b id="rtype"></b></div><div><span>Duration</span><b id="rdur"></b></div><div><span>Expires</span><b id="rexp"></b></div></div>
+      <a class="btn p" id="rscript" href="#" style="width:100%">Get script</a>
+      <button class="btn" id="rmore" type="button" style="width:100%;margin-top:8px">Redeem another key</button>
+    </div>
+  </div>
 </section>
 </main>
 
@@ -279,7 +317,7 @@ const CONFIG = {
   comingSoon: {
     enabled: true,
     hours: 0,
-    minutes: 1,
+    minutes: 10,
     launchAt: "",
     version: "1",            // change this (e.g. "2") to restart the countdown for everyone who visited before
     autoUnlock: true,        // store appears (with confetti) when the timer hits 0
@@ -296,12 +334,30 @@ const CONFIG = {
   youtubeLink: "",           // paste a YouTube link, e.g. "https://www.youtube.com/watch?v=XXXXXXXXXXX"
   tosLink: "",               // link to your Terms of Service
 
+  status: "working",         // "working" | "updating" | "down"  (updating / down pauses buying)
+
+  sale: {
+    enabled: true,           // false = normal prices, no banner
+    name: "Halloween Sale",
+    discountPercent: 25,
+    endsAt: "2026-10-31T23:59:59"   // sale switches off automatically
+  },
+
+  /* KEYS - one line per key.  type = text shown after redeeming, days = how long the key lasts.
+     To ADD a key: copy a line and change it.  To REMOVE one: delete its line. */
+  keys: [
+    { key: "MYST-WEEK-0001",  type: "Weekly Key",  days: 7  },
+    { key: "MYST-WEEK-0002",  type: "Weekly Key",  days: 7  },
+    { key: "MYST-MONTH-0001", type: "Monthly Key", days: 30 },
+    { key: "MYST-MONTH-0002", type: "Monthly Key", days: 30 }
+  ],
+
   paypalClientId: "AWBY3FCmVQqK3oWx78WPQithZFeI7GBvItmrmJbdQcdMBbp1uAfLrXFlqFcinBwdvuV3J4VaxF610ywn",
   currency: "GBP",
 
-  plans: [
-    { id: "weekly",  days: 7,  tag: "Flexible",   name: "Weekly access",  desc: "Full access for a quick start", price: "3.99",  per: "week" },
-    { id: "monthly", days: 30, tag: "Best value", name: "Monthly access", desc: "More time for a better price",  price: "14.99", per: "month", best: true }
+  plans: [                   // stock = how many can be sold (delete the stock part for unlimited)
+    { id: "weekly",  days: 7,  tag: "Flexible",   name: "Weekly access",  desc: "Full access for a quick start", price: "3.99",  per: "week",  stock: 25 },
+    { id: "monthly", days: 30, tag: "Best value", name: "Monthly access", desc: "More time for a better price",  price: "14.99", per: "month", best: true, stock: 10 }
   ]
 };
 /* ============================================ */
@@ -485,17 +541,37 @@ function startSite(){
 
 
 
-  const P=CONFIG.plans,wk=P.find(p=>p.days===7),mo=P.find(p=>p.best);
-  const save=wk&&mo?Math.max(0,wk.price*4-mo.price):0;
-  P.forEach(p=>{
-    const c=el("div","plan"+(p.best?" best":"")),a=el("div","pa"),b=el("div","pb"),ul=el("ul");
-    a.append(el("em","",p.tag),el("strong","",p.days),el("small","","DAYS"));
-    [["Full "+CONFIG.storeName+" premium access",1],["Latest releases and updates",1],["Instant license key delivery",1],
-     [p.days+" days without repurchasing",p.best],["Save "+money(save)+" vs. four weeks",p.best]].forEach(([t,ok])=>ul.append(el("li",ok?"":"no",t)));
-    const pr=el("div","pr",money(p.price));pr.append(el("small","","  / "+p.per));
-    const bt=el("button","btn p","Get "+(p.best?"Monthly":"Weekly"));bt.onclick=()=>askTos(p);
-    b.append(el("h3","",p.name),el("small","",p.desc),pr,ul,bt);c.append(a,b);$("plans").append(c);
-  });
+  const P=CONFIG.plans,S=CONFIG.sale||{},endMs=new Date(S.endsAt).getTime();
+  const onSale=()=>S.enabled===true&&(isNaN(endMs)||Date.now()<endMs);
+  const price=p=>onSale()?(Math.round(+p.price*(100-S.discountPercent))/100).toFixed(2):(+p.price).toFixed(2);
+  const st=["working","updating","down"].includes(CONFIG.status)?CONFIG.status:"working",open=st==="working";
+  $("stp").classList.add(st);$("stp").lastChild.textContent={working:"Working",updating:"Updating",down:"Down"}[st];
+  function renderPlans(){
+    const box=$("plans");box.innerHTML="";const on=onSale();
+    const wk=P.find(p=>p.days===7),mo=P.find(p=>p.best),save=wk&&mo?Math.max(0,price(wk)*4-price(mo)):0;
+    $("stbox").hidden=open;$("stbox").textContent=st==="updating"?"The store is being updated. Buying is paused for now, check back soon.":"The store is currently down. Buying is unavailable.";
+    P.forEach(p=>{
+      const lim=p.stock!=null,out=lim&&p.stock<=0,dis=!open||out;
+      const c=el("div","plan"+(p.best?" best":"")),a=el("div","pa"),b=el("div","pb"),ul=el("ul");
+      if(on&&!dis)a.append(el("span","off","-"+S.discountPercent+"%"));
+      a.append(el("em","",p.tag),el("strong","",p.days),el("small","","DAYS"));
+      [["Full "+CONFIG.storeName+" premium access",1],["Latest releases and updates",1],["Instant license key delivery",1],
+       [p.days+" days without repurchasing",p.best],["Save "+money(save)+" vs. four weeks",p.best]].forEach(([t,ok])=>ul.append(el("li",ok?"":"no",t)));
+      const pr=el("div","pr");if(on)pr.append(el("s","",money(p.price)));pr.append(document.createTextNode(money(price(p))),el("small","","  / "+p.per));
+      const sk=el("div","stk"+(open&&!out&&lim&&p.stock<=5?" low":""),!open?(st==="updating"?"Store updating":"Store unavailable"):out?"Sold out":!lim?"In stock":p.stock<=5?"Only "+p.stock+" left":p.stock+" in stock");
+      const bt=el("button","btn p",dis?(!open?(st==="updating"?"Updating":"Unavailable"):"Sold out"):"Get "+(p.best?"Monthly":"Weekly"));bt.disabled=dis;bt.onclick=()=>askTos(p);
+      b.append(el("h3","",p.name),el("small","",p.desc),pr,sk,ul,bt);c.append(a,b);box.append(c);
+    });
+  }
+  let saleWas=onSale();
+  document.querySelectorAll(".sn").forEach(e=>e.textContent=S.name);document.querySelectorAll(".sp").forEach(e=>e.textContent=S.discountPercent+"% off all keys");
+  function saleTick(){
+    const on=onSale();document.querySelectorAll(".sale").forEach(e=>e.style.display=on?"":"none");
+    if(!on){if(saleWas){saleWas=false;renderPlans()}return}
+    const q=Math.max(0,Math.floor((endMs-Date.now())/1000)),z=n=>String(n).padStart(2,"0");
+    document.querySelectorAll(".stm").forEach(e=>e.textContent=isNaN(endMs)?"":"Ends in "+z(Math.floor(q/86400))+"d "+z(Math.floor(q%86400/3600))+"h "+z(Math.floor(q%3600/60))+"m "+z(q%60)+"s");
+  }
+  renderPlans();saleTick();setInterval(saleTick,1000);
 
   /* terms: tick box, wait 5s, accept */
   const T=$("tos"),ck=$("tc"),ac=$("ta"),bar=$("tbar");let tm=null,pick=null;
@@ -537,7 +613,7 @@ function startSite(){
     if(!$("dName"))$("dBody").innerHTML=dHTML;
     $("x").onclick=closeD;sel=p;{const a=$("robux");a.href=CONFIG.discordLink||"#";a.onclick=()=>{if(!CONFIG.discordLink)toast("Discord link coming soon")}}
     ;
-    $("dName").textContent=CONFIG.storeName+" · "+p.name;$("dProd").textContent=p.days+" days";$("dNow").textContent=money(p.price);
+    $("dName").textContent=CONFIG.storeName+" · "+p.name;$("dProd").textContent=p.days+" days"+(onSale()?" · "+S.name:"");$("dNow").textContent=money(price(p));
     if(!D.open)D.showModal();pay();
   }
   D.addEventListener("click",e=>{if(e.target===D)closeD()});
@@ -551,8 +627,9 @@ function startSite(){
     if(my!==tok)return;box.innerHTML="";const p=sel;
     paypal.Buttons({
       style:{layout:"vertical",color:"white",shape:"rect",label:"pay",height:46},
-      createOrder:(d,a)=>a.order.create({purchase_units:[{description:CONFIG.storeName+" - "+p.name,amount:{currency_code:CONFIG.currency,value:Number(p.price).toFixed(2)}}]}),
+      createOrder:(d,a)=>a.order.create({purchase_units:[{description:CONFIG.storeName+" - "+p.name,amount:{currency_code:CONFIG.currency,value:price(p)}}]}),
       onApprove:(d,a)=>a.order.capture().then(o=>{
+        if(p.stock!=null){p.stock=Math.max(0,p.stock-1);renderPlans()}
         const b=$("dBody");b.innerHTML="";const w=el("div","done");
         w.innerHTML='<svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="25"/><path d="M17 29l8 8 14-16"/></svg>';
         w.append(el("h3","","Payment complete"),el("p","",`Your ${p.name} will be delivered shortly. Keep your order ID:`));
@@ -564,7 +641,24 @@ function startSite(){
       onError:()=>showErr("Payment error",["Nothing was charged. Please try again."],true)
     }).render("#paypal").catch(()=>showErr("PayPal buttons couldn't be shown",["Refresh the page and try again."],true));
   }
-    /* docs */
+    /* redeem */
+  const RK=()=>{try{return JSON.parse(ls.get("mystical_redeemed")||"{}")}catch(e){return{}}};
+  const nk=v=>String(v||"").toUpperCase().replace(/\s+/g,"");
+  const dstr=t=>new Date(t).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  function resetRedeem(){$("rform").hidden=false;$("rok").hidden=true;$("rk").value="";$("rerr").textContent=""}
+  function redeem(){
+    const i=$("rk"),v=nk(i.value),k=(CONFIG.keys||[]).find(x=>nk(x.key)===v);
+    if(!v||!k){$("rerr").textContent=v?"That key isn't valid. Check it and try again.":"Enter your key first.";i.classList.remove("bad");void i.offsetWidth;i.classList.add("bad");return}
+    const db=RK(),first=!db[v];if(first){db[v]=Date.now();ls.set("mystical_redeemed",JSON.stringify(db))}
+    const end=db[v]+k.days*864e5,live=end>Date.now();
+    $("rkey").textContent=k.key;$("rtype").textContent=k.type;$("rdur").textContent=k.days+" day"+(k.days===1?"":"s");
+    $("rexp").textContent=live?dstr(end):"Expired";$("rh").textContent=first?"Key redeemed":live?"Key already redeemed":"Key expired";
+    $("rform").hidden=true;$("rok").hidden=false;if(first)confetti();
+  }
+  $("rgo").onclick=redeem;$("rk").onkeydown=e=>{if(e.key==="Enter")redeem()};$("rmore").onclick=resetRedeem;
+  {const a=$("rscript");if(CONFIG.discordLink){a.href=CONFIG.discordLink;a.target="_blank";a.rel="noopener"}else a.onclick=e=>{e.preventDefault();toast("Discord link coming soon")}}
+
+  /* docs */
   const Q=$("dq"),RES=$("dres");
   document.querySelectorAll(".dn").forEach(n=>n.textContent=CONFIG.storeName);
   function renderDocs(cat,fn){
@@ -596,8 +690,8 @@ function startSite(){
 
   const route=()=>{
     if(!$("vHome"))return;
-    const h=location.hash,docs=h.startsWith("#/docs"),buy=h==="#/purchase",v=$(docs?"vDocs":buy?"vBuy":"vHome");
-    $("vHome").hidden=docs||buy;$("vBuy").hidden=!buy;$("vDocs").hidden=!docs;
+    const h=location.hash,docs=h.startsWith("#/docs"),buy=h==="#/purchase",red=h==="#/redeem",v=$(docs?"vDocs":buy?"vBuy":red?"vRedeem":"vHome");
+    $("vHome").hidden=docs||buy||red;$("vBuy").hidden=!buy;$("vRedeem").hidden=!red;$("vDocs").hidden=!docs;if(red)resetRedeem();
     v.style.animation="none";void v.offsetWidth;v.style.animation="";
     document.querySelectorAll(".plan,.box,.nav .btn").forEach(n=>{n.style.animation="none";void n.offsetWidth;n.style.animation=""});
     scrollTo(0,0);
