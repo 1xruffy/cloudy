@@ -86,7 +86,7 @@ main{max-width:880px;margin:0 auto;padding:0 20px}
 .brand h1{font-size:clamp(2.8rem,10vw,5.6rem);font-weight:700;letter-spacing:-.045em;line-height:1;background:linear-gradient(100deg,#fff 20%,var(--acc) 50%,#fff 80%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sweep 7s linear infinite}
 .sub{margin-top:14px;color:var(--dim);font-weight:500}
 .nav{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:34px}
-.nav .btn{animation:up .8s both}.nav .btn:nth-child(2){animation-delay:.1s}.nav .btn:nth-child(3){animation-delay:.2s}.nav .btn:nth-child(4){animation-delay:.3s}
+.nav .btn{animation:up .8s both}.nav .btn:nth-child(2){animation-delay:.1s}.nav .btn:nth-child(3){animation-delay:.2s}.nav .btn:nth-child(4){animation-delay:.3s}.nav .btn:nth-child(5){animation-delay:.4s}
 .vid{position:relative;max-width:720px;margin:36px auto 0;aspect-ratio:16/9;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#000;display:grid;place-items:center;color:var(--dim);font-size:.9rem;animation:up .9s .35s both;transition:box-shadow .3s,border-color .3s}
 .vid:hover{border-color:rgba(var(--rgb),.45);box-shadow:0 0 50px -16px var(--glow)}
 .vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -214,6 +214,11 @@ body.hasbk .dtop{padding-right:190px}
 #rk.bad{border-color:var(--red);animation:shake .35s}
 #rerr{min-height:1.4em;color:var(--red);font-size:.84rem;margin-bottom:8px}
 .rinfo{margin:16px 0 20px;text-align:left}.rinfo div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.88rem}.rinfo span{color:var(--dim)}
+
+/* browser page */
+.cdn{display:inline-flex;align-items:center;flex-wrap:wrap;gap:10px;margin:0 0 14px;padding:5px 6px 5px 14px;border:1px solid rgba(var(--rgb),.35);background:rgba(var(--rgb),.08);border-radius:99px;font-size:.8rem;font-weight:600}
+.cdn .t{background:#000;border:1px solid var(--line);border-radius:99px;padding:3px 11px;font-variant-numeric:tabular-nums}
+
 @media(max-width:640px){.plans{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.done circle,.done path{stroke-dashoffset:0!important}}
 </style>
@@ -250,6 +255,7 @@ body.hasbk .dtop{padding-right:190px}
     <a class="btn" href="#/purchase"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>Purchase</a>
     <a class="btn" id="docs" href="#/docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M8 13h8M8 17h8"/></svg>Documentation</a>
     <a class="btn" id="disc" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-11.5 7.2L4 20l1-4.2A8 8 0 1121 12z"/></svg>Discord</a>
+    <a class="btn" href="#/browser"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>Browser</a>
     <a class="btn" href="#/redeem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L21 2M17 6l3 3M14 9l2 2"/></svg>Redeem</a>
   </div>
   <div class="vid" id="vid"></div>
@@ -263,6 +269,27 @@ body.hasbk .dtop{padding-right:190px}
   <div class="box"><b>Save your reference after payment</b>Your order reference is shown once on this page. Keep it with your transaction hash. Lost references can only be reviewed through Discord support with proof of payment.</div>
   <div class="box"><b>Terms</b>You must be at least 18 and agree to our Terms of Service before buying. Digital content is delivered after your payment is confirmed.</div>
   <p class="pw">Payments are accepted in crypto</p>
+</section>
+
+<section class="view buy" id="vBrowser" hidden>
+  <div class="bh"><b>BROWSER</b><a class="btn sm" href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>Home</a></div>
+  <div class="cdn"><span>Free access ends in</span><span class="t" id="bt"></span></div>
+  <div class="plans">
+    <div class="plan">
+      <div class="pa"><em>Free</em><strong>FREE</strong></div>
+      <div class="pb"><h3>Mystical Browser</h3><small>Free version</small>
+        <div class="pr">Free</div>
+        <ul><li>Fast, lightweight browsing</li><li class="no">Enhanced encryption</li><li class="no">Built-in VPN</li></ul>
+        <a class="btn" id="bFree" href="#" target="_blank" rel="noopener">Download free</a></div>
+    </div>
+    <div class="plan best">
+      <div class="pa"><em>Premium</em><strong>PRO</strong></div>
+      <div class="pb"><h3>Mystical Browser Premium</h3><small>Better protection</small>
+        <div class="pr" id="bpr"></div>
+        <ul><li>Fast, lightweight browsing</li><li>Stronger encryption</li><li>Built-in VPN</li></ul>
+        <button class="btn p" id="bBuy" type="button">Get Premium</button></div>
+    </div>
+  </div>
 </section>
 
 <section class="view buy" id="vRedeem" hidden>
@@ -349,6 +376,19 @@ const CONFIG = {
     endsAt: "2026-10-31T23:59:59"   // sale switches off automatically
   },
 
+  /* BROWSER TAB
+     freeLink = where "Download free" goes.
+     hours / minutes = how long the free countdown lasts (starts when a visitor first opens the Browser tab).
+                       When it hits zero they are sent to the purchase page.
+                       Examples: hours: 2, minutes: 0  |  hours: 0, minutes: 30
+     premium = the paid version shown on the Browser tab (price is per month, sale discount applies). */
+  browser: {
+    freeLink: "https://gofile.io/d/NddeZFni",
+    hours: 2,
+    minutes: 0,
+    premium: { id: "browser", days: 30, name: "Mystical Browser Premium", price: "4.99", per: "month" }
+  },
+
   /* KEYS - one line per key.  type = text shown after redeeming, days = how long the key lasts.
      To ADD a key: copy a line and change it.  To REMOVE one: delete its line. */
   keys: [
@@ -366,15 +406,13 @@ const CONFIG = {
       { coin: "LTC",  network: "Litecoin",     address: "ltc1qzjnlnwjvkyltemxxqvd7d6js20054jh2w0vmjs" },
       { coin: "SOLANA", network: "Solana", address: "9doEbFbBvWnDkAP3rXf9mf2Aot7n2bm3uvjW24RSF33E" }
     ],
-    checkoutLinks: { weekly: "", monthly: "" }
+    checkoutLinks: { weekly: "", monthly: "", browser: "" }
   },
   currency: "GBP",
 
   plans: [                   // stock = how many can be sold (delete the stock part for unlimited)
     { id: "weekly",  days: 7,  tag: "Flexible",   name: "Weekly access",  desc: "Full access for a quick start", price: "3.99",  per: "week",  stock: 25 },
-    { id: "monthly", days: 30, tag: "Best value", name: "Monthly access", desc: "More time for a better price",  price: "14.99", per: "month", best: true, stock: 10 },
-    { id: "Browser", days: 0, tag: "NEW!", name: "Lifetime Premuim Browser", desc: "More time for a better price",  price: "4.99", per: "lifetime", best: true, stock: 10 }
-
+    { id: "monthly", days: 30, tag: "Best value", name: "Monthly access", desc: "More time for a better price",  price: "14.99", per: "month", best: true, stock: 10 }
   ]
 };
 /* ============================================ */
@@ -688,10 +726,35 @@ function startSite(){
   Q.onblur=()=>setTimeout(()=>RES.classList.remove("on"),150);
   Q.onkeydown=e=>{if(e.key==="Escape"){Q.blur()}else if(e.key==="Enter"){const a=RES.querySelector("a[href]");if(a)a.click(),location.hash=a.getAttribute("href")}};
 
+  /* browser page + free countdown */
+  const B=CONFIG.browser||{},bMs=((+B.hours||0)*36e5+(+B.minutes||0)*6e4)||72e5;
+  let bIv=null;
+  {const a=$("bFree");if(B.freeLink)a.href=B.freeLink;else a.onclick=e=>{e.preventDefault();toast("Download link coming soon")}}
+  if(B.premium){
+    const bp=$("bpr"),pp=B.premium;
+    if(onSale())bp.append(el("s","",money(pp.price)));
+    bp.append(document.createTextNode(money(price(pp))),el("small","","  / "+pp.per));
+    $("bBuy").onclick=()=>askTos(pp);
+  }
+  function browserTimer(on){
+    clearInterval(bIv);if(!on)return;
+    let s;try{s=JSON.parse(ls.get("mystical_browser")||"null")}catch(e){}
+    const sig=String(bMs);
+    if(!s||s.sig!==sig){s={sig,start:Date.now()};ls.set("mystical_browser",JSON.stringify(s))}
+    const end=s.start+bMs,z=n=>String(n).padStart(2,"0");
+    const tick=()=>{
+      const q=Math.max(0,Math.floor((end-Date.now())/1000));
+      if(q<=0){clearInterval(bIv);toast("Free access ended. Pick a plan to continue.");location.hash="#/purchase";return}
+      $("bt").textContent=z(Math.floor(q/3600))+"h "+z(Math.floor(q%3600/60))+"m "+z(q%60)+"s";
+    };
+    tick();bIv=setInterval(tick,1000);
+  }
+
   const route=()=>{
     if(!$("vHome"))return;
-    const h=location.hash,docs=h.startsWith("#/docs"),buy=h==="#/purchase",red=h==="#/redeem",v=$(docs?"vDocs":buy?"vBuy":red?"vRedeem":"vHome");
-    $("vHome").hidden=docs||buy||red;$("vBuy").hidden=!buy;$("vRedeem").hidden=!red;$("vDocs").hidden=!docs;if(red)resetRedeem();
+    const h=location.hash,docs=h.startsWith("#/docs"),buy=h==="#/purchase",red=h==="#/redeem",brw=h==="#/browser",v=$(docs?"vDocs":buy?"vBuy":red?"vRedeem":brw?"vBrowser":"vHome");
+    $("vHome").hidden=docs||buy||red||brw;$("vBuy").hidden=!buy;$("vRedeem").hidden=!red;$("vBrowser").hidden=!brw;$("vDocs").hidden=!docs;if(red)resetRedeem();
+    browserTimer(brw);
     v.style.animation="none";void v.offsetWidth;v.style.animation="";
     document.querySelectorAll(".plan,.box,.nav .btn").forEach(n=>{n.style.animation="none";void n.offsetWidth;n.style.animation=""});
     scrollTo(0,0);
@@ -718,7 +781,7 @@ function boot(enter){
   startSite();
   if(enter)$("app").classList.add("enter");
 }
-if(/[?&]reset/.test(location.search)){try{localStorage.removeItem("mystical_cs");sessionStorage.removeItem("mk")}catch(e){}}
+if(/[?&]reset/.test(location.search)){try{localStorage.removeItem("mystical_cs");localStorage.removeItem("mystical_browser");sessionStorage.removeItem("mk")}catch(e){}}
 document.addEventListener("keydown",e=>{const q=$("dq");if(q&&$("vDocs")&&!$("vDocs").hidden&&(e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();q.focus();q.select()}});
 boot();
 </script>
