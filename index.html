@@ -440,7 +440,7 @@ const CONFIG = {
     showLastChecked: true,
     lastCheckedLabel: "Last checked",
     lastCheckedTime: "",           // "" = live clock time, or type your own e.g. "19:27"
-    announcement: { enabled: true, title: "Notice", text: "Scheduled maintenance tonight at 1:00." },
+    announcement: { enabled: false, title: "Notice", text: "Scheduled maintenance tonight at 1:00." },
     days: 30,                      // number of bars
     showUptime: false,             // shows e.g. "96.7%" next to each service
     showLegend: true,
@@ -453,8 +453,8 @@ const CONFIG = {
       { name: "Database",                status: "operational", incidents: {} },
       { name: "Update delivery",         status: "operational", incidents: { 12: "outage" } },
       { name: "Server capacity",         status: "operational", incidents: {} },
-      { name: "Browser API",         status: "Outage", incidents: {} },
-      { name: "Browser",         status: "Outage", incidents: {} }
+      { name: "Browser API",         status: "operational", incidents: {} },
+      { name: "Browser",         status: "operational", incidents: {} }
     ]
   },
 
