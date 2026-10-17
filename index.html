@@ -151,6 +151,49 @@ dialog[open]{animation:pop .3s cubic-bezier(.2,.9,.3,1.2)}
 .done code{display:block;margin-top:12px;padding:11px;background:#000;border:1px solid var(--line);border-radius:8px;cursor:pointer;word-break:break-all;font-size:.85rem}
 #toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,30px);background:#000;border:1px solid var(--line);padding:10px 18px;border-radius:99px;font-size:.85rem;opacity:0;transition:.3s;z-index:60;pointer-events:none}
 #toast.on{opacity:1;transform:translate(-50%,0)}
+.bk{position:fixed;top:14px;right:14px;z-index:70;animation:up .6s both;background:#000}
+.dv{max-width:1280px;margin:0 auto;padding:0 20px 80px}
+.dtop{display:flex;align-items:center;justify-content:space-between;gap:12px;height:64px}
+body.hasbk .dtop{padding-right:190px}
+.dlogo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700}.dlogo img{height:26px}
+.dsearch{position:relative;width:min(330px,60vw)}
+.dsearch input{width:100%;padding:10px 64px 10px 14px;border-radius:10px;border:1px solid var(--line);background:#000;color:#fff;font:inherit;font-size:.82rem;transition:border-color .2s,box-shadow .2s}
+.dsearch input:focus{outline:none;border-color:rgba(var(--rgb),.6);box-shadow:0 0 24px -8px var(--glow)}
+.dsearch kbd,.lead kbd{font:inherit;font-size:.68rem;color:var(--mute);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+.dsearch kbd{position:absolute;right:10px;top:50%;transform:translateY(-50%)}
+#dres{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#000;border:1px solid var(--line);border-radius:10px;overflow:hidden;z-index:30;display:none}
+#dres.on{display:block;animation:pop .2s both}
+#dres a{display:flex;justify-content:space-between;gap:10px;padding:9px 14px;font-size:.8rem;text-decoration:none}#dres a:hover{background:#0c0c0c;color:var(--acc)}#dres small{color:var(--mute)}
+.dgrid{display:grid;grid-template-columns:240px minmax(0,1fr) 200px;gap:40px;align-items:start}
+#dside{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;padding:8px 0}
+#dside h4{font-size:.68rem;letter-spacing:.1em;font-weight:700;color:#cfdbe0;margin:18px 10px 8px}
+#dside a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:.84rem;color:#c8d4d9;text-decoration:none;transition:background .2s,color .2s,transform .2s}
+#dside a::before{content:"";width:8px;height:8px;border-radius:3px;background:#2a3338;transition:background .2s}
+#dside a:hover{background:#0b0b0b;color:#fff;transform:translateX(3px)}
+#dside a.on{background:#0e0e0e;color:#fff}#dside a.on::before,#dside a:hover::before{background:var(--acc)}
+.dfoot{margin-top:18px;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:.72rem;color:var(--dim)}
+#dside .dfoot a{display:inline;padding:0;color:var(--acc);background:none;transform:none}#dside .dfoot a::before{display:none}
+#dmain{padding-top:34px;animation:up .6s both}
+#dmain h1{font-size:clamp(2rem,5vw,2.8rem);letter-spacing:-.04em;line-height:1.1}
+.lead{margin-top:14px;color:#c8d4d9;font-size:1.02rem;max-width:60ch}
+.dnote{display:flex;gap:14px;margin:30px 0;padding:16px 18px;background:#050505;border:1px solid var(--line);border-radius:12px;font-size:.85rem;color:var(--dim)}.dnote b{display:block;color:#fff;margin-bottom:2px}.dnote a{color:#fff}.dnote svg{width:18px;height:18px;flex:none;margin-top:2px;color:var(--acc)}
+#dmain h2{font-size:1.4rem;letter-spacing:-.03em;margin:40px 0 8px;scroll-margin-top:20px}
+.dlab{font-size:.7rem;letter-spacing:.1em;font-weight:700;color:#cfdbe0;margin:26px 0 12px}
+.dcards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dcard{display:block;padding:18px;background:#050505;border:1px solid var(--line);border-radius:12px;text-decoration:none;position:relative;transition:border-color .25s,transform .25s,box-shadow .25s}
+.dcard:hover{border-color:rgba(var(--rgb),.5);transform:translateY(-3px);box-shadow:0 12px 36px -18px var(--glow)}
+.dcard b{display:block;font-size:.95rem;margin-bottom:6px}.dcard span{font-size:.78rem;color:var(--dim);display:block;padding-right:20px}
+.dcard::after{content:"›";position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--dim);transition:transform .25s,color .25s}.dcard:hover::after{transform:translate(4px,-50%);color:var(--acc)}
+.fn{padding:20px 0;border-bottom:1px solid var(--line);scroll-margin-top:20px;border-radius:6px}
+.fn h3{font-size:1.05rem;font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--acc)}
+.fn p{margin:8px 0 12px;color:var(--dim);font-size:.88rem}
+.fn pre{padding:12px 14px;background:#050505;border:1px solid var(--line);border-radius:10px;overflow:auto;font-size:.8rem}
+.fn.flash{animation:flash 1.8s}@keyframes flash{0%{background:rgba(var(--rgb),.16)}}
+#dtoc{position:sticky;top:90px;margin-top:34px;border-left:1px solid var(--line);padding-left:18px;font-size:.78rem;max-height:70vh;overflow:auto}
+#dtoc b{display:block;margin-bottom:12px}
+#dtoc a{display:block;color:var(--dim);text-decoration:none;padding:4px 0;cursor:pointer;transition:color .2s}#dtoc a:hover{color:var(--acc)}
+@media(max-width:1100px){.dgrid{grid-template-columns:220px minmax(0,1fr)}#dtoc{display:none}}
+@media(max-width:760px){.dgrid{grid-template-columns:1fr;gap:0}#dside{position:static;max-height:none}.dcards{grid-template-columns:1fr}body.hasbk .dtop{padding-right:0;padding-top:52px;height:auto}}
 @media(max-width:640px){.plans{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.done circle,.done path{stroke-dashoffset:0!important}}
 </style>
@@ -184,7 +227,7 @@ dialog[open]{animation:pop .3s cubic-bezier(.2,.9,.3,1.2)}
   <p class="sub" id="sub"></p>
   <div class="nav">
     <a class="btn" href="#/purchase"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>Purchase</a>
-    <a class="btn" id="docs" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M8 13h8M8 17h8"/></svg>Documentation</a>
+    <a class="btn" id="docs" href="#/docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M8 13h8M8 17h8"/></svg>Documentation</a>
     <a class="btn" id="disc" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-11.5 7.2L4 20l1-4.2A8 8 0 1121 12z"/></svg>Discord</a>
   </div>
   <div class="vid" id="vid"></div>
@@ -198,6 +241,14 @@ dialog[open]{animation:pop .3s cubic-bezier(.2,.9,.3,1.2)}
   <p class="pw">Payments are processed by PayPal</p>
 </section>
 </main>
+
+<section class="view dv" id="vDocs" hidden>
+  <header class="dtop">
+    <a class="dlogo" href="#/"><img src="assets/store.png" alt="" onerror="this.remove()"><span class="dn"></span></a>
+    <div class="dsearch"><input id="dq" type="search" placeholder="Search documentation" autocomplete="off" spellcheck="false"><kbd>Ctrl K</kbd><div id="dres"></div></div>
+  </header>
+  <div class="dgrid"><aside id="dside"></aside><article id="dmain"></article><aside id="dtoc"></aside></div>
+</section>
 
 <dialog id="tos" aria-labelledby="tT">
   <div class="dh"><h3 id="tT">Do you agree to our Terms of Service?</h3><button class="x" id="tx" aria-label="Close">&#10005;</button></div>
@@ -243,7 +294,6 @@ const CONFIG = {
   tagline: "The #1 Rivals cheat.",
   discordLink: "https://discord.gg/mysti",
   youtubeLink: "",           // paste a YouTube link, e.g. "https://www.youtube.com/watch?v=XXXXXXXXXXX"
-  docsLink: "",              // e.g. "https://docs.yoursite.com"
   tosLink: "",               // link to your Terms of Service
 
   paypalClientId: "AWBY3FCmVQqK3oWx78WPQithZFeI7GBvItmrmJbdQcdMBbp1uAfLrXFlqFcinBwdvuV3J4VaxF610ywn",
@@ -255,6 +305,114 @@ const CONFIG = {
   ]
 };
 /* ============================================ */
+
+const RAW=`
+Closures|Inspect, create, classify, hook and restore Luau closures.
+ checkcaller|checkcaller() → boolean|Returns true when the current thread was created by the executor.
+ clonefunction|clonefunction(fn) → function|Creates a separate copy of a function that behaves the same.
+ hookfunction|hookfunction(fn, hook) → function|Replaces a function with a hook and returns the original.
+ restorefunction|restorefunction(fn) → ()|Removes a hook and restores the original function.
+ isfunctionhooked|isfunctionhooked(fn) → boolean|Checks whether a function is currently hooked.
+ newcclosure|newcclosure(fn) → function|Wraps a Luau function inside a C closure.
+ iscclosure|iscclosure(fn) → boolean|Returns true if the function is a C closure.
+ islclosure|islclosure(fn) → boolean|Returns true if the function is a Luau closure.
+ isexecutorclosure|isexecutorclosure(fn) → boolean|Returns true if the function was created by the executor.
+ loadstring|loadstring(source, chunkname?) → function|Compiles a string of Luau code into a callable function.
+Debug|Inspect and modify constants, upvalues, stacks and prototypes.
+ debug.getconstant|debug.getconstant(fn, index) → any|Returns the constant at the given index of a function.
+ debug.getconstants|debug.getconstants(fn) → table|Returns every constant used by a function.
+ debug.setconstant|debug.setconstant(fn, index, value) → ()|Changes a constant of a function.
+ debug.getupvalue|debug.getupvalue(fn, index) → any|Returns the upvalue at the given index.
+ debug.getupvalues|debug.getupvalues(fn) → table|Returns all upvalues of a function.
+ debug.setupvalue|debug.setupvalue(fn, index, value) → ()|Changes an upvalue of a function.
+ debug.getstack|debug.getstack(level, index?) → any|Reads values from the stack at a call level.
+ debug.setstack|debug.setstack(level, index, value) → ()|Writes a value into the stack at a call level.
+ debug.getproto|debug.getproto(fn, index, active?) → function|Returns a nested function prototype.
+ debug.getprotos|debug.getprotos(fn) → table|Returns every nested prototype of a function.
+ debug.getinfo|debug.getinfo(fn) → table|Returns information about a function such as source and line.
+Drawing|Create and manage client-only 2D drawing objects.
+ Drawing.new|Drawing.new(type) → Drawing|Creates a Line, Text, Image, Circle, Square, Quad or Triangle object.
+ Drawing.Fonts|Drawing.Fonts → table|Lists the fonts available to Text drawing objects.
+ isrenderobj|isrenderobj(obj) → boolean|Checks whether a value is a drawing object.
+ getrenderproperty|getrenderproperty(obj, prop) → any|Reads a property of a drawing object.
+ setrenderproperty|setrenderproperty(obj, prop, value) → ()|Sets a property of a drawing object.
+ cleardrawcache|cleardrawcache() → ()|Removes all active drawing objects.
+Encoding|Encode Base64 data and compress or decompress LZ4 data.
+ crypt.base64encode|crypt.base64encode(data) → string|Encodes data as Base64.
+ crypt.base64decode|crypt.base64decode(data) → string|Decodes Base64 data.
+ lz4compress|lz4compress(data) → string|Compresses data with LZ4.
+ lz4decompress|lz4decompress(data, size) → string|Decompresses LZ4 data to the given size.
+Environment|Inspect executor environments, the registry and garbage-collected values.
+ getgenv|getgenv() → table|Returns the global executor environment.
+ getrenv|getrenv() → table|Returns the Roblox global environment.
+ getreg|getreg() → table|Returns the Luau registry.
+ getgc|getgc(includeTables?) → table|Returns garbage-collectable values, optionally including tables.
+ filtergc|filtergc(type, options, returnOne?) → any|Searches garbage-collected values using a filter.
+ getthreadidentity|getthreadidentity() → number|Returns the identity level of the current thread.
+ setthreadidentity|setthreadidentity(identity) → ()|Sets the identity level of the current thread.
+Filesystem|Read, write and organize files in the executor workspace.
+ readfile|readfile(path) → string|Reads the contents of a file.
+ writefile|writefile(path, content) → ()|Writes content to a file, replacing it.
+ appendfile|appendfile(path, content) → ()|Adds content to the end of a file.
+ loadfile|loadfile(path) → function|Loads a file as a callable chunk.
+ listfiles|listfiles(folder) → table|Lists files and folders inside a folder.
+ isfile|isfile(path) → boolean|Checks whether a path is a file.
+ isfolder|isfolder(path) → boolean|Checks whether a path is a folder.
+ makefolder|makefolder(path) → ()|Creates a folder.
+ delfile|delfile(path) → ()|Deletes a file.
+ delfolder|delfolder(path) → ()|Deletes a folder and everything in it.
+Instances|Enumerate, reference, inspect and interact with Roblox Instances.
+ getinstances|getinstances() → table|Returns every Instance that is still referenced.
+ getnilinstances|getnilinstances() → table|Returns Instances whose parent is nil.
+ cloneref|cloneref(instance) → Instance|Returns a reference copy of an Instance.
+ compareinstances|compareinstances(a, b) → boolean|Checks whether two references point to the same Instance.
+ gethui|gethui() → Instance|Returns a protected container for custom interfaces.
+ fireclickdetector|fireclickdetector(detector, distance?) → ()|Triggers a ClickDetector.
+ fireproximityprompt|fireproximityprompt(prompt) → ()|Triggers a ProximityPrompt.
+ firetouchinterest|firetouchinterest(part, toTouch, state) → ()|Simulates a touch between two parts.
+Metatable|Access, replace and inspect protected metatables.
+ getrawmetatable|getrawmetatable(object) → table|Returns the real metatable even if it is protected.
+ setrawmetatable|setrawmetatable(object, metatable) → ()|Replaces the metatable of an object.
+ setreadonly|setreadonly(table, state) → ()|Turns the read-only state of a table on or off.
+ isreadonly|isreadonly(table) → boolean|Checks whether a table is read-only.
+ hookmetamethod|hookmetamethod(object, method, hook) → function|Hooks a metamethod and returns the original.
+ getnamecallmethod|getnamecallmethod() → string|Returns the method name of the current namecall.
+Miscellaneous|Utility functions for executor info, HTTP requests, clipboard and more.
+ identifyexecutor|identifyexecutor() → name, version|Returns the executor name and version.
+ request|request(options) → table|Sends an HTTP request and returns the response.
+ setclipboard|setclipboard(text) → ()|Copies text to the clipboard.
+ queue_on_teleport|queue_on_teleport(code) → ()|Runs code after the next teleport.
+ setfpscap|setfpscap(fps) → ()|Sets the maximum frame rate.
+Reflection|Read and modify hidden and non-scriptable properties.
+ gethiddenproperty|gethiddenproperty(instance, prop) → value, isHidden|Reads a hidden property.
+ sethiddenproperty|sethiddenproperty(instance, prop, value) → boolean|Writes a hidden property.
+ isscriptable|isscriptable(instance, prop) → boolean|Checks whether a property is scriptable.
+ setscriptable|setscriptable(instance, prop, state) → boolean|Changes whether a property is scriptable.
+ getcallbackvalue|getcallbackvalue(instance, prop) → function|Returns the callback assigned to a property.
+ getcustomasset|getcustomasset(path) → string|Returns an asset id for a file in the workspace.
+Scripts|Inspect running scripts, bytecode, hashes and script environments.
+ getscripts|getscripts() → table|Returns every script in the game.
+ getloadedmodules|getloadedmodules() → table|Returns every loaded ModuleScript.
+ getrunningscripts|getrunningscripts() → table|Returns scripts that are currently running.
+ getscriptbytecode|getscriptbytecode(script) → string|Returns the bytecode of a script.
+ getscripthash|getscripthash(script) → string|Returns a hash of the script source.
+ getscriptclosure|getscriptclosure(script) → function|Returns a function that runs the script.
+ getsenv|getsenv(script) → table|Returns the environment of a running script.
+ getcallingscript|getcallingscript() → Instance|Returns the script that called the current function.
+Signals|Inspect, fire and replicate signal connections.
+ getconnections|getconnections(signal) → table|Returns the connections of a signal.
+ firesignal|firesignal(signal, ...) → ()|Fires every connection of a signal.
+ replicatesignal|replicatesignal(signal, ...) → ()|Replicates a signal to the server.
+ Connection|connection:Fire() / Defer() / Enable() / Disable() / Disconnect()|Methods available on connection objects.
+WebSocket|Open and manage WebSocket connections.
+ WebSocket.connect|WebSocket.connect(url) → WebSocket|Opens a connection to a WebSocket server.
+ socket:Send|socket:Send(message) → ()|Sends a message through the connection.
+ socket:Close|socket:Close() → ()|Closes the connection.
+ socket.OnMessage|socket.OnMessage:Connect(callback)|Fires when a message is received.
+ socket.OnClose|socket.OnClose:Connect(callback)|Fires when the connection closes.
+`;
+const DOC=[];RAW.trim().split("\n").forEach(l=>{if(l[0]===" "){const [n,sg,d]=l.trim().split("|");DOC[DOC.length-1].f.push({n,sg,d})}else{const [t,d]=l.split("|");DOC.push({id:t.toLowerCase(),t,d,f:[]})}});
+const fid=n=>"f_"+n.replace(/\W/g,"_");
 const $=id=>document.getElementById(id);
 const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 const mount=id=>{$("app").className="";$("app").innerHTML="";$("app").append($(id).content.cloneNode(true))};
@@ -306,7 +464,7 @@ function showSoon(){
   }
   tick();
   $("devlink").onclick=()=>{$("devbox").classList.toggle("on");$("devkey").focus()};
-  const tryKey=()=>{const i=$("devkey");if(norm(i.value)===norm(CONFIG.devKey)){done=true;clearInterval(iv);leave()}else{i.classList.remove("bad");void i.offsetWidth;i.classList.add("bad");i.select()}};
+  const tryKey=()=>{const i=$("devkey");if(norm(i.value)===norm(CONFIG.devKey)){ss.set("dev","1");done=true;clearInterval(iv);leave()}else{i.classList.remove("bad");void i.offsetWidth;i.classList.add("bad");i.select()}};
   $("devgo").onclick=tryKey;$("devkey").onkeydown=e=>{if(e.key==="Enter")tryKey()};
 }
 
@@ -322,17 +480,10 @@ function startSite(){
   const yt=String(CONFIG.youtubeLink||"").match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/),vid=$("vid");
   if(yt){const f=el("iframe");f.src="https://www.youtube-nocookie.com/embed/"+yt[1]+"?rel=0";f.loading="lazy";f.title="Preview video";f.allow="encrypted-media; picture-in-picture";f.allowFullscreen=true;vid.append(f)}
   else vid.textContent="Video coming soon";
-  link("disc",CONFIG.discordLink,"Discord");link("docs",CONFIG.docsLink,"Documentation");
+  link("disc",CONFIG.discordLink,"Discord");
   if(CONFIG.tosLink){$("tl").href=CONFIG.tosLink}else $("tl").onclick=e=>{e.preventDefault();toast("Terms link coming soon")};
 
-  const route=()=>{
-    const buy=location.hash==="#/purchase",v=$(buy?"vBuy":"vHome");
-    $("vHome").hidden=buy;$("vBuy").hidden=!buy;
-    v.style.animation="none";void v.offsetWidth;v.style.animation="";
-    document.querySelectorAll(".plan,.box,.nav .btn").forEach(n=>{n.style.animation="none";void n.offsetWidth;n.style.animation=""});
-    scrollTo(0,0);
-  };
-  addEventListener("hashchange",route);
+
 
   const P=CONFIG.plans,wk=P.find(p=>p.days===7),mo=P.find(p=>p.best);
   const save=wk&&mo?Math.max(0,wk.price*4-mo.price):0;
@@ -413,6 +564,57 @@ function startSite(){
       onError:()=>showErr("Payment error",["Nothing was charged. Please try again."],true)
     }).render("#paypal").catch(()=>showErr("PayPal buttons couldn't be shown",["Refresh the page and try again."],true));
   }
+    /* docs */
+  const Q=$("dq"),RES=$("dres");
+  document.querySelectorAll(".dn").forEach(n=>n.textContent=CONFIG.storeName);
+  function renderDocs(cat,fn){
+    const C=DOC.find(c=>c.id===cat),S=CONFIG.storeName;
+    $("dside").innerHTML='<h4>START</h4><a href="#/docs" class="'+(C?"":"on")+'">Introduction</a><h4>SUNC REFERENCE</h4>'+DOC.map(c=>`<a href="#/docs/${c.id}" class="${C&&C.id===c.id?"on":""}">${c.t}</a>`).join("")+'<div class="dfoot"><b>Related to sUNC docs</b><br><a href="https://docs.sunc.su" target="_blank" rel="noopener">Official reference ↗</a></div>';
+    const m=$("dmain"),t=$("dtoc");m.style.animation="none";void m.offsetWidth;m.style.animation="";
+    if(!C){
+      m.innerHTML=`<h1>sUNC Documentation</h1><p class="lead">${S}'s API reference is related to and based exclusively on the official sUNC documentation.</p>
+      <div class="dnote" id="src"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><b>Official sUNC source</b>Only APIs documented and actively tested by sUNC are listed here. The canonical reference is <a href="https://docs.sunc.su" target="_blank" rel="noopener">docs.sunc.su</a>.</div></div>
+      <h2 id="explore">Explore the sUNC reference</h2><p class="lead" style="font-size:.92rem">Browse the official sUNC surface or press <kbd>Ctrl K</kbd> to find a function.</p>
+      <div class="dlab">SUNC REFERENCE</div><div class="dcards">${DOC.map(c=>`<a class="dcard" href="#/docs/${c.id}"><b>${c.t}</b><span>${c.d}</span></a>`).join("")}</div>`;
+      t.innerHTML='<b>On this page</b><a data-t="src">sUNC source</a><a data-t="explore">Explore the reference</a>';
+    }else{
+      m.innerHTML=`<h1>${C.t}</h1><p class="lead">${C.d}</p><div class="dlab">${C.f.length} FUNCTIONS</div>`+C.f.map(f=>`<div class="fn" id="${fid(f.n)}"><h3>${f.n}</h3><p>${f.d}</p><pre><code></code></pre></div>`).join("");
+      m.querySelectorAll("pre code").forEach((c,i)=>c.textContent=C.f[i].sg);
+      t.innerHTML='<b>On this page</b>'+C.f.map(f=>`<a data-t="${fid(f.n)}">${f.n}</a>`).join("");
+    }
+    t.querySelectorAll("a").forEach(a=>a.onclick=()=>{const e=$(a.dataset.t);e&&e.scrollIntoView({behavior:"smooth",block:"start"})});
+    if(fn){const e=$(fid(fn));if(e)setTimeout(()=>{e.scrollIntoView({block:"center"});e.classList.add("flash")},60)}
+  }
+  Q.oninput=()=>{
+    const q=Q.value.trim().toLowerCase();if(!q){RES.classList.remove("on");return}
+    const hit=[];DOC.forEach(c=>{if(c.t.toLowerCase().includes(q))hit.push([c.t,"Category","#/docs/"+c.id]);c.f.forEach(f=>{if(f.n.toLowerCase().includes(q))hit.push([f.n,c.t,"#/docs/"+c.id+"/"+f.n])})});
+    RES.innerHTML="";hit.slice(0,8).forEach(h=>{const a=el("a");a.href=h[2];a.append(el("span","",h[0]),el("small","",h[1]));a.onclick=()=>{Q.value="";RES.classList.remove("on")};RES.append(a)});
+    if(!hit.length)RES.append(el("a","","No results"));RES.classList.add("on");
+  };
+  Q.onblur=()=>setTimeout(()=>RES.classList.remove("on"),150);
+  Q.onkeydown=e=>{if(e.key==="Escape"){Q.blur()}else if(e.key==="Enter"){const a=RES.querySelector("a[href]");if(a)a.click(),location.hash=a.getAttribute("href")}};
+
+  const route=()=>{
+    if(!$("vHome"))return;
+    const h=location.hash,docs=h.startsWith("#/docs"),buy=h==="#/purchase",v=$(docs?"vDocs":buy?"vBuy":"vHome");
+    $("vHome").hidden=docs||buy;$("vBuy").hidden=!buy;$("vDocs").hidden=!docs;
+    v.style.animation="none";void v.offsetWidth;v.style.animation="";
+    document.querySelectorAll(".plan,.box,.nav .btn").forEach(n=>{n.style.animation="none";void n.offsetWidth;n.style.animation=""});
+    scrollTo(0,0);
+    if(docs){const p=h.split("/").map(decodeURIComponent);renderDocs(p[2],p[3])}
+  };
+  if(window._r)removeEventListener("hashchange",window._r);window._r=route;addEventListener("hashchange",route);
+
+  /* back to countdown (dev access only) */
+  document.querySelectorAll(".bk").forEach(b=>b.remove());document.body.classList.remove("hasbk");
+  const CS=CONFIG.comingSoon||{},live=()=>ss.get("dev")==="1"&&CS.enabled===true&&launchTime(CS).end>Date.now();
+  if(live()){
+    const b=el("button","btn sm bk");b.type="button";
+    b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back to countdown';
+    document.body.append(b);document.body.classList.add("hasbk");
+    const off=()=>{clearInterval(iv);b.remove();document.body.classList.remove("hasbk")},iv=setInterval(()=>{if(!live()){off();ss.set("dev","")}},1000);
+    b.onclick=()=>{off();ss.set("mk","");ss.set("dev","");document.querySelectorAll("dialog[open]").forEach(d=>d.close());boot()};
+  }
   route();
 }
 
@@ -423,6 +625,7 @@ function boot(enter){
   if(enter)$("app").classList.add("enter");
 }
 if(/[?&]reset/.test(location.search)){try{localStorage.removeItem("mystical_cs");sessionStorage.removeItem("mk")}catch(e){}}
+document.addEventListener("keydown",e=>{const q=$("dq");if(q&&$("vDocs")&&!$("vDocs").hidden&&(e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();q.focus();q.select()}});
 boot();
 </script>
 </body>
