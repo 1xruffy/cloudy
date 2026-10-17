@@ -115,25 +115,38 @@ input:focus{outline:none;border-color:rgba(255,255,255,.6)}
 #toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,30px);z-index:99998;background:#000;border:1px solid rgba(255,255,255,.2);padding:9px 18px;border-radius:99px;font-size:.86rem;opacity:0;transition:.3s;pointer-events:none}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 
-/* loading screen */
-#ld{position:fixed;inset:0;z-index:9000;background:#000;display:grid;place-items:center;cursor:pointer;overflow:hidden}
-#lw{position:relative;font:400 clamp(4.5rem,19vw,14rem) "Instrument Serif",Georgia,serif;line-height:1;letter-spacing:-.02em;white-space:nowrap}
-#lw .o{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.28)}
-#lw .f{position:absolute;left:0;top:0;color:transparent;background:linear-gradient(100deg,var(--a) 0,var(--b) 30%,#fff 50%,var(--b) 70%,var(--a) 100%) 0 0/300% 100%;-webkit-background-clip:text;background-clip:text;animation:flow 2.6s linear infinite;clip-path:inset(100% 0 0 0)}
-@keyframes flow{to{background-position:-300% 0}}
-#lm{position:absolute;left:28px;right:28px;bottom:30px;display:flex;justify-content:space-between;align-items:flex-end;font-size:.8rem;color:rgba(255,255,255,.55)}
-#lp{font:400 3rem "Instrument Serif",serif;color:#fff;line-height:1}
-#lb{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.1)}#lb i{display:block;height:100%;width:0;background:#fff}
+/* loading screen: line fills, splits open onto the live background, name flies into the nav */
+#ld{position:fixed;inset:0;z-index:9000;cursor:pointer;overflow:hidden}
+#ld .pn{position:absolute;left:0;right:0;background:#000;will-change:transform}
+#ld .t{top:0;height:50%}#ld .b{top:50%;bottom:0}
+#lt,#lf{position:absolute;left:0;right:0;top:50%;height:1px}
+#lt{background:rgba(255,255,255,.14)}#lf{background:#fff;transform:scaleX(0)}
+#lw{position:absolute;left:0;right:0;bottom:calc(50% + 12px);text-align:center;font:400 clamp(4.2rem,16vw,12rem)/1.12 "Instrument Serif",Georgia,serif;white-space:nowrap;pointer-events:none}
+#lwi{display:inline-block}
+.lc{display:inline-block;overflow:hidden;vertical-align:bottom;padding:0 .02em .16em;margin-bottom:-.16em}
+.lc>span{display:inline-block;transform:translateY(112%)}
+#lg{position:absolute;left:0;right:0;top:calc(50% + 16px);text-align:center;font:italic 1.15rem "Instrument Serif",Georgia,serif;color:rgba(255,255,255,.68);opacity:0}
+#lm{position:absolute;left:28px;right:28px;bottom:30px;display:flex;justify-content:space-between;align-items:flex-end;font-size:.8rem;color:rgba(255,255,255,.55);opacity:0}
+#lp{font:400 3.2rem "Instrument Serif",serif;color:#fff;line-height:1}
+nav b .nm{transition:opacity .3s}body.fly nav b .nm{opacity:0}
+.ln{display:block;overflow:hidden;padding-bottom:.14em;margin-bottom:-.14em}
+.ln>span{display:block;transform:translateY(108%);transition:transform 1.1s cubic-bezier(.2,.9,.2,1) calc(var(--i)*.12s)}
+body.in .ln>span{transform:none}
+.rv{opacity:0;transform:translateY(16px);transition:opacity 1s cubic-bezier(.2,.9,.2,1) calc(.35s + var(--i)*.1s),transform 1s cubic-bezier(.2,.9,.2,1) calc(.35s + var(--i)*.1s)}
+body.in .rv{opacity:1;transform:none}
 nav,#snap,.dots{transition:opacity .8s}
 body.pre nav,body.pre #snap,body.pre .dots{opacity:0}
 @media(max-width:760px){nav{padding:12px}nav b span{display:none}nav a{padding:6px 8px;font-size:.78rem}nav a.hm{display:none}.dots{display:none}.fg{grid-template-columns:1fr}.s{padding-top:110px}
   .dg{grid-template-columns:1fr;grid-template-rows:auto 1fr}.dg aside{flex-direction:row;overflow-x:auto}.dg aside button{white-space:nowrap}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
 <body class="pre">
-<div id="ld"><div id="lw"><span class="o"></span><span class="f"></span></div>
-  <div id="lm"><span id="lp">0</span><span id="lt">Starting up</span></div><div id="lb"><i></i></div></div>
+<div id="ld">
+  <div class="pn t"></div><div class="pn b"></div>
+  <div id="lt"></div><div id="lf"></div>
+  <div id="lw"><span id="lwi"></span></div><p id="lg"></p>
+  <div id="lm"><span id="lp">0</span><span id="ls">Starting up</span></div>
+</div>
 <canvas id="bg"></canvas>
 <img id="cur" alt="">
 <div id="toast"></div>
@@ -149,10 +162,10 @@ body.pre nav,body.pre #snap,body.pre .dots{opacity:0}
 
 <main id="snap">
   <section class="s">
-    <button class="pill gl" id="pill" type="button"><i></i><span></span></button>
-    <h1 id="h1"></h1><p class="sub" id="sub"></p>
-    <div class="cta"><button class="btn w" data-go="2">Get the script</button><button class="btn" data-go="3">View premium</button></div>
-    <span class="hint">Scroll</span>
+    <button class="pill gl rv" style="--i:0" id="pill" type="button"><i></i><span></span></button>
+    <h1 id="h1"></h1><p class="sub rv" style="--i:4" id="sub"></p>
+    <div class="cta rv" style="--i:5"><button class="btn w" data-go="2">Get the script</button><button class="btn" data-go="3">View premium</button></div>
+    <span class="hint rv" style="--i:7">Scroll</span>
   </section>
   <section class="s">
     <h2 id="h2f"></h2><div class="stats" id="stats"></div><div class="fg" id="fg"></div>
@@ -182,7 +195,7 @@ const CONFIG={
   tosLink:"",
   status:"working",                       /* store: working | updating | down (updating/down pauses buying) */
 
-  loader:{enabled:true,minMs:2800,messages:["Starting up","Loading assets","Checking status","Ready"]},
+  loader:{enabled:true,respectReducedMotion:false,minMs:2400,messages:["Starting up","Loading assets","Checking status","Ready"]},
   cursor:{src:"assets/cursor.gif",size:32,hotX:0,hotY:0},
 
   hero:{headline:"Free forever.\nCompletely undetected.\nYou heard that right.",text:"We firmly believe you should never have to pay for a cheat."},
@@ -197,7 +210,7 @@ const CONFIG={
       {t:"Real support",d:"Open a ticket on Discord and get help from people who use it."}]},
   free:{headline:"So, what are you waiting for?",text:"Three steps and you're in.",
     steps:[{t:"Get a key",d:"Buy premium below or ask for a free key on Discord."},{t:"Redeem it",d:"Enter the key on the Redeem tab."},{t:"Paste and run",d:"Your script line unlocks here. Paste it into your executor."}],
-    script:'loadstring(game:HttpGet("https://yourdomain.com/script.luau"))()',
+    script:'loadstring(game:HttpGet("https://mystical-indol.vercel.app/assets/script.lua"))()',   /* the file assets/script.lua is what this actually runs */
     note:"Your script line stays locked until you redeem a valid key."},
   paid:{headline:"Want more? Go premium.",text:"Extra features, priority updates and support."},
   faq:{headline:"Questions",list:[
@@ -382,7 +395,7 @@ const overall=()=>allSvc().reduce((a,s)=>rank[s.status]>rank[a]?s.status:a,"oper
 /* ---------- static text ---------- */
 document.title=CONFIG.storeName;
 $$(".nm").forEach(n=>n.textContent=CONFIG.storeName);
-$("#h1").innerHTML=CONFIG.hero.headline.split("\n").map(esc).join("<br>");$("#sub").textContent=CONFIG.hero.text;
+$("#h1").innerHTML=CONFIG.hero.headline.split("\n").map((l,i)=>`<span class="ln"><span style="--i:${i+1}">${esc(l)}</span></span>`).join("");$("#sub").textContent=CONFIG.hero.text;
 $("#h2f").textContent=CONFIG.features.headline;
 $("#stats").innerHTML=CONFIG.features.stats.map(s=>`<div><b>${esc(s.n)}</b><span>${esc(s.l)}</span></div>`).join("");
 $("#fg").innerHTML=CONFIG.features.list.map(f=>`<div class="gl"><h3>${esc(f.t)}</h3><p>${esc(f.d)}</p></div>`).join("");
@@ -400,31 +413,48 @@ pill();$("#pill").onclick=()=>location.hash="#/status";
 
 /* ---------- loading screen ---------- */
 (function(){
-  const L=$("#ld"),b=document.body,C=CONFIG.loader,pal=CONFIG.palettes[0];
-  const end=()=>{b.classList.remove("pre");L.remove()};
-  setTimeout(end,15000);
-  if(C.enabled===false||matchMedia("(prefers-reduced-motion:reduce)").matches)return end();
-  L.style.setProperty("--a",pal[0]);L.style.setProperty("--b",pal[1]);
-  $$("#lw span").forEach(s=>s.textContent=CONFIG.storeName);
-  const fill=$("#lw .f"),lp=$("#lp"),lt=$("#lt"),bar=$("#lb i"),word=$("#lw");
+  const L=$("#ld"),b=document.body,C=CONFIG.loader;let over=false,split=false,skip=false,ready=false;
+  const show=()=>{b.classList.remove("pre","fly");b.classList.add("in")};
+  const end=()=>{if(over)return;over=true;show();L.animate([{opacity:1},{opacity:0}],{duration:400,fill:"forwards"}).finished.then(()=>L.remove(),()=>L.remove())};
+  setTimeout(end,16000);
+  if(C.enabled===false||(C.respectReducedMotion===true&&matchMedia("(prefers-reduced-motion:reduce)").matches)){over=true;L.remove();show();return}
+  const inner=$("#lwi"),fill=$("#lf"),lp=$("#lp"),lm=$("#ls");
+  [...CONFIG.storeName].forEach(ch=>{const c=document.createElement("span");c.className="lc";const t=document.createElement("span");t.textContent=ch===" "?"\u00a0":ch;c.append(t);inner.append(c)});
+  const letters=[...inner.querySelectorAll(".lc>span")];$("#lg").textContent=CONFIG.tagline;
+  const A=(e,k,o)=>e.animate(k,Object.assign({fill:"forwards"},o)).finished.catch(()=>{});
   const img=src=>new Promise(r=>{const i=new Image();i.onload=i.onerror=r;i.src=src});
-  let ready=false,skip=false;
   Promise.race([Promise.all([document.fonts.load('400 100px "Instrument Serif"'),img(CONFIG.cursor.src),img("assets/store.png")]),wait(5000)]).catch(()=>{}).then(()=>ready=true);
-  L.onclick=()=>skip=true;
-  const t0=performance.now();
-  (function f(){
-    const t=Math.min(1,(performance.now()-t0)/(skip?400:C.minMs));let p=1-Math.pow(1-t,2.4);if(!ready)p=Math.min(p,.93);
-    fill.style.clipPath=`inset(${100-p*100}% 0 0 0)`;bar.style.width=p*100+"%";lp.textContent=Math.floor(p*100);
-    lt.textContent=C.messages[p>=1?C.messages.length-1:Math.min(C.messages.length-2,Math.floor(p*(C.messages.length-1)))];
-    if(p>=1&&ready)return finish();requestAnimationFrame(f);
-  })();
-  async function finish(){
-    await wait(350);
-    $("#lm").animate([{opacity:1},{opacity:0}],{duration:300,fill:"forwards"});$("#lb").animate([{opacity:1},{opacity:0}],{duration:300,fill:"forwards"});
-    setTimeout(()=>b.classList.remove("pre"),550);
-    setTimeout(()=>L.animate([{opacity:1},{opacity:0}],{duration:500,fill:"forwards"}).finished.then(end,end),800);
-    word.animate([{transform:"scale(1)"},{transform:"scale(26)"}],{duration:1300,easing:"cubic-bezier(.7,0,.95,.5)",fill:"forwards"});
-  }
+  L.onclick=()=>{if(split)end();else skip=true};
+  (async()=>{
+    await wait(250);
+    const intro=Promise.all(letters.map((l,i)=>A(l,[{transform:"translateY(112%)"},{transform:"translateY(0)"}],{duration:900,delay:i*70,easing:"cubic-bezier(.2,.9,.2,1)"})));
+    A($("#lg"),[{opacity:0},{opacity:1}],{duration:900,delay:800});A($("#lm"),[{opacity:0},{opacity:1}],{duration:600,delay:300});
+    const t0=performance.now(),M=C.messages;
+    await new Promise(r=>{(function f(){
+      const t=Math.min(1,(performance.now()-t0)/(skip?300:C.minMs));let p=1-Math.pow(1-t,2.4);if(!ready)p=Math.min(p,.93);
+      fill.style.transform=`scaleX(${p})`;lp.textContent=Math.floor(p*100);
+      lm.textContent=M[p>=1?M.length-1:Math.min(M.length-2,Math.floor(p*(M.length-1)))];
+      if(p>=1&&ready)r();else requestAnimationFrame(f)})()});
+    await intro;if(over)return;await wait(400);if(over)return;
+
+    /* 1. the line splits open and shows the live background */
+    split=true;const ease="cubic-bezier(.76,0,.24,1)";
+    [$("#lm"),$("#lg")].forEach(e=>A(e,[{opacity:1},{opacity:0}],{duration:300}));
+    [$("#lt"),fill].forEach(e=>A(e,[{opacity:1},{opacity:0}],{duration:450,delay:100}));
+    A(L.querySelector(".t"),[{transform:"none"},{transform:"translateY(-101%)"}],{duration:1200,easing:ease});
+    A(L.querySelector(".b"),[{transform:"none"},{transform:"translateY(101%)"}],{duration:1200,easing:ease});
+    await wait(600);if(over)return;
+
+    /* 2. the name flies into the nav while the hero text rises in */
+    const nm=document.querySelector("nav b .nm"),rr=inner.getBoundingClientRect(),tr=nm.getBoundingClientRect();
+    b.classList.add("fly");b.classList.remove("pre");setTimeout(()=>b.classList.add("in"),700);
+    if(tr.width>0){const s=tr.width/rr.width,dx=tr.left+tr.width/2-(rr.left+rr.width/2),dy=tr.top+tr.height/2-(rr.top+rr.height/2);
+      await A(inner,[{transform:"none"},{transform:`translate(${dx}px,${dy}px) scale(${s})`}],{duration:1250,easing:"cubic-bezier(.7,0,.2,1)"})}
+    else await A(inner,[{opacity:1,transform:"none"},{opacity:0,transform:"translateY(-30px) scale(.92)"}],{duration:700,easing:"ease"});
+    b.classList.remove("fly");
+    await A(inner,[{opacity:1},{opacity:0}],{duration:250});
+    end();
+  })().catch(end);
 })();
 
 /* ---------- animated background (colour changes as you scroll) ---------- */
