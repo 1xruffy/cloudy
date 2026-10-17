@@ -433,14 +433,14 @@ const CONFIG = {
     homeLabel: "Home",
     showLogo: true,                // logo image top-left (assets/store.png)
     autoOverall: true,             // true = banner follows the worst service; false = uses overall.status
-    overall: { status: "updating", text: "" },   // text = custom headline, "" = use headlines below
+    overall: { status: "online", text: "" },   // text = custom headline, "" = use headlines below
     headlines: { operational: "All systems operational", degraded: "Some systems degraded", outage: "Major outage" },
     labels:    { operational: "Operational", degraded: "Degraded", outage: "Outage" },
     colors:    { operational: "#22c55e", degraded: "#fbbf24", outage: "#f87171" },
     showLastChecked: true,
     lastCheckedLabel: "Last checked",
     lastCheckedTime: "",           // "" = live clock time, or type your own e.g. "19:27"
-    announcement: { enabled: false, title: "Notice", text: "Scheduled maintenance tonight at 22:00." },
+    announcement: { enabled: true, title: "Notice", text: "Scheduled maintenance tonight at 1:00." },
     days: 30,                      // number of bars
     showUptime: false,             // shows e.g. "96.7%" next to each service
     showLegend: true,
