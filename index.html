@@ -89,6 +89,13 @@ main{max-width:880px;margin:0 auto;padding:0 20px}
 .sub{margin-top:14px;color:var(--dim);font-weight:500}
 .nav{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:34px}
 .nav .btn{animation:up .8s both}.nav .btn:nth-child(2){animation-delay:.1s}.nav .btn:nth-child(3){animation-delay:.2s}
+.home{padding-bottom:70px}
+.vid{position:relative;max-width:720px;margin:36px auto 0;aspect-ratio:16/9;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#000;display:grid;place-items:center;color:var(--dim);font-size:.9rem;animation:up .9s .35s both;transition:box-shadow .3s,border-color .3s}
+.vid:hover{border-color:rgba(var(--rgb),.45);box-shadow:0 0 50px -16px var(--glow)}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.btn.sm{padding:7px 12px;font-size:.78rem;border-radius:8px;gap:6px}.btn.sm svg{width:13px;height:13px}
+.or{display:flex;align-items:center;gap:10px;margin:14px 0 4px;color:var(--mute);font-size:.72rem}.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.rbx{width:100%;margin-top:8px}
 .buy{padding:90px 0 40px}
 .bh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .bh b{font-size:.72rem;letter-spacing:.12em;font-weight:700;color:#cfdbe0}
@@ -180,10 +187,11 @@ dialog[open]{animation:pop .3s cubic-bezier(.2,.9,.3,1.2)}
     <a class="btn" id="docs" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M8 13h8M8 17h8"/></svg>Documentation</a>
     <a class="btn" id="disc" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-11.5 7.2L4 20l1-4.2A8 8 0 1121 12z"/></svg>Discord</a>
   </div>
+  <div class="vid" id="vid"></div>
 </section>
 
 <section class="view buy" id="vBuy" hidden>
-  <div class="bh"><b>SUBSCRIPTIONS</b><a class="btn" href="#/">Home</a></div>
+  <div class="bh"><b>SUBSCRIPTIONS</b><a class="btn sm" href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>Home</a></div>
   <div class="plans" id="plans"></div>
   <div class="box"><b>Save your key after payment</b>Your order ID is shown once on this page. Keep it with your payment confirmation. Lost keys can only be reviewed through Discord support with proof of payment.</div>
   <div class="box"><b>Terms</b>You must be at least 18 and agree to our Terms of Service before buying. Digital content is delivered immediately after payment.</div>
@@ -204,6 +212,8 @@ dialog[open]{animation:pop .3s cubic-bezier(.2,.9,.3,1.2)}
     <div class="dh"><div><h3 id="dName"></h3><small id="dProd"></small></div><button class="x" id="x" aria-label="Close">&#10005;</button></div>
     <div class="dp"><b id="dNow"></b></div>
     <div id="paypal"></div><div id="msg" aria-live="polite"></div>
+    <div class="or">or</div>
+    <a class="btn rbx" id="robux" href="#" target="_blank" rel="noopener">Pay with Robux</a>
     <p class="fine">Secure payment by PayPal</p>
   </div>
 </dialog>
@@ -218,8 +228,9 @@ const CONFIG = {
   comingSoon: {
     enabled: true,
     hours: 0,
-    minutes: 1,
+    minutes: 10,
     launchAt: "",
+    version: "1",            // change this (e.g. "2") to restart the countdown for everyone who visited before
     autoUnlock: true,        // store appears (with confetti) when the timer hits 0
     badge: "Launching soon",
     title: "Mystical",
@@ -230,7 +241,8 @@ const CONFIG = {
 
   storeName: "Mystical",
   tagline: "The #1 Rivals cheat.",
-  discordLink: "",           // e.g. "https://discord.gg/yourinvite"
+  discordLink: "https://discord.gg/mysti",
+  youtubeLink: "",           // paste a YouTube link, e.g. "https://www.youtube.com/watch?v=XXXXXXXXXXX"
   docsLink: "",              // e.g. "https://docs.yoursite.com"
   tosLink: "",               // link to your Terms of Service
 
@@ -274,7 +286,7 @@ function confetti(){
 function launchTime(C){
   const len=(+C.hours||0)*36e5+(+C.minutes||0)*6e4,fixed=new Date(C.launchAt).getTime();
   if(C.launchAt&&!isNaN(fixed))return{start:fixed-len,end:fixed};
-  const sig="cs:"+len;let s;try{s=JSON.parse(ls.get("mystical_cs")||"null")}catch(e){}
+  const sig="cs:"+len+":"+(C.version||"");let s;try{s=JSON.parse(ls.get("mystical_cs")||"null")}catch(e){}
   if(!s||s.sig!==sig){s={sig,start:Date.now(),end:Date.now()+len};ls.set("mystical_cs",JSON.stringify(s))}
   return s;
 }
@@ -307,6 +319,9 @@ function startSite(){
   $("h1").textContent=CONFIG.storeName;$("sub").textContent=CONFIG.tagline;
   $("lg").onerror=()=>{$("lg").hidden=true;$("lgs").hidden=false};
   const link=(id,url,name)=>{const a=$(id);if(url){a.href=url;a.target="_blank";a.rel="noopener"}else a.onclick=e=>{e.preventDefault();toast(name+" link coming soon")}};
+  const yt=String(CONFIG.youtubeLink||"").match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/),vid=$("vid");
+  if(yt){const f=el("iframe");f.src="https://www.youtube-nocookie.com/embed/"+yt[1]+"?rel=0";f.loading="lazy";f.title="Preview video";f.allow="encrypted-media; picture-in-picture";f.allowFullscreen=true;vid.append(f)}
+  else vid.textContent="Video coming soon";
   link("disc",CONFIG.discordLink,"Discord");link("docs",CONFIG.docsLink,"Documentation");
   if(CONFIG.tosLink){$("tl").href=CONFIG.tosLink}else $("tl").onclick=e=>{e.preventDefault();toast("Terms link coming soon")};
 
@@ -369,7 +384,8 @@ function startSite(){
   }
   function openCheckout(p){
     if(!$("dName"))$("dBody").innerHTML=dHTML;
-    $("x").onclick=closeD;sel=p;
+    $("x").onclick=closeD;sel=p;{const a=$("robux");a.href=CONFIG.discordLink||"#";a.onclick=()=>{if(!CONFIG.discordLink)toast("Discord link coming soon")}}
+    ;
     $("dName").textContent=CONFIG.storeName+" · "+p.name;$("dProd").textContent=p.days+" days";$("dNow").textContent=money(p.price);
     if(!D.open)D.showModal();pay();
   }
@@ -406,6 +422,7 @@ function boot(enter){
   startSite();
   if(enter)$("app").classList.add("enter");
 }
+if(/[?&]reset/.test(location.search)){try{localStorage.removeItem("mystical_cs");sessionStorage.removeItem("mk")}catch(e){}}
 boot();
 </script>
 </body>
