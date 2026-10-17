@@ -208,10 +208,10 @@ const CONFIG={
       {t:"Config system",d:"Save, load and share your setups in a couple of clicks."},
       {t:"Fast updates",d:"Patched within hours of a game update, not days."},
       {t:"Real support",d:"Open a ticket on Discord and get help from people who use it."}]},
-  free:{headline:"So, what are you waiting for?",text:"Three steps and you're in.",
-    steps:[{t:"Get a key",d:"Buy premium below or ask for a free key on Discord."},{t:"Redeem it",d:"Enter the key on the Redeem tab."},{t:"Paste and run",d:"Your script line unlocks here. Paste it into your executor."}],
+  free:{headline:"So, what are you waiting for?",text:"Free, no key needed.",
+    steps:[{t:"Copy the script",d:"Press copy on the line below."},{t:"Paste it in your executor",d:"Join a Rivals game and paste it in."},{t:"Run it, you're done",d:"No key and no setup."}],
     script:'loadstring(game:HttpGet("https://mystical-indol.vercel.app/assets/script.lua"))()',   /* the file assets/script.lua is what this actually runs */
-    note:"Your script line stays locked until you redeem a valid key."},
+    note:"Want more features? Premium keys unlock extras. Redeem them on the Redeem tab."},
   paid:{headline:"Want more? Go premium.",text:"Extra features, priority updates and support."},
   faq:{headline:"Questions",list:[
     {q:"How do I get my key?",a:"Pay with crypto from the premium section, open a ticket on Discord with your order reference and transaction hash, and your key is delivered once the payment confirms."},
@@ -526,11 +526,8 @@ renderPlans();saleTick();setInterval(saleTick,1000);
 const DBK="myst_redeemed",getDB=()=>{try{return JSON.parse(ls.get(DBK)||"{}")}catch(e){return{}}};
 const liveKey=()=>{const db=getDB();return CONFIG.keys.find(k=>db[norm(k.key)]&&db[norm(k.key)]+k.days*864e5>Date.now())};
 function renderLock(){
-  const box=$("#lock"),k=liveKey();
-  if(k){box.innerHTML=`<div class="code gl"><code></code><button class="btn sm">Copy</button></div>`;box.querySelector("code").textContent=CONFIG.free.script;
-    box.querySelector("button").onclick=()=>copy(CONFIG.free.script,"Script copied")}
-  else{box.innerHTML=`<div class="code gl lock"><code>Locked. Redeem a key to unlock your script.</code><button class="btn w sm">Redeem key</button></div>`;
-    box.querySelector("button").onclick=()=>location.hash="#/redeem"}
+  const box=$("#lock");box.innerHTML=`<div class="code gl"><code></code><button class="btn sm">Copy</button></div>`;
+  box.querySelector("code").textContent=CONFIG.free.script;box.querySelector("button").onclick=()=>copy(CONFIG.free.script,"Script copied");
 }
 renderLock();
 
