@@ -433,7 +433,7 @@ const CONFIG = {
     homeLabel: "Home",
     showLogo: true,                // logo image top-left (assets/store.png)
     autoOverall: true,             // true = banner follows the worst service; false = uses overall.status
-    overall: { status: "Outage", text: "" },   // text = custom headline, "" = use headlines below
+    overall: { status: "Operational", text: "" },   // text = custom headline, "" = use headlines below
     headlines: { operational: "All systems operational", degraded: "Some systems degraded", outage: "Major outage" },
     labels:    { operational: "Operational", degraded: "Degraded", outage: "Outage" },
     colors:    { operational: "#22c55e", degraded: "#fbbf24", outage: "#f87171" },
@@ -447,12 +447,14 @@ const CONFIG = {
     footer: "Live status, refreshed automatically.",
     /* status = state right now (last bar).  incidents = past bars: { daysAgo: "degraded" | "outage" } */
     services: [
-      { name: "Web platform",            status: "operational", incidents: {} },
+      { name: "Web platform",            status: "Operational", incidents: {} },
       { name: "Authentication & logins", status: "operational", incidents: { 6: "degraded" } },
       { name: "Registrations",           status: "operational", incidents: {} },
       { name: "Database",                status: "operational", incidents: {} },
       { name: "Update delivery",         status: "operational", incidents: { 12: "outage" } },
-      { name: "Server capacity",         status: "operational", incidents: {} }
+      { name: "Server capacity",         status: "operational", incidents: {} },
+      { name: "Browser API",         status: "Outage", incidents: {} },
+      { name: "Browser",         status: "Outage", incidents: {} }
     ]
   },
 
