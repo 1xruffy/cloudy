@@ -12,7 +12,6 @@
 <meta property="og:description" content="Mystical provides premium Rivals hacks, scripts and externals. Get instant delivery, secure payments, and reliable support you can count on.">
 <!-- Replace with your real domain (https://yourdomain.com/) so the embed links correctly: -->
 <meta property="og:url" content="https://yourdomain.com/">
-<!-- Optional big image in the embed: full https URL to an image, e.g. https://yourdomain.com/assets/store.png -->
 <!-- <meta property="og:image" content="https://yourdomain.com/assets/store.png"> -->
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mystical | Best Rivals Hacks &amp; Scripts">
@@ -59,9 +58,8 @@ a{color:inherit}button{font:inherit;color:inherit}
 @keyframes out{to{opacity:0;transform:scale(1.08);filter:blur(12px)}}
 .soon h1{font-size:clamp(3rem,13vw,7.5rem);font-weight:800;letter-spacing:-.05em;line-height:1;background:linear-gradient(100deg,#fff 20%,var(--acc) 45%,var(--acc2) 55%,#fff 80%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sweep 6s linear infinite,up 1s both}
 .badge{display:inline-flex;align-items:center;gap:9px;margin-bottom:22px;padding:7px 16px;border:1px solid rgba(var(--rgb),.4);background:rgba(var(--rgb),.08);border-radius:99px;font-size:.85rem;font-weight:600;animation:up 1s .1s both}
-.badge i{width:8px;height:8px;border-radius:50%;background:var(--acc);animation:ping 1.6s infinite}
+.badge i{width:8px;height:8px;border-radius:50%;background:var(--acc);animation:ping 1.6s infinite;box-shadow:0 0 0 0 var(--acc)}
 @keyframes ping{to{box-shadow:0 0 0 12px transparent}}
-.badge i{box-shadow:0 0 0 0 var(--acc)}
 .soon h2{margin-top:18px;font-size:clamp(1.3rem,4vw,2rem);font-weight:700;letter-spacing:-.02em;animation:up 1s .25s both}
 .soon .tx{margin:10px auto 0;max-width:46ch;color:var(--dim);animation:up 1s .35s both}
 .cd{display:flex;justify-content:center;gap:clamp(8px,2.4vw,18px);margin-top:42px;animation:up 1s .5s both}
@@ -82,14 +80,13 @@ a{color:inherit}button{font:inherit;color:inherit}
 /* views */
 main{max-width:880px;margin:0 auto;padding:0 20px}
 .view{animation:up .8s cubic-bezier(.2,.8,.2,1) both}
-.home{text-align:center;padding-top:clamp(70px,20vh,170px);min-height:100vh}
+.home{text-align:center;padding-top:clamp(70px,20vh,170px);min-height:100vh;padding-bottom:70px}
 .brand{display:flex;align-items:center;justify-content:center;gap:clamp(12px,3vw,24px)}
 .logo{width:clamp(64px,12vw,110px);height:clamp(64px,12vw,110px);object-fit:contain;filter:drop-shadow(0 0 26px var(--glow));animation:bob 4s ease-in-out infinite}
 .brand h1{font-size:clamp(2.8rem,10vw,5.6rem);font-weight:700;letter-spacing:-.045em;line-height:1;background:linear-gradient(100deg,#fff 20%,var(--acc) 50%,#fff 80%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sweep 7s linear infinite}
 .sub{margin-top:14px;color:var(--dim);font-weight:500}
 .nav{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:34px}
 .nav .btn{animation:up .8s both}.nav .btn:nth-child(2){animation-delay:.1s}.nav .btn:nth-child(3){animation-delay:.2s}.nav .btn:nth-child(4){animation-delay:.3s}
-.home{padding-bottom:70px}
 .vid{position:relative;max-width:720px;margin:36px auto 0;aspect-ratio:16/9;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#000;display:grid;place-items:center;color:var(--dim);font-size:.9rem;animation:up .9s .35s both;transition:box-shadow .3s,border-color .3s}
 .vid:hover{border-color:rgba(var(--rgb),.45);box-shadow:0 0 50px -16px var(--glow)}
 .vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -120,7 +117,7 @@ main{max-width:880px;margin:0 auto;padding:0 20px}
 .pw{text-align:center;margin-top:22px;font-size:.7rem;color:var(--mute)}
 
 /* dialogs */
-dialog{margin:auto;width:min(430px,calc(100% - 32px));background:#000;color:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 30px 80px #000,0 0 60px -20px var(--glow)}
+dialog{margin:auto;width:min(430px,calc(100% - 32px));max-height:calc(100vh - 24px);overflow:auto;background:#000;color:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 30px 80px #000,0 0 60px -20px var(--glow)}
 dialog::backdrop{background:rgba(0,0,0,.75);backdrop-filter:blur(4px)}
 dialog[open]{animation:pop .3s cubic-bezier(.2,.9,.3,1.2)}
 @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.94)}}
@@ -136,22 +133,26 @@ dialog[open]{animation:pop .3s cubic-bezier(.2,.9,.3,1.2)}
 .ta{display:flex;gap:8px}.ta .btn{flex:1}
 .dp{display:flex;align-items:baseline;gap:10px;margin:16px 0 18px;padding-bottom:16px;border-bottom:1px solid var(--line)}
 .dp b{font-size:2.2rem;letter-spacing:-.03em;line-height:1}
-#paypal{min-height:46px}
-.skel{height:46px;border-radius:8px;background:linear-gradient(90deg,#080808,#1a1a1a,#080808);background-size:200% 100%;animation:sk 1.2s linear infinite}
-@keyframes sk{to{background-position:-200% 0}}
+.coins{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.coins .btn.on{border-color:var(--acc);background:rgba(var(--rgb),.1)}
+.addr{padding:12px;border:1px solid var(--line);border-radius:10px;margin-bottom:12px}
+.addr small{display:block;color:var(--dim);margin-bottom:6px;font-size:.75rem}
+.addr code{display:block;word-break:break-all;font-size:.8rem;margin-bottom:10px;user-select:all}
 .fine{margin-top:12px;color:var(--mute);font-size:.78rem;text-align:center}
 #msg{margin-top:10px;font-size:.88rem;color:var(--dim)}
 #msg.err{border:1px solid rgba(248,113,113,.5);background:rgba(248,113,113,.08);color:#fff;padding:12px 14px;border-radius:10px}
-#msg.err h4{color:var(--red);margin-bottom:4px}#msg.err ul{margin:6px 0 10px 18px;color:var(--dim)}
 .done{text-align:center}.done svg{width:56px;height:56px}
 .done circle{fill:none;stroke:var(--ok);stroke-width:3;stroke-dasharray:157;stroke-dashoffset:157;animation:dr .7s ease forwards}
 .done path{fill:none;stroke:var(--ok);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:dr .4s ease .6s forwards}
 @keyframes dr{to{stroke-dashoffset:0}}
 .done h3{font-size:1.4rem;margin:10px 0 6px}
+.done p{color:var(--dim);font-size:.88rem}
 .done code{display:block;margin-top:12px;padding:11px;background:#000;border:1px solid var(--line);border-radius:8px;cursor:pointer;word-break:break-all;font-size:.85rem}
-#toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,30px);background:#000;border:1px solid var(--line);padding:10px 18px;border-radius:99px;font-size:.85rem;opacity:0;transition:.3s;z-index:60;pointer-events:none}
+#toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,30px);background:#000;border:1px solid var(--line);padding:10px 18px;border-radius:99px;font-size:.85rem;opacity:0;transition:.3s;z-index:200;pointer-events:none}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 .bk{position:fixed;top:14px;right:14px;z-index:70;animation:up .6s both;background:#000}
+
+/* docs */
 .dv{max-width:1280px;margin:0 auto;padding:0 20px 80px}
 .dtop{display:flex;align-items:center;justify-content:space-between;gap:12px;height:64px}
 body.hasbk .dtop{padding-right:190px}
@@ -259,9 +260,9 @@ body.hasbk .dtop{padding-right:190px}
   <div class="box" id="stbox" hidden></div>
   <div class="tags" style="margin:0 0 14px;justify-content:flex-start"><div class="sale"><span><b class="sn"></b> · <span class="sp"></span></span><span class="t stm"></span></div></div>
   <div class="plans" id="plans"></div>
-  <div class="box"><b>Save your key after payment</b>Your order ID is shown once on this page. Keep it with your payment confirmation. Lost keys can only be reviewed through Discord support with proof of payment.</div>
-  <div class="box"><b>Terms</b>You must be at least 18 and agree to our Terms of Service before buying. Digital content is delivered immediately after payment.</div>
-  <p class="pw">Payments are processed by PayPal</p>
+  <div class="box"><b>Save your reference after payment</b>Your order reference is shown once on this page. Keep it with your transaction hash. Lost references can only be reviewed through Discord support with proof of payment.</div>
+  <div class="box"><b>Terms</b>You must be at least 18 and agree to our Terms of Service before buying. Digital content is delivered after your payment is confirmed.</div>
+  <p class="pw">Payments are accepted in crypto</p>
 </section>
 
 <section class="view buy" id="vRedeem" hidden>
@@ -300,10 +301,15 @@ body.hasbk .dtop{padding-right:190px}
   <div id="dBody">
     <div class="dh"><div><h3 id="dName"></h3><small id="dProd"></small></div><button class="x" id="x" aria-label="Close">&#10005;</button></div>
     <div class="dp"><b id="dNow"></b></div>
-    <div id="paypal"></div><div id="msg" aria-live="polite"></div>
+    <p class="tp">Send the GBP value above in your chosen coin (at the current rate) to the address below.</p>
+    <div class="coins" id="coins"></div>
+    <div class="addr"><small id="cNet"></small><code id="cAddr"></code><button class="btn sm" id="cCopy" type="button">Copy address</button></div>
+    <div id="msg" aria-live="polite"></div>
+    <a class="btn rbx" id="cHosted" href="#" target="_blank" rel="noopener" hidden>Pay via checkout link</a>
+    <button class="btn p rbx" id="cPaid" type="button">I've sent the payment</button>
     <div class="or">or</div>
     <a class="btn rbx" id="robux" href="#" target="_blank" rel="noopener">Pay with Robux</a>
-    <p class="fine">Secure payment by PayPal</p>
+    <p class="fine">Keys are delivered after your payment is confirmed</p>
   </div>
 </dialog>
 </template>
@@ -352,7 +358,17 @@ const CONFIG = {
     { key: "MYST-MONTH-0002", type: "Monthly Key", days: 30 }
   ],
 
-  paypalClientId: "AWBY3FCmVQqK3oWx78WPQithZFeI7GBvItmrmJbdQcdMBbp1uAfLrXFlqFcinBwdvuV3J4VaxF610ywn",
+  /* CRYPTO - put your own wallet addresses here (add or remove coins freely).
+     checkoutLinks = optional hosted payment link per plan id (NOWPayments, Coinbase Commerce...).
+     Leave "" to hide that button. */
+  crypto: {
+    wallets: [
+      { coin: "BTC",  network: "Bitcoin",      address: "YOUR_BTC_ADDRESS" },
+      { coin: "LTC",  network: "Litecoin",     address: "YOUR_LTC_ADDRESS" },
+      { coin: "USDT", network: "TRC20 (Tron)", address: "YOUR_USDT_ADDRESS" }
+    ],
+    checkoutLinks: { weekly: "", monthly: "" }
+  },
   currency: "GBP",
 
   plans: [                   // stock = how many can be sold (delete the stock part for unlimited)
@@ -539,8 +555,6 @@ function startSite(){
   link("disc",CONFIG.discordLink,"Discord");
   if(CONFIG.tosLink){$("tl").href=CONFIG.tosLink}else $("tl").onclick=e=>{e.preventDefault();toast("Terms link coming soon")};
 
-
-
   const P=CONFIG.plans,S=CONFIG.sale||{},endMs=new Date(S.endsAt).getTime();
   const onSale=()=>S.enabled===true&&(isNaN(endMs)||Date.now()<endMs);
   const price=p=>onSale()?(Math.round(+p.price*(100-S.discountPercent))/100).toFixed(2):(+p.price).toFixed(2);
@@ -555,7 +569,7 @@ function startSite(){
       const c=el("div","plan"+(p.best?" best":"")),a=el("div","pa"),b=el("div","pb"),ul=el("ul");
       if(on&&!dis)a.append(el("span","off","-"+S.discountPercent+"%"));
       a.append(el("em","",p.tag),el("strong","",p.days),el("small","","DAYS"));
-      [["Full "+CONFIG.storeName+" premium access",1],["Latest releases and updates",1],["Instant license key delivery",1],
+      [["Full "+CONFIG.storeName+" premium access",1],["Latest releases and updates",1],["Fast key delivery after payment",1],
        [p.days+" days without repurchasing",p.best],["Save "+money(save)+" vs. four weeks",p.best]].forEach(([t,ok])=>ul.append(el("li",ok?"":"no",t)));
       const pr=el("div","pr");if(on)pr.append(el("s","",money(p.price)));pr.append(document.createTextNode(money(price(p))),el("small","","  / "+p.per));
       const sk=el("div","stk"+(open&&!out&&lim&&p.stock<=5?" low":""),!open?(st==="updating"?"Store updating":"Store unavailable"):out?"Sold out":!lim?"In stock":p.stock<=5?"Only "+p.stock+" left":p.stock+" in stock");
@@ -586,62 +600,47 @@ function startSite(){
   T.addEventListener("click",e=>{if(e.target===T){reset();T.close()}});
   ac.onclick=()=>{if(ac.disabled)return;T.close();reset();openCheckout(pick)};
 
-  /* paypal */
-  const PP=String(CONFIG.paypalClientId||"").trim();
-  const idProblem=()=>!PP||/YOUR|CLIENT_ID|PASTE|XXXX/i.test(PP)?"No PayPal client ID set in CONFIG.":(PP.toLowerCase()!=="sb"&&!/^[A-Za-z0-9_-]{40,120}$/.test(PP)?"That doesn't look like a PayPal Client ID. Make sure it isn't the Secret.":"");
-  const inject=qs=>new Promise((res,rej)=>{
-    const s=document.createElement("script");s.src="https://www.paypal.com/sdk/js?"+qs;s.async=true;
-    const to=setTimeout(()=>{s.remove();rej("timeout")},15000);
-    s.onload=()=>{clearTimeout(to);window.paypal&&window.paypal.Buttons?res():rej("init")};
-    s.onerror=()=>{clearTimeout(to);s.remove();rej("blocked")};document.head.append(s);
-  });
-  let ppP=null;
-  const loadPayPal=()=>{
-    if(window.paypal&&window.paypal.Buttons)return Promise.resolve();
-    if(ppP)return ppP;
-    const id=encodeURIComponent(PP),cur=encodeURIComponent(CONFIG.currency);
-    return ppP=inject(`client-id=${id}&currency=${cur}&intent=capture&components=buttons`).catch(()=>inject(`client-id=${id}&currency=${cur}`)).catch(r=>{ppP=null;throw r});
+  /* crypto checkout */
+  const D=$("dlg"),dHTML=$("dBody").innerHTML,W=(CONFIG.crypto&&CONFIG.crypto.wallets)||[];
+  let sel=null,coin=null;
+  const closeD=()=>D.close();
+  const copy=(t,m)=>{
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>toast(m),()=>toast("Copy failed"));
+    else toast("Copy failed");
   };
-  const D=$("dlg"),dHTML=$("dBody").innerHTML;let sel=null,tok=0;
-  const closeD=()=>{tok++;D.close()};
-  function showErr(title,list,retry){
-    const m=$("msg");m.className="err";m.innerHTML="";m.append(el("h4","",title));
-    if(list&&list.length){const u=el("ul");list.forEach(t=>u.append(el("li","",t)));m.append(u)}
-    if(retry){const b=el("button","btn p","Retry");b.onclick=pay;m.append(b)}
-  }
   function openCheckout(p){
     if(!$("dName"))$("dBody").innerHTML=dHTML;
-    $("x").onclick=closeD;sel=p;{const a=$("robux");a.href=CONFIG.discordLink||"#";a.onclick=()=>{if(!CONFIG.discordLink)toast("Discord link coming soon")}}
-    ;
+    $("x").onclick=closeD;sel=p;
+    {const a=$("robux");a.href=CONFIG.discordLink||"#";a.onclick=()=>{if(!CONFIG.discordLink)toast("Discord link coming soon")}}
     $("dName").textContent=CONFIG.storeName+" · "+p.name;$("dProd").textContent=p.days+" days"+(onSale()?" · "+S.name:"");$("dNow").textContent=money(price(p));
     if(!D.open)D.showModal();pay();
   }
   D.addEventListener("click",e=>{if(e.target===D)closeD()});
-  async function pay(){
-    const my=++tok,box=$("paypal");box.innerHTML="";$("msg").className="";$("msg").innerHTML="";
-    const prob=idProblem();if(prob)return showErr("PayPal isn't set up",[prob],false);
-    if(!navigator.onLine)return showErr("You're offline",["Reconnect and try again."],true);
-    box.append(el("div","skel"));
-    try{await loadPayPal()}catch(r){if(my!==tok)return;box.innerHTML="";
-      return showErr("PayPal couldn't load",r==="timeout"?["PayPal took too long to respond. Check your connection."]:["An error occurred. Contact a staff member, or try refreshing or a different browser."],true)}
-    if(my!==tok)return;box.innerHTML="";const p=sel;
-    paypal.Buttons({
-      style:{layout:"vertical",color:"white",shape:"rect",label:"pay",height:46},
-      createOrder:(d,a)=>a.order.create({purchase_units:[{description:CONFIG.storeName+" - "+p.name,amount:{currency_code:CONFIG.currency,value:price(p)}}]}),
-      onApprove:(d,a)=>a.order.capture().then(o=>{
-        if(p.stock!=null){p.stock=Math.max(0,p.stock-1);renderPlans()}
-        const b=$("dBody");b.innerHTML="";const w=el("div","done");
-        w.innerHTML='<svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="25"/><path d="M17 29l8 8 14-16"/></svg>';
-        w.append(el("h3","","Payment complete"),el("p","",`Your ${p.name} will be delivered shortly. Keep your order ID:`));
-        const c=el("code","",o.id);c.title="Click to copy";c.onclick=()=>navigator.clipboard&&navigator.clipboard.writeText(o.id).then(()=>{c.textContent="Copied";setTimeout(()=>c.textContent=o.id,1200)});
-        const cl=el("button","btn p","Done");cl.style.marginTop="16px";cl.onclick=closeD;w.append(c,cl);b.append(w);confetti();
-        // TODO: deliver the key SERVER-SIDE after verifying o.id with PayPal's Orders API.
-      }),
-      onCancel:()=>{$("msg").className="";$("msg").textContent="Payment cancelled. You haven't been charged."},
-      onError:()=>showErr("Payment error",["Nothing was charged. Please try again."],true)
-    }).render("#paypal").catch(()=>showErr("PayPal buttons couldn't be shown",["Refresh the page and try again."],true));
+  function pay(){
+    const p=sel,H=((CONFIG.crypto||{}).checkoutLinks||{})[p.id];
+    const msg=$("msg");msg.className="";msg.textContent="";
+    const box=$("coins");box.innerHTML="";
+    const show=w=>{coin=w;$("cNet").textContent=w.coin+" · "+w.network;$("cAddr").textContent=w.address;
+      box.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.c===w.coin))};
+    if(!W.length){msg.className="err";msg.textContent="No crypto wallets are set up in CONFIG.";$("cCopy").hidden=true;$("cPaid").disabled=true}
+    else{
+      W.forEach(w=>{const b=el("button","btn sm",w.coin);b.type="button";b.dataset.c=w.coin;b.onclick=()=>show(w);box.append(b)});
+      show(W[0]);
+      $("cCopy").onclick=()=>copy(coin.address,"Address copied");
+    }
+    const h=$("cHosted");if(H){h.href=H;h.hidden=false}else h.hidden=true;
+    $("cPaid").onclick=()=>{
+      const ref="MYST-"+Math.random().toString(36).slice(2,8).toUpperCase();
+      const b=$("dBody");b.innerHTML="";const w=el("div","done");
+      w.innerHTML='<svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="25"/><path d="M17 29l8 8 14-16"/></svg>';
+      w.append(el("h3","","Almost done"),el("p","",`Open a ticket on Discord and send this reference plus your transaction hash. Your ${p.name} key is delivered once the payment confirms.`));
+      const c=el("code","",ref);c.title="Click to copy";c.onclick=()=>copy(ref,"Reference copied");
+      const cl=el("button","btn p","Done");cl.style.marginTop="16px";cl.onclick=closeD;w.append(c,cl);b.append(w);confetti();
+      /* stock is not reduced here: payment is unverified. Lower plan.stock in CONFIG after you confirm a payment. */
+    };
   }
-    /* redeem */
+
+  /* redeem */
   const RK=()=>{try{return JSON.parse(ls.get("mystical_redeemed")||"{}")}catch(e){return{}}};
   const nk=v=>String(v||"").toUpperCase().replace(/\s+/g,"");
   const dstr=t=>new Date(t).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
