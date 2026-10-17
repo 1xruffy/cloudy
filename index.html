@@ -315,7 +315,7 @@ const CONFIG = {
      Change hours/minutes to change the length (restarts the countdown).
      launchAt (e.g. "2026-10-17T21:00:00") = one fixed launch time for everyone; overrides hours/minutes. */
   comingSoon: {
-    enabled: true,
+    enabled: false,
     hours: 0,
     minutes: 10,
     launchAt: "",
@@ -334,19 +334,19 @@ const CONFIG = {
   youtubeLink: "",           // paste a YouTube link, e.g. "https://www.youtube.com/watch?v=XXXXXXXXXXX"
   tosLink: "",               // link to your Terms of Service
 
-  status: "working",         // "working" | "updating" | "down"  (updating / down pauses buying)
+  status: "down",         // "working" | "updating" | "down"  (updating / down pauses buying)
 
   sale: {
     enabled: true,           // false = normal prices, no banner
     name: "Halloween Sale",
-    discountPercent: 25,
+    discountPercent: 45,
     endsAt: "2026-10-31T23:59:59"   // sale switches off automatically
   },
 
   /* KEYS - one line per key.  type = text shown after redeeming, days = how long the key lasts.
      To ADD a key: copy a line and change it.  To REMOVE one: delete its line. */
   keys: [
-    { key: "MYST-WEEK-0001",  type: "Weekly Key",  days: 7  },
+    { key: "KF-0d1b-tzc6-dl1r-phip-6my5-bany-jdlg-6q7f",  type: "Lifetime Key",  days: 104495  },
     { key: "MYST-WEEK-0002",  type: "Weekly Key",  days: 7  },
     { key: "MYST-MONTH-0001", type: "Monthly Key", days: 30 },
     { key: "MYST-MONTH-0002", type: "Monthly Key", days: 30 }
