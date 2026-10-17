@@ -273,8 +273,14 @@ body.hasbk .dtop{padding-right:190px}
 
 <section class="view buy" id="vBrowser" hidden>
   <div class="bh"><b>BROWSER</b><a class="btn sm" href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>Home</a></div>
-  <div class="cdn"><span>Free access ends in</span><span class="t" id="bt"></span></div>
-  <div class="plans">
+  <div class="rcard" id="bGate" style="text-align:center;max-width:560px">
+    <h2>Preparing Browser</h2><p>Your Browser options unlock when the timer hits zero.</p>
+    <div class="cd" role="timer" style="margin-top:26px">
+      <div class="u"><b id="bH">00</b><span>Hours</span></div><div class="u"><b id="bM">00</b><span>Minutes</span></div><div class="u"><b id="bS">00</b><span>Seconds</span></div>
+    </div>
+    <div class="bar"><i id="bBar"></i></div>
+  </div>
+  <div class="plans" id="bPlans" hidden>
     <div class="plan">
       <div class="pa"><em>Free</em><strong>FREE</strong></div>
       <div class="pb"><h3>Mystical Browser</h3><small>Free version</small>
@@ -378,8 +384,8 @@ const CONFIG = {
 
   /* BROWSER TAB
      freeLink = where "Download free" goes.
-     hours / minutes = how long the free countdown lasts (starts when a visitor first opens the Browser tab).
-                       When it hits zero they are sent to the purchase page.
+     hours / minutes = countdown shown when a visitor first opens the Browser tab.
+                       When it hits zero the Free / Premium options appear (and stay unlocked).
                        Examples: hours: 2, minutes: 0  |  hours: 0, minutes: 30
      premium = the paid version shown on the Browser tab (price is per month, sale discount applies). */
   browser: {
@@ -741,11 +747,14 @@ function startSite(){
     let s;try{s=JSON.parse(ls.get("mystical_browser")||"null")}catch(e){}
     const sig=String(bMs);
     if(!s||s.sig!==sig){s={sig,start:Date.now()};ls.set("mystical_browser",JSON.stringify(s))}
-    const end=s.start+bMs,z=n=>String(n).padStart(2,"0");
+    const end=s.start+bMs,z=n=>String(n).padStart(2,"0"),gate=$("bGate"),pl=$("bPlans");
+    let waited=false;
     const tick=()=>{
-      const q=Math.max(0,Math.floor((end-Date.now())/1000));
-      if(q<=0){clearInterval(bIv);toast("Free access ended. Pick a plan to continue.");location.hash="#/purchase";return}
-      $("bt").textContent=z(Math.floor(q/3600))+"h "+z(Math.floor(q%3600/60))+"m "+z(q%60)+"s";
+      const left=Math.max(0,end-Date.now()),q=Math.floor(left/1000);
+      if(left<=0){clearInterval(bIv);gate.hidden=true;pl.hidden=false;if(waited)confetti();return}
+      waited=true;gate.hidden=false;pl.hidden=true;
+      $("bH").textContent=z(Math.floor(q/3600));$("bM").textContent=z(Math.floor(q%3600/60));$("bS").textContent=z(q%60);
+      $("bBar").style.width=Math.min(100,Math.max(0,(Date.now()-s.start)/bMs*100))+"%";
     };
     tick();bIv=setInterval(tick,1000);
   }
