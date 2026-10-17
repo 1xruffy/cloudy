@@ -241,7 +241,7 @@ body.hasbk .dtop{padding-right:190px}
 @media(max-width:1100px){.dgrid{grid-template-columns:220px minmax(0,1fr)}#dtoc{display:none}}
 @media(max-width:760px){.dgrid{grid-template-columns:1fr;gap:0}#dside{position:static;max-height:none}.dcards{grid-template-columns:1fr}body.hasbk .dtop{padding-right:0;padding-top:52px;height:auto}}
 @media(max-width:640px){.plans{grid-template-columns:1fr}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.done circle,.done path{stroke-dashoffset:0!important}}
+@media(prefers-reduced-motion:reduce){#app,#app *,#app *::before,#app *::after{animation:none!important;transition:none!important}.done circle,.done path{stroke-dashoffset:0!important}}
 
 /* cinematic intro */
 #intro{position:fixed;inset:0;z-index:1000;background:#000;overflow:hidden;color:#fff;font-family:var(--sans)}
@@ -429,7 +429,7 @@ function play(){
   return new Promise(resolve=>{
     const C=(typeof CONFIG!=='undefined'&&CONFIG.intro)||{},reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
     let seen=null;try{seen=sessionStorage.getItem('myst_intro')}catch(e){}
-    if(C.enabled===false||reduced||(C.oncePerSession&&seen)){resolve();return}
+    if(C.enabled===false||(reduced&&C.respectReducedMotion===true)||(C.oncePerSession&&seen)||/[?&]nointro/.test(location.search)){resolve();return}
     try{sessionStorage.setItem('myst_intro','1')}catch(e){}
     const name=(typeof CONFIG!=='undefined'&&CONFIG.storeName)||'Mystical',tagline=(typeof CONFIG!=='undefined'&&CONFIG.tagline)||'';
     const root=document.createElement('div');root.id='intro';
@@ -573,7 +573,7 @@ const CONFIG = {
   },
   devKey: "DEV091",          // skips the coming soon screen
 
-  intro: { enabled: true, oncePerSession: false, clickToStart: true },   // clickToStart: wait for a click (also lets sound play)   // loading + logo + punch intro
+  intro: { enabled: true, oncePerSession: false, clickToStart: true, respectReducedMotion: false },   // clickToStart: wait for a click (also lets sound play)   // loading + logo + punch intro
 
   storeName: "Mystical",
   tagline: "The #1 Rivals cheat.",
