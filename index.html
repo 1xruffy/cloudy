@@ -10,11 +10,8 @@
 <meta property="og:site_name" content="Mystical">
 <meta property="og:title" content="Mystical | Best Rivals Hacks &amp; Scripts">
 <meta property="og:description" content="Mystical provides premium Rivals hacks, scripts and externals. Get instant delivery, secure payments, and reliable support you can count on.">
-<!-- Replace with your real domain (https://yourdomain.com/) so the embed links correctly: -->
 <meta property="og:url" content="https://yourdomain.com/">
-<!-- <meta property="og:image" content="https://yourdomain.com/assets/store.png"> -->
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mystical | Best Rivals Hacks &amp; Scripts">
 <link rel="icon" type="image/png" href="assets/store.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,16 +28,13 @@ a{color:inherit}button{font:inherit;color:inherit}
 .btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border-radius:10px;font-weight:600;font-size:.9rem;border:1px solid var(--line);background:#000;text-decoration:none;cursor:pointer;transition:background .2s,border-color .2s,transform .15s,box-shadow .2s}
 .btn:hover:not(:disabled){background:#0a0a0a;border-color:rgba(var(--rgb),.5);box-shadow:0 0 24px -8px var(--glow);transform:translateY(-2px)}
 .btn:active:not(:disabled){transform:scale(.97)}
-.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:disabled,.btn.off{opacity:.45;cursor:not-allowed;pointer-events:none}
 .btn.p{background:#fff;border-color:#fff;color:#000}.btn.p:hover:not(:disabled){background:#dff7fc}
 .btn svg{width:15px;height:15px;flex:none}
+.btn.sm{padding:7px 12px;font-size:.78rem;border-radius:8px;gap:6px}.btn.sm svg{width:13px;height:13px}
 
 /* ambient */
 .amb{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
-.orb{display:none;position:absolute;border-radius:50%;filter:blur(100px);opacity:.3;animation:drift 18s ease-in-out infinite alternate}
-.o1{width:420px;height:420px;background:var(--acc);top:-140px;left:-100px}
-.o2{width:480px;height:480px;background:var(--acc2);bottom:-180px;right:-120px;animation-duration:24s}
-@keyframes drift{to{transform:translate(90px,70px) scale(1.2)}}
 .gridbg{position:absolute;inset:0;background-image:linear-gradient(rgba(var(--rgb),.045) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--rgb),.045) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse at center,#000 10%,transparent 72%);animation:pan 14s linear infinite}
 @keyframes pan{to{background-position:56px 56px}}
 .pt{position:absolute;bottom:-10px;width:var(--s);height:var(--s);border-radius:50%;background:var(--acc);opacity:0;box-shadow:0 0 10px var(--acc);animation:rise var(--d) linear var(--w) infinite}
@@ -86,11 +80,10 @@ main{max-width:880px;margin:0 auto;padding:0 20px}
 .brand h1{font-size:clamp(2.8rem,10vw,5.6rem);font-weight:700;letter-spacing:-.045em;line-height:1;background:linear-gradient(100deg,#fff 20%,var(--acc) 50%,#fff 80%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sweep 7s linear infinite}
 .sub{margin-top:14px;color:var(--dim);font-weight:500}
 .nav{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:34px}
-.nav .btn{animation:up .8s both}.nav .btn:nth-child(2){animation-delay:.1s}.nav .btn:nth-child(3){animation-delay:.2s}.nav .btn:nth-child(4){animation-delay:.3s}.nav .btn:nth-child(5){animation-delay:.4s}
+.nav .btn{animation:up .8s both}.nav .btn:nth-child(2){animation-delay:.1s}.nav .btn:nth-child(3){animation-delay:.2s}.nav .btn:nth-child(4){animation-delay:.3s}.nav .btn:nth-child(5){animation-delay:.4s}.nav .btn:nth-child(6){animation-delay:.5s}
 .vid{position:relative;max-width:720px;margin:36px auto 0;aspect-ratio:16/9;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#000;display:grid;place-items:center;color:var(--dim);font-size:.9rem;animation:up .9s .35s both;transition:box-shadow .3s,border-color .3s}
 .vid:hover{border-color:rgba(var(--rgb),.45);box-shadow:0 0 50px -16px var(--glow)}
 .vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.btn.sm{padding:7px 12px;font-size:.78rem;border-radius:8px;gap:6px}.btn.sm svg{width:13px;height:13px}
 .or{display:flex;align-items:center;gap:10px;margin:14px 0 4px;color:var(--mute);font-size:.72rem}.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
 .rbx{width:100%;margin-top:8px}
 .buy{padding:90px 0 40px}
@@ -115,6 +108,40 @@ main{max-width:880px;margin:0 auto;padding:0 20px}
 .box{margin-top:10px;padding:14px 16px;background:var(--card);border-radius:12px;font-size:.72rem;color:var(--dim);animation:up .8s .25s both}
 .box b{display:block;color:#fff;font-size:.78rem;margin-bottom:3px}
 .pw{text-align:center;margin-top:22px;font-size:.7rem;color:var(--mute)}
+.tags{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:18px}
+.stp{display:inline-flex;align-items:center;gap:8px;padding:6px 13px;border:1px solid var(--line);border-radius:99px;font-size:.78rem;font-weight:600;background:#000}
+.stp i{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px currentColor;color:var(--ok);animation:blink 2s infinite}
+.stp.updating i{background:#fbbf24;color:#fbbf24}.stp.down i{background:var(--red);color:var(--red)}
+@keyframes blink{50%{opacity:.35}}
+.sale{display:inline-flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:10px;padding:5px 6px 5px 14px;border:1px solid rgba(var(--rgb),.35);background:rgba(var(--rgb),.08);border-radius:99px;font-size:.8rem;font-weight:600;animation:glowp 3s ease-in-out infinite}
+@keyframes glowp{50%{box-shadow:0 0 28px -4px var(--glow)}}
+.sale b{color:var(--acc)}.sale .t{background:#000;border:1px solid var(--line);border-radius:99px;padding:3px 11px;font-variant-numeric:tabular-nums}
+.pa .off{position:absolute;top:10px;right:10px;background:var(--acc);color:#000;font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:99px;animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.1)}}
+.pr s{font-size:1rem;font-weight:500;color:var(--mute);margin-right:8px;letter-spacing:0}
+.stk{margin:-6px 0 14px;font-size:.74rem;color:var(--mute)}.stk.low{color:#fbbf24}
+.rcard{max-width:480px;margin:28px auto 0;padding:28px;background:#000;border:1px solid var(--line);border-radius:16px;animation:up .8s both;box-shadow:0 0 60px -34px var(--glow)}
+.rcard h2{font-size:1.4rem;letter-spacing:-.03em}.rcard p{color:var(--dim);font-size:.88rem;margin-top:4px}
+#rk{width:100%;padding:13px 14px;margin:18px 0 8px;border-radius:10px;border:1px solid var(--line);background:#000;color:#fff;font:inherit;letter-spacing:.12em;text-align:center;text-transform:uppercase;transition:border-color .2s,box-shadow .2s}
+#rk:focus{outline:none;border-color:rgba(var(--rgb),.6);box-shadow:0 0 24px -8px var(--glow)}
+#rk.bad{border-color:var(--red);animation:shake .35s}
+#rerr{min-height:1.4em;color:var(--red);font-size:.84rem;margin-bottom:8px}
+.rinfo{margin:16px 0 20px;text-align:left}.rinfo div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.88rem}.rinfo span{color:var(--dim)}
+
+/* status page */
+.sp{max-width:680px;margin:0 auto}
+.ssum,.srow,.sann{background:#0a0a0a;border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.ssum{display:flex;align-items:center;gap:12px;margin-top:34px}
+.ssum b{display:block;font-size:.9rem}.ssum small{font-size:.72rem;color:var(--dim)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none;box-shadow:0 0 10px var(--c)}
+.srh{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:.85rem}
+.srh em{margin-left:auto;font-style:normal;font-size:.72rem;color:var(--c)}
+.srh span{color:var(--mute);font-size:.72rem}
+.sbars{display:flex;gap:3px}.sbars i{flex:1;min-width:2px;height:14px;border-radius:3px;background:var(--c)}
+.sbars i:hover{filter:brightness(1.3)}
+.sann{border:1px solid rgba(var(--rgb),.35);font-size:.82rem;color:var(--dim)}.sann b{display:block;color:#fff;margin-bottom:2px}
+.sleg{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:18px;padding-top:14px;border-top:1px solid var(--line);font-size:.68rem;color:var(--dim)}
+.sleg span{display:inline-flex;align-items:center;gap:6px;margin-right:12px}.sleg .dot{width:6px;height:6px;box-shadow:none}
 
 /* dialogs */
 dialog{margin:auto;width:min(430px,calc(100% - 32px));max-height:calc(100vh - 24px);overflow:auto;background:#000;color:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 30px 80px #000,0 0 60px -20px var(--glow)}
@@ -131,8 +158,11 @@ dialog[open]{animation:pop .3s cubic-bezier(.2,.9,.3,1.2)}
 .tb{height:4px;border-radius:9px;background:#0e0e0e;margin:14px 0;overflow:hidden}.tb i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc2),var(--acc))}
 .tb i.go{animation:fill 5s linear forwards}@keyframes fill{to{width:100%}}
 .ta{display:flex;gap:8px}.ta .btn{flex:1}
-.dp{display:flex;align-items:baseline;gap:10px;margin:16px 0 18px;padding-bottom:16px;border-bottom:1px solid var(--line)}
-.dp b{font-size:2.2rem;letter-spacing:-.03em;line-height:1}
+.dp{display:flex;align-items:baseline;gap:10px;margin:16px 0 14px}
+.dp b{font-size:2.2rem;letter-spacing:-.03em;line-height:1}.dp s{color:var(--mute)}
+.promo{display:flex;gap:8px}
+.promo input{flex:1;min-width:0;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:#000;color:#fff;font:inherit;font-size:.85rem;text-transform:uppercase}
+.pm{min-height:1.3em;margin:6px 0 12px;font-size:.78rem;border-bottom:1px solid var(--line);padding-bottom:10px}
 .coins{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
 .coins .btn.on{border-color:var(--acc);background:rgba(var(--rgb),.1)}
 .addr{padding:12px;border:1px solid var(--line);border-radius:10px;margin-bottom:12px}
@@ -195,36 +225,12 @@ body.hasbk .dtop{padding-right:190px}
 #dtoc a{display:block;color:var(--dim);text-decoration:none;padding:4px 0;cursor:pointer;transition:color .2s}#dtoc a:hover{color:var(--acc)}
 @media(max-width:1100px){.dgrid{grid-template-columns:220px minmax(0,1fr)}#dtoc{display:none}}
 @media(max-width:760px){.dgrid{grid-template-columns:1fr;gap:0}#dside{position:static;max-height:none}.dcards{grid-template-columns:1fr}body.hasbk .dtop{padding-right:0;padding-top:52px;height:auto}}
-.tags{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:18px}
-.stp{display:inline-flex;align-items:center;gap:8px;padding:6px 13px;border:1px solid var(--line);border-radius:99px;font-size:.78rem;font-weight:600;background:#000}
-.stp i{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px currentColor;color:var(--ok);animation:blink 2s infinite}
-.stp.updating i{background:#fbbf24;color:#fbbf24}.stp.down i{background:var(--red);color:var(--red)}
-@keyframes blink{50%{opacity:.35}}
-.sale{display:inline-flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:10px;padding:5px 6px 5px 14px;border:1px solid rgba(var(--rgb),.35);background:rgba(var(--rgb),.08);border-radius:99px;font-size:.8rem;font-weight:600;animation:glowp 3s ease-in-out infinite}
-@keyframes glowp{50%{box-shadow:0 0 28px -4px var(--glow)}}
-.sale b{color:var(--acc)}.sale .t{background:#000;border:1px solid var(--line);border-radius:99px;padding:3px 11px;font-variant-numeric:tabular-nums}
-.pa .off{position:absolute;top:10px;right:10px;background:var(--acc);color:#000;font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:99px;animation:pulse 2.2s ease-in-out infinite}
-@keyframes pulse{50%{transform:scale(1.1)}}
-.pr s{font-size:1rem;font-weight:500;color:var(--mute);margin-right:8px;letter-spacing:0}
-.stk{margin:-6px 0 14px;font-size:.74rem;color:var(--mute)}.stk.low{color:#fbbf24}
-.rcard{max-width:480px;margin:28px auto 0;padding:28px;background:#000;border:1px solid var(--line);border-radius:16px;animation:up .8s both;box-shadow:0 0 60px -34px var(--glow)}
-.rcard h2{font-size:1.4rem;letter-spacing:-.03em}.rcard p{color:var(--dim);font-size:.88rem;margin-top:4px}
-#rk{width:100%;padding:13px 14px;margin:18px 0 8px;border-radius:10px;border:1px solid var(--line);background:#000;color:#fff;font:inherit;letter-spacing:.12em;text-align:center;text-transform:uppercase;transition:border-color .2s,box-shadow .2s}
-#rk:focus{outline:none;border-color:rgba(var(--rgb),.6);box-shadow:0 0 24px -8px var(--glow)}
-#rk.bad{border-color:var(--red);animation:shake .35s}
-#rerr{min-height:1.4em;color:var(--red);font-size:.84rem;margin-bottom:8px}
-.rinfo{margin:16px 0 20px;text-align:left}.rinfo div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.88rem}.rinfo span{color:var(--dim)}
-
-/* browser page */
-.cdn{display:inline-flex;align-items:center;flex-wrap:wrap;gap:10px;margin:0 0 14px;padding:5px 6px 5px 14px;border:1px solid rgba(var(--rgb),.35);background:rgba(var(--rgb),.08);border-radius:99px;font-size:.8rem;font-weight:600}
-.cdn .t{background:#000;border:1px solid var(--line);border-radius:99px;padding:3px 11px;font-variant-numeric:tabular-nums}
-
 @media(max-width:640px){.plans{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.done circle,.done path{stroke-dashoffset:0!important}}
 </style>
 </head>
 <body>
-<div class="amb" aria-hidden="true"><div class="gridbg"></div><div class="orb o1"></div><div class="orb o2"></div><div id="pts"></div></div>
+<div class="amb" aria-hidden="true"><div class="gridbg"></div><div id="pts"></div></div>
 <canvas id="cf" aria-hidden="true"></canvas>
 <div id="toast" role="status"></div>
 <div id="app"></div>
@@ -250,13 +256,14 @@ body.hasbk .dtop{padding-right:190px}
 <section class="view home" id="vHome">
   <div class="brand"><img class="logo" id="lg" src="assets/store.png" alt=""><svg class="logo" id="lgs" viewBox="0 0 64 64" hidden><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><path fill="url(#g)" d="M32 4l7 21 21 7-21 7-7 21-7-21-21-7 21-7z"/></svg><h1 id="h1"></h1></div>
   <p class="sub" id="sub"></p>
-  <div class="tags"><div class="stp" id="stp"><i></i><span></span></div><div class="sale"><span><b class="sn"></b> · <span class="sp"></span></span><span class="t stm"></span></div></div>
+  <div class="tags"><div class="stp" id="stp"><i></i><span></span></div><div class="sale"><span><b class="sn"></b> · <span class="spc"></span></span><span class="t stm"></span></div></div>
   <div class="nav">
     <a class="btn" href="#/purchase"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>Purchase</a>
-    <a class="btn" id="docs" href="#/docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M8 13h8M8 17h8"/></svg>Documentation</a>
+    <a class="btn" href="#/docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M8 13h8M8 17h8"/></svg>Documentation</a>
     <a class="btn" id="disc" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-11.5 7.2L4 20l1-4.2A8 8 0 1121 12z"/></svg>Discord</a>
     <a class="btn" href="#/browser"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>Browser</a>
     <a class="btn" href="#/redeem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L21 2M17 6l3 3M14 9l2 2"/></svg>Redeem</a>
+    <a class="btn" id="stn" href="#/status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span></span></a>
   </div>
   <div class="vid" id="vid"></div>
 </section>
@@ -264,7 +271,7 @@ body.hasbk .dtop{padding-right:190px}
 <section class="view buy" id="vBuy" hidden>
   <div class="bh"><b>SUBSCRIPTIONS</b><a class="btn sm" href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>Home</a></div>
   <div class="box" id="stbox" hidden></div>
-  <div class="tags" style="margin:0 0 14px;justify-content:flex-start"><div class="sale"><span><b class="sn"></b> · <span class="sp"></span></span><span class="t stm"></span></div></div>
+  <div class="tags" style="margin:0 0 14px;justify-content:flex-start"><div class="sale"><span><b class="sn"></b> · <span class="spc"></span></span><span class="t stm"></span></div></div>
   <div class="plans" id="plans"></div>
   <div class="box"><b>Save your reference after payment</b>Your order reference is shown once on this page. Keep it with your transaction hash. Lost references can only be reviewed through Discord support with proof of payment.</div>
   <div class="box"><b>Terms</b>You must be at least 18 and agree to our Terms of Service before buying. Digital content is delivered after your payment is confirmed.</div>
@@ -273,6 +280,7 @@ body.hasbk .dtop{padding-right:190px}
 
 <section class="view buy" id="vBrowser" hidden>
   <div class="bh"><b>BROWSER</b><a class="btn sm" href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>Home</a></div>
+  <div class="tags" style="margin:0 0 14px;justify-content:flex-start"><div class="stp" id="bstp"><i></i><span></span></div></div>
   <div class="rcard" id="bGate" style="text-align:center;max-width:560px">
     <h2>Preparing Browser</h2><p>Your Browser options unlock when the timer hits zero.</p>
     <div class="cd" role="timer" style="margin-top:26px">
@@ -291,7 +299,7 @@ body.hasbk .dtop{padding-right:190px}
     <div class="plan best">
       <div class="pa"><em>Premium</em><strong>PRO</strong></div>
       <div class="pb"><h3>Mystical Browser Premium</h3><small>Better protection</small>
-        <div class="pr" id="bpr"></div>
+        <div class="pr" id="bpr"></div><div class="stk" id="bstk"></div>
         <ul><li>Fast, lightweight browsing</li><li>Stronger encryption</li><li>Built-in VPN</li></ul>
         <button class="btn p" id="bBuy" type="button">Get Premium</button></div>
     </div>
@@ -310,6 +318,13 @@ body.hasbk .dtop{padding-right:190px}
       <a class="btn p" id="rscript" href="#" style="width:100%">Get script</a>
       <button class="btn" id="rmore" type="button" style="width:100%;margin-top:8px">Redeem another key</button>
     </div>
+  </div>
+</section>
+
+<section class="view buy" id="vStatus" hidden>
+  <div class="sp">
+    <div class="bh"><span id="stLogo"></span><a class="btn sm" href="#/" id="stHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg><span></span></a></div>
+    <div id="stBody"></div>
   </div>
 </section>
 </main>
@@ -333,7 +348,9 @@ body.hasbk .dtop{padding-right:190px}
 <dialog id="dlg" aria-labelledby="dName">
   <div id="dBody">
     <div class="dh"><div><h3 id="dName"></h3><small id="dProd"></small></div><button class="x" id="x" aria-label="Close">&#10005;</button></div>
-    <div class="dp"><b id="dNow"></b></div>
+    <div class="dp"><b id="dNow"></b><s id="dOld"></s></div>
+    <div class="promo" id="promoBox"><input id="promoIn" placeholder="Discount code" autocomplete="off" spellcheck="false"><button class="btn sm" id="promoGo" type="button">Apply</button></div>
+    <div class="pm" id="promoMsg"></div>
     <p class="tp">Send the GBP value above in your chosen coin (at the current rate) to the address below.</p>
     <div class="coins" id="coins"></div>
     <div class="addr"><small id="cNet"></small><code id="cAddr"></code><button class="btn sm" id="cCopy" type="button">Copy address</button></div>
@@ -351,15 +368,14 @@ body.hasbk .dtop{padding-right:190px}
 /* ============ EDIT THIS SECTION ============ */
 const CONFIG = {
   /* COMING SOON: enabled true = visitors only see the countdown page.
-     Change hours/minutes to change the length (restarts the countdown).
-     launchAt (e.g. "2026-10-17T21:00:00") = one fixed launch time for everyone; overrides hours/minutes. */
+     launchAt (e.g. "2026-10-17T21:00:00") = one fixed launch time; overrides hours/minutes. */
   comingSoon: {
     enabled: false,
     hours: 0,
     minutes: 10,
     launchAt: "",
-    version: "1",            // change this (e.g. "2") to restart the countdown for everyone who visited before
-    autoUnlock: true,        // store appears (with confetti) when the timer hits 0
+    version: "1",            // change (e.g. "2") to restart the countdown for everyone
+    autoUnlock: true,
     badge: "Launching soon",
     title: "Mystical",
     heading: "Website coming soon",
@@ -370,53 +386,95 @@ const CONFIG = {
   storeName: "Mystical",
   tagline: "The #1 Rivals cheat.",
   discordLink: "https://discord.gg/mysti",
-  youtubeLink: "",           // paste a YouTube link, e.g. "https://www.youtube.com/watch?v=XXXXXXXXXXX"
-  tosLink: "",               // link to your Terms of Service
+  youtubeLink: "",
+  tosLink: "",
 
-  status: "working",         // "working" | "updating" | "down"  (updating / down pauses buying)
+  status: "working",         // STORE status: "working" | "updating" | "down" (updating / down pauses buying)
 
   sale: {
-    enabled: true,           // false = normal prices, no banner
+    enabled: true,
     name: "Halloween Sale",
-    discountPercent: 45,
-    endsAt: "2026-10-31T23:59:59"   // sale switches off automatically
+    discountPercent: 20,
+    endsAt: "2026-10-31T23:59:59"
   },
 
-  /* BROWSER TAB
-     freeLink = where "Download free" goes.
-     hours / minutes = countdown shown when a visitor first opens the Browser tab.
-                       When it hits zero the Free / Premium options appear (and stay unlocked).
-                       Examples: hours: 2, minutes: 0  |  hours: 0, minutes: 30
-     premium = the paid version shown on the Browser tab (price is per month, sale discount applies). */
+  /* ---------- DISCOUNT CODES ----------
+     ADD a code: copy a line.  DELETE: remove the line.  CHANGE %: edit percent.
+     active:false = switched off without deleting.
+     expiresAt (optional) = code stops working after this date.
+     plans (optional) = only these plan ids: "weekly", "monthly", "browser".
+     stackWithSale: true  = code is taken off the already-discounted sale price
+                    false = customer gets whichever is cheaper (sale OR code)  */
+  codes: {
+    enabled: true,
+    stackWithSale: true,
+    list: [
+      { code: "MYSTICAL10", percent: 10, active: true },
+      { code: "VIP25",      percent: 25, active: true,  expiresAt: "2026-12-31T23:59:59", plans: ["monthly"] },
+      { code: "OLDCODE",    percent: 50, active: false }
+    ]
+  },
+
+  /* ---------- BROWSER TAB ---------- */
   browser: {
     freeLink: "https://gofile.io/d/NddeZFni",
     hours: 0,
-    minutes: 3,
-    premium: { id: "browser", days: 30, name: "Mystical Browser Premium", price: "4.99", per: "month" }
+    minutes: 3,              // countdown before options unlock
+    status: "working",       // "working" | "updating" | "down"
+    statusText: { working: "Working", updating: "Updating", down: "Down" },   // rename the pill labels
+    statusNote: "",          // shown instead of stock when not working, e.g. "Updating for the new patch"
+    premium: { id: "browser", days: 30, name: "Mystical Browser Premium", price: "4.99", per: "month", stock: 20 }   // delete stock = unlimited
   },
 
-  /* KEYS - one line per key.  type = text shown after redeeming, days = how long the key lasts.
-     To ADD a key: copy a line and change it.  To REMOVE one: delete its line. */
+  /* ---------- STATUS PAGE (everything on it) ---------- */
+  statusPage: {
+    enabled: true,                 // false hides the Status button + page
+    navLabel: "Status",
+    homeLabel: "Home",
+    showLogo: true,                // logo image top-left (assets/store.png)
+    autoOverall: true,             // true = banner follows the worst service; false = uses overall.status
+    overall: { status: "operational", text: "" },   // text = custom headline, "" = use headlines below
+    headlines: { operational: "All systems operational", degraded: "Some systems degraded", outage: "Major outage" },
+    labels:    { operational: "Operational", degraded: "Degraded", outage: "Outage" },
+    colors:    { operational: "#22c55e", degraded: "#fbbf24", outage: "#f87171" },
+    showLastChecked: true,
+    lastCheckedLabel: "Last checked",
+    lastCheckedTime: "",           // "" = live clock time, or type your own e.g. "19:27"
+    announcement: { enabled: false, title: "Notice", text: "Scheduled maintenance tonight at 22:00." },
+    days: 30,                      // number of bars
+    showUptime: false,             // shows e.g. "96.7%" next to each service
+    showLegend: true,
+    footer: "Live status, refreshed automatically.",
+    /* status = state right now (last bar).  incidents = past bars: { daysAgo: "degraded" | "outage" } */
+    services: [
+      { name: "Web platform",            status: "operational", incidents: {} },
+      { name: "Authentication & logins", status: "operational", incidents: { 6: "degraded" } },
+      { name: "Registrations",           status: "operational", incidents: {} },
+      { name: "Database",                status: "operational", incidents: {} },
+      { name: "Update delivery",         status: "operational", incidents: { 12: "outage" } },
+      { name: "Server capacity",         status: "operational", incidents: {} }
+    ]
+  },
+
+  /* KEYS - one line per key */
   keys: [
-    { key: "KF-0d1b-tzc6-dl1r-phip-6my5-bany-jdlg-6q7f",  type: "Lifetime Key",  days: 365  },
+    { key: "KF-0d1b-tzc6-dl1r-phip-6my5-bany-jdlg-6q7f", type: "Lifetime Key", days: 365 },
     { key: "MYST-WEEK-0002",  type: "Weekly Key",  days: 7  },
     { key: "MYST-MONTH-0001", type: "Monthly Key", days: 30 }
   ],
 
-  /* CRYPTO - put your own wallet addresses here (add or remove coins freely).
-     checkoutLinks = optional hosted payment link per plan id (NOWPayments, Coinbase Commerce...).
-     Leave "" to hide that button. */
+  /* CRYPTO */
   crypto: {
     wallets: [
-      { coin: "BTC",  network: "Bitcoin",      address: "bc1q0tmczvvnjn6svkwzjfqsp7cjdxlynccyjh22sw" },
-      { coin: "LTC",  network: "Litecoin",     address: "ltc1qzjnlnwjvkyltemxxqvd7d6js20054jh2w0vmjs" },
-      { coin: "SOLANA", network: "Solana", address: "9doEbFbBvWnDkAP3rXf9mf2Aot7n2bm3uvjW24RSF33E" }
+      { coin: "BTC",    network: "Bitcoin",  address: "bc1q0tmczvvnjn6svkwzjfqsp7cjdxlynccyjh22sw" },
+      { coin: "LTC",    network: "Litecoin", address: "ltc1qzjnlnwjvkyltemxxqvd7d6js20054jh2w0vmjs" },
+      { coin: "SOLANA", network: "Solana",   address: "9doEbFbBvWnDkAP3rXf9mf2Aot7n2bm3uvjW24RSF33E" }
     ],
     checkoutLinks: { weekly: "", monthly: "", browser: "" }
   },
   currency: "GBP",
 
-  plans: [                   // stock = how many can be sold (delete the stock part for unlimited)
+  plans: [                   // stock = how many can be sold (delete for unlimited)
     { id: "weekly",  days: 7,  tag: "Flexible",   name: "Weekly access",  desc: "Full access for a quick start", price: "3.99",  per: "week",  stock: 25 },
     { id: "monthly", days: 30, tag: "Best value", name: "Monthly access", desc: "More time for a better price",  price: "14.99", per: "month", best: true, stock: 10 }
   ]
@@ -623,7 +681,7 @@ function startSite(){
     });
   }
   let saleWas=onSale();
-  document.querySelectorAll(".sn").forEach(e=>e.textContent=S.name);document.querySelectorAll(".sp").forEach(e=>e.textContent=S.discountPercent+"% off all keys");
+  document.querySelectorAll(".sn").forEach(e=>e.textContent=S.name);document.querySelectorAll(".spc").forEach(e=>e.textContent=S.discountPercent+"% off all keys");
   function saleTick(){
     const on=onSale();document.querySelectorAll(".sale").forEach(e=>e.style.display=on?"":"none");
     if(!on){if(saleWas){saleWas=false;renderPlans()}return}
@@ -632,7 +690,7 @@ function startSite(){
   }
   renderPlans();saleTick();setInterval(saleTick,1000);
 
-  /* terms: tick box, wait 5s, accept */
+  /* terms */
   const T=$("tos"),ck=$("tc"),ac=$("ta"),bar=$("tbar");let tm=null,pick=null;
   const reset=()=>{clearInterval(tm);ac.disabled=true;ac.textContent="Accept";bar.classList.remove("go")};
   function askTos(p){pick=p;ck.checked=false;reset();T.showModal()}
@@ -645,19 +703,41 @@ function startSite(){
   T.addEventListener("click",e=>{if(e.target===T){reset();T.close()}});
   ac.onclick=()=>{if(ac.disabled)return;T.close();reset();openCheckout(pick)};
 
-  /* crypto checkout */
-  const D=$("dlg"),dHTML=$("dBody").innerHTML,W=(CONFIG.crypto&&CONFIG.crypto.wallets)||[];
-  let sel=null,coin=null;
+  /* crypto checkout + discount codes */
+  const D=$("dlg"),dHTML=$("dBody").innerHTML,W=(CONFIG.crypto&&CONFIG.crypto.wallets)||[],CC=CONFIG.codes||{};
+  let sel=null,coin=null,promo=null;
   const closeD=()=>D.close();
   const copy=(t,m)=>{
     if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>toast(m),()=>toast("Copy failed"));
     else toast("Copy failed");
   };
+  function finalPrice(p){
+    const sp=+price(p);if(!promo)return sp.toFixed(2);
+    const cp=+p.price*(100-promo.percent)/100,v=CC.stackWithSale===false?Math.min(sp,cp):sp*(100-promo.percent)/100;
+    return (Math.round(v*100)/100).toFixed(2);
+  }
+  function showPrice(){
+    $("dNow").textContent=money(finalPrice(sel));
+    const old=promo?price(sel):"";$("dOld").textContent=old&&old!==finalPrice(sel)?money(old):"";
+  }
+  function applyCode(){
+    const v=norm($("promoIn").value),m=$("promoMsg"),c=(CC.list||[]).find(x=>norm(x.code)===v);let err="";
+    if(!v)err="Enter a code first.";
+    else if(!c||c.active===false)err="That code isn't valid.";
+    else if(c.expiresAt&&Date.now()>new Date(c.expiresAt).getTime())err="That code has expired.";
+    else if(c.plans&&!c.plans.includes(sel.id))err="That code doesn't work for this product.";
+    if(err){promo=null;m.style.color="var(--red)";m.textContent=err}
+    else{promo=c;m.style.color="var(--ok)";m.textContent=c.code+" applied: "+c.percent+"% off"}
+    showPrice();
+  }
   function openCheckout(p){
     if(!$("dName"))$("dBody").innerHTML=dHTML;
-    $("x").onclick=closeD;sel=p;
+    $("x").onclick=closeD;sel=p;promo=null;
     {const a=$("robux");a.href=CONFIG.discordLink||"#";a.onclick=()=>{if(!CONFIG.discordLink)toast("Discord link coming soon")}}
-    $("dName").textContent=CONFIG.storeName+" · "+p.name;$("dProd").textContent=p.days+" days"+(onSale()?" · "+S.name:"");$("dNow").textContent=money(price(p));
+    $("dName").textContent=CONFIG.storeName+" · "+p.name;$("dProd").textContent=p.days+" days"+(onSale()?" · "+S.name:"");
+    $("promoBox").hidden=CC.enabled===false;$("promoMsg").hidden=CC.enabled===false;$("promoIn").value="";$("promoMsg").textContent="";
+    $("promoGo").onclick=applyCode;$("promoIn").onkeydown=e=>{if(e.key==="Enter")applyCode()};
+    showPrice();
     if(!D.open)D.showModal();pay();
   }
   D.addEventListener("click",e=>{if(e.target===D)closeD()});
@@ -678,10 +758,9 @@ function startSite(){
       const ref="MYST-"+Math.random().toString(36).slice(2,8).toUpperCase();
       const b=$("dBody");b.innerHTML="";const w=el("div","done");
       w.innerHTML='<svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="25"/><path d="M17 29l8 8 14-16"/></svg>';
-      w.append(el("h3","","Almost done"),el("p","",`Open a ticket on Discord and send this reference plus your transaction hash. Your ${p.name} key is delivered once the payment confirms.`));
+      w.append(el("h3","","Almost done"),el("p","",`Open a ticket on Discord and send this reference plus your transaction hash. Your ${p.name} key is delivered once the payment confirms. Amount: ${money(finalPrice(p))}.${promo?" Discount code used: "+promo.code+".":""}`));
       const c=el("code","",ref);c.title="Click to copy";c.onclick=()=>copy(ref,"Reference copied");
       const cl=el("button","btn p","Done");cl.style.marginTop="16px";cl.onclick=closeD;w.append(c,cl);b.append(w);confetti();
-      /* stock is not reduced here: payment is unverified. Lower plan.stock in CONFIG after you confirm a payment. */
     };
   }
 
@@ -701,6 +780,46 @@ function startSite(){
   }
   $("rgo").onclick=redeem;$("rk").onkeydown=e=>{if(e.key==="Enter")redeem()};$("rmore").onclick=resetRedeem;
   {const a=$("rscript");if(CONFIG.discordLink){a.href=CONFIG.discordLink;a.target="_blank";a.rel="noopener"}else a.onclick=e=>{e.preventDefault();toast("Discord link coming soon")}}
+
+  /* status page */
+  const SP=CONFIG.statusPage||{},SD=SP.days>0?Math.min(+SP.days,120):30;
+  const SLb=Object.assign({operational:"Operational",degraded:"Degraded",outage:"Outage"},SP.labels),
+        SCl=Object.assign({operational:"#22c55e",degraded:"#fbbf24",outage:"#f87171"},SP.colors),
+        SHd=Object.assign({operational:"All systems operational",degraded:"Some systems degraded",outage:"Major outage"},SP.headlines);
+  const sk=s=>SLb[s]?s:"operational",rank={operational:0,degraded:1,outage:2};
+  {const a=$("stn");a.hidden=SP.enabled===false;a.querySelector("span").textContent=SP.navLabel||"Status";$("stHome").querySelector("span").textContent=SP.homeLabel||"Home"}
+  function renderStatus(){
+    if(SP.enabled===false)return;
+    const body=$("stBody"),svc=SP.services||[],cur=svc.map(s=>sk(s.status));
+    const ov=SP.autoOverall===false?sk((SP.overall||{}).status):cur.reduce((a,b)=>rank[b]>rank[a]?b:a,"operational");
+    const head=(SP.autoOverall===false&&(SP.overall||{}).text)||SHd[ov];
+    const hm=n=>String(n).padStart(2,"0"),d=new Date(),now=hm(d.getHours())+":"+hm(d.getMinutes());
+    body.innerHTML="";
+    if(SP.announcement&&SP.announcement.enabled){const a=el("div","sann");a.append(el("b","",SP.announcement.title||"Notice"),document.createTextNode(SP.announcement.text||""));body.append(a)}
+    const sm=el("div","ssum");sm.style.setProperty("--c",SCl[ov]);
+    const tx=el("div");tx.append(el("b","",head));
+    if(SP.showLastChecked!==false)tx.append(el("small","",(SP.lastCheckedLabel||"Last checked")+" "+(SP.lastCheckedTime||now)));
+    sm.append(el("span","dot"),tx);body.append(sm);
+    svc.forEach((s,si)=>{
+      const row=el("div","srow"),h=el("div","srh"),cs=cur[si],bars=el("div","sbars");
+      row.style.setProperty("--c",SCl[cs]);let bad=0;
+      for(let i=0;i<SD;i++){
+        const ago=SD-1-i,state=ago===0?cs:sk((s.incidents||{})[ago]);if(state!=="operational")bad++;
+        const b=el("i");b.style.setProperty("--c",SCl[state]);b.title=(ago===0?"Today":ago+" day"+(ago===1?"":"s")+" ago")+" · "+SLb[state];bars.append(b);
+      }
+      h.append(el("span","dot"),document.createTextNode(s.name));
+      if(SP.showUptime)h.append(el("span","",((SD-bad)/SD*100).toFixed(1)+"%"));
+      h.append(el("em","",SLb[cs]));row.append(h,bars);body.append(row);
+    });
+    if(SP.showLegend!==false||SP.footer){
+      const lg=el("div","sleg"),l=el("div");
+      if(SP.showLegend!==false)["operational","degraded","outage"].forEach(k=>{const s=el("span");s.style.setProperty("--c",SCl[k]);s.append(el("i","dot"),document.createTextNode(SLb[k]));l.append(s)});
+      lg.append(l,el("div","",SP.footer||""));body.append(lg);
+    }
+    const lg=$("stLogo");lg.innerHTML="";
+    if(SP.showLogo!==false){const im=el("img");im.src="assets/store.png";im.alt="";im.style.height="28px";im.onerror=()=>im.remove();lg.append(im)}
+  }
+  let stIv=null;
 
   /* docs */
   const Q=$("dq"),RES=$("dres");
@@ -732,7 +851,7 @@ function startSite(){
   Q.onblur=()=>setTimeout(()=>RES.classList.remove("on"),150);
   Q.onkeydown=e=>{if(e.key==="Escape"){Q.blur()}else if(e.key==="Enter"){const a=RES.querySelector("a[href]");if(a)a.click(),location.hash=a.getAttribute("href")}};
 
-  /* browser page + free countdown */
+  /* browser page: status + stock + countdown */
   const B=CONFIG.browser||{},bMs=((+B.hours||0)*36e5+(+B.minutes||0)*6e4)||72e5;
   let bIv=null;
   {const a=$("bFree");if(B.freeLink)a.href=B.freeLink;else a.onclick=e=>{e.preventDefault();toast("Download link coming soon")}}
@@ -741,6 +860,14 @@ function startSite(){
     if(onSale())bp.append(el("s","",money(pp.price)));
     bp.append(document.createTextNode(money(price(pp))),el("small","","  / "+pp.per));
     $("bBuy").onclick=()=>askTos(pp);
+    const bs=["working","updating","down"].includes(B.status)?B.status:"working",go=bs==="working",
+      tx=Object.assign({working:"Working",updating:"Updating",down:"Down"},B.statusText),
+      out=pp.stock!=null&&pp.stock<=0;
+    $("bstp").classList.add(bs);$("bstp").lastChild.textContent=tx[bs];
+    $("bstk").className="stk"+(go&&!out&&pp.stock!=null&&pp.stock<=5?" low":"");
+    $("bstk").textContent=!go?(B.statusNote||"Browser "+tx[bs].toLowerCase()):out?"Sold out":pp.stock==null?"In stock":pp.stock<=5?"Only "+pp.stock+" left":pp.stock+" in stock";
+    if(!go||out){$("bBuy").disabled=true;$("bBuy").textContent=!go?tx[bs]:"Sold out"}
+    if(!go){const f=$("bFree");f.classList.add("off");f.textContent=tx[bs]}
   }
   function browserTimer(on){
     clearInterval(bIv);if(!on)return;
@@ -761,9 +888,11 @@ function startSite(){
 
   const route=()=>{
     if(!$("vHome"))return;
-    const h=location.hash,docs=h.startsWith("#/docs"),buy=h==="#/purchase",red=h==="#/redeem",brw=h==="#/browser",v=$(docs?"vDocs":buy?"vBuy":red?"vRedeem":brw?"vBrowser":"vHome");
-    $("vHome").hidden=docs||buy||red||brw;$("vBuy").hidden=!buy;$("vRedeem").hidden=!red;$("vBrowser").hidden=!brw;$("vDocs").hidden=!docs;if(red)resetRedeem();
+    const h=location.hash,docs=h.startsWith("#/docs"),buy=h==="#/purchase",red=h==="#/redeem",brw=h==="#/browser",sts=h==="#/status"&&SP.enabled!==false,
+      v=$(docs?"vDocs":buy?"vBuy":red?"vRedeem":brw?"vBrowser":sts?"vStatus":"vHome");
+    $("vHome").hidden=docs||buy||red||brw||sts;$("vBuy").hidden=!buy;$("vRedeem").hidden=!red;$("vBrowser").hidden=!brw;$("vStatus").hidden=!sts;$("vDocs").hidden=!docs;if(red)resetRedeem();
     browserTimer(brw);
+    clearInterval(stIv);if(sts){renderStatus();stIv=setInterval(renderStatus,30000)}
     v.style.animation="none";void v.offsetWidth;v.style.animation="";
     document.querySelectorAll(".plan,.box,.nav .btn").forEach(n=>{n.style.animation="none";void n.offsetWidth;n.style.animation=""});
     scrollTo(0,0);
