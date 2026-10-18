@@ -258,6 +258,7 @@ const CONFIG={
     {coin:"SOLANA",network:"Solana",address:"9doEbFbBvWnDkAP3rXf9mf2Aot7n2bm3uvjW24RSF33E"}],
     checkoutLinks:{weekly:"",monthly:""}},
 
+
   /* ---- VALID KEYS: one line per key. days = how long it lasts after it is first redeemed ---- */
   keys:[
     {key:"MYST-LIFE-0001", type:"Lifetime Key", days:36500},
@@ -269,17 +270,17 @@ const CONFIG={
     headlines:{operational:"All systems operational",degraded:"Some systems degraded",outage:"Major outage"},
     labels:{operational:"Operational",degraded:"Degraded",outage:"Outage"},
     colors:{operational:"#4ade80",degraded:"#fbbf24",outage:"#f87171"},
-    /* services: status = operational | degraded | outage.  incidents = { daysAgo: state } for the history bars */
+    /* services: status = operational | degraded | outage. incidents = { daysAgo: state } for the history bars */
     services:[
       {name:"Web platform",status:"operational",incidents:{}},
       {name:"Authentication & logins",status:"operational",incidents:{6:"degraded"}},
       {name:"Registrations",status:"operational",incidents:{}},
       {name:"Database",status:"operational",incidents:{21:"degraded"}},
       {name:"Update delivery",status:"operational",incidents:{12:"outage"}},
-      {name:"Server capacity",status:"operational",incidents:{}}],
-      {name:"Mystical Free",status:"degraded",incidents:{}}],
-      {name:"Mystical Paid",status:"Outage",incidents:{}}],
-      {name:"Mystical Script API",status:"Outage",incidents:{}}]
+      {name:"Server capacity",status:"operational",incidents:{}},
+      {name:"Mystical Free",status:"degraded",incidents:{}},
+      {name:"Mystical Paid",status:"outage",incidents:{}},
+      {name:"Mystical Script API",status:"outage",incidents:{}}],
     /* notices shown at the top of the status tab */
     incidents:[
       {date:"12 days ago",state:"outage",title:"Update delivery outage",text:"Resolved. A bad release blocked updates for a short time."},
@@ -289,6 +290,7 @@ const CONFIG={
     {v:"1.2.0",date:"October 2026",items:["New site, loader and status page","Halloween sale live","Faster key delivery"]},
     {v:"1.1.0",date:"September 2026",items:["Config system improvements","Stability fixes for Rivals update"]}]
 };
+
 /* ============================================================= */
 
 const RAW=`
