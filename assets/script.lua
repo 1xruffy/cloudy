@@ -940,7 +940,7 @@ ToggleButton.Size = UDim2.new(0, 50, 0, 50)
 ToggleButton.Position = UDim2.new(0, 10, 0, 10)
 ToggleButton.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
 ToggleButton.BorderSizePixel = 0
-ToggleButton.Text = "Mystical ┃ FREE"
+ToggleButton.Text = "mysti"
 ToggleButton.TextColor3 = Color3.fromRGB(0, 255, 0)
 ToggleButton.TextSize = 13
 ToggleButton.Font = Enum.Font.SourceSansBold
@@ -964,6 +964,29 @@ UserInputService.InputBegan:Connect(function(input, processed)
     if input.KeyCode == Enum.KeyCode.RightShift then
         MainFrame.Visible = not MainFrame.Visible
     end
+end)
+
+-- Unload Button
+local UnloadButton = Instance.new("TextButton")
+UnloadButton.Name = "UnloadButton"
+UnloadButton.Size = UDim2.new(0, 90, 0, 28)
+UnloadButton.Position = UDim2.new(1, -100, 0, 1)
+UnloadButton.BackgroundColor3 = Color3.fromRGB(160, 35, 35)
+UnloadButton.BorderSizePixel = 0
+UnloadButton.Text = "UNLOAD"
+UnloadButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+UnloadButton.TextSize = 12
+UnloadButton.Font = Enum.Font.SourceSansBold
+UnloadButton.Parent = TopBar
+
+local UnloadCorner = Instance.new("UICorner")
+UnloadCorner.CornerRadius = UDim.new(0, 5)
+UnloadCorner.Parent = UnloadButton
+
+UnloadButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+    FOVCircle:Remove()
+    print("[Mystical] UI removed")
 end)
 
 print("[Rivals] Joint Silent Aim & UI Loaded.")
