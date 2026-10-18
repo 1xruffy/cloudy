@@ -201,6 +201,28 @@ nav.sc{background:rgba(0,0,0,.34);backdrop-filter:blur(16px);-webkit-backdrop-fi
 .cl:first-child h4::after{content:"Latest";margin-left:10px;padding:2px 9px;border-radius:99px;font:600 .66rem Spectral;letter-spacing:.06em;background:#a6efe6;color:#000;vertical-align:middle}
 .ico{width:64px;height:64px;margin:4px auto 14px;border-radius:50%;display:grid;place-items:center;font-size:1.8rem;background:radial-gradient(circle,rgba(166,239,230,.25),transparent 70%);border:1px solid rgba(166,239,230,.35)}
 #rk{font:500 1.15rem ui-monospace,Consolas,monospace;text-align:center;letter-spacing:.12em;padding:16px}
+
+/* ===== vault redeem, updating state, extra motion ===== */
+.vault{position:relative;width:180px;height:225px;margin:6px auto 0}
+.vault .lk{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.vault .sh{transform-box:fill-box;transform-origin:0 100%}
+.vault .ky{position:absolute;left:-10px;top:129px;transform-origin:100% 50%;opacity:0;filter:drop-shadow(0 0 8px rgba(166,239,230,.6))}
+.vault .ring{position:absolute;left:90px;top:144px;width:120px;height:120px;margin:-60px;border-radius:50%;border:2px solid #a6efe6;opacity:0;pointer-events:none}
+.vt{text-align:center;margin-top:8px}
+.rise{animation:up .6s cubic-bezier(.2,.9,.2,1) both;animation-delay:calc(var(--k,0)*70ms)}
+.spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(252,211,77,.3);border-top-color:#fcd34d;animation:rot .9s linear infinite;flex:none}
+@keyframes rot{to{transform:rotate(360deg)}}
+.code.lock{overflow:hidden}
+.code.lock::after{content:"";position:absolute;left:-40%;bottom:0;height:2px;width:40%;background:linear-gradient(90deg,transparent,#fcd34d,transparent);animation:sld 1.6s ease-in-out infinite}
+@keyframes sld{to{left:100%}}
+.code.lock code{color:#fcd34d}
+body.in h1 .ln>span{background:linear-gradient(100deg,#fff 40%,#a6efe6 50%,#fff 60%) 100% 0/250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s ease-in-out 2s infinite}
+@keyframes shine{0%,55%{background-position:100% 0}100%{background-position:0 0}}
+.fg.vis.done>div{animation:fl 6s ease-in-out infinite}
+.fg>div:nth-child(2n){animation-delay:-2s!important}.fg>div:nth-child(3n){animation-delay:-4s!important}
+@keyframes fl{50%{transform:translateY(-7px)}}
+.spk{position:fixed;width:5px;height:5px;border-radius:50%;background:#a6efe6;box-shadow:0 0 8px #a6efe6;pointer-events:none;z-index:99990}
+.sw{position:fixed;width:20px;height:20px;margin:-10px;border-radius:50%;border:1.5px solid rgba(166,239,230,.8);pointer-events:none;z-index:99990}
 </style>
 </head>
 <body class="pre bgb">
@@ -253,7 +275,7 @@ const CONFIG={
      updating/down pauses buying AND locks the loadstring (cannot be copied).
      statusFile: if set, the site reads the status from that file instead, so ONE file (assets/status.json)
      controls the site and the Lua loader together. Set to "" to use the value below only. */
-  status:"working",
+  status:"updating",
   statusFile:"assets/status.json",
 
   /* ---- TABS: add a line to add a tab, set enabled:false to hide one ----
@@ -276,7 +298,7 @@ const CONFIG={
 
   loader:{enabled:true,respectReducedMotion:false,minMs:2600,messages:["Starting up","Loading assets","Checking status","Ready"]},
   /* SOUND: effects are generated in the browser. To use your own audio add files, e.g. files:{click:"assets/click.mp3"}.
-     names: enter letter tick riser boom whoosh land air click hover open close copy error success section toggle */
+     names: enter letter tick riser boom whoosh land air click hover open close copy error success section toggle keyfly insert turn unlock shock fanfare sparkle */
   sound:{enabled:true,volume:.55,gate:"auto",files:{}},
   cursor:{src:"assets/cursor.gif",size:32,hotX:0,hotY:0},
 
@@ -523,7 +545,14 @@ const SFX=(()=>{
     error:()=>{tone(196,.35,{to:150,vol:.08,h:0,lp:900,rev:.2});tone(185,.4,{to:140,vol:.06,h:0,lp:900,delay:.13,rev:.2})},
     success:()=>PEN.slice(0,5).forEach((f,i)=>tone(f,.9,{vol:.05,delay:i*.075,rev:.7})),
     section:()=>noise(.5,{from:600,to:1900,vol:.03,attack:.25,rev:.3}),
-    toggle:()=>tone(1318.5,.18,{vol:.05,rev:.3})
+    toggle:()=>tone(1318.5,.18,{vol:.05,rev:.3}),
+    keyfly:()=>{noise(.9,{from:300,to:5200,q:.8,vol:.12,attack:.5,rev:.5});tone(180,.9,{to:700,vol:.05,attack:.6,h:1.5})},
+    insert:()=>{tone(320,.14,{to:150,vol:.14,h:3,lp:2500,rev:.1});noise(.05,{from:4500,to:3000,vol:.06})},
+    turn:()=>[0,1,2,3].forEach(i=>{tone(700+i*180,.07,{vol:.07,h:0,rev:.1,delay:i*.14});noise(.03,{from:3000,to:2000,vol:.03,delay:i*.14})}),
+    unlock:()=>{tone(90,.7,{to:45,vol:.5,h:0,lp:350,rev:.3});noise(.35,{type:"highpass",from:2500,to:6000,vol:.1,rev:.4});tone(1568,.5,{vol:.05,delay:.08,rev:.6})},
+    shock:()=>{tone(60,1.2,{to:28,vol:.5,h:0,lp:250});noise(1,{type:"lowpass",from:1400,to:60,vol:.2})},
+    fanfare:()=>{[523.25,659.25,783.99,1046.5,1318.5,1568].forEach((f,i)=>tone(f,1.4,{vol:.06,delay:i*.09,rev:.8,hv:.3}));tone(130.8,2,{vol:.12,h:0,attack:.1,rev:.6,lp:500})},
+    sparkle:()=>{for(let i=0;i<9;i++)tone(2000+Math.random()*2600,.25,{vol:.025,delay:i*.07+Math.random()*.05,rev:.7,h:0})}
   };
   return{
     get on(){return on},
@@ -670,7 +699,7 @@ const DBK="myst_redeemed",getDB=()=>{try{return JSON.parse(ls.get(DBK)||"{}")}ca
 const lockMsg=()=>(CONFIG.free.lockedText||{})[st]||"Script is unavailable right now.";
 function renderLock(){
   const box=$("#lock");
-  box.innerHTML=`<div class="code gl ${open?"":"lock"}"><code></code><button class="btn sm"></button></div>`;
+  box.innerHTML=`<div class="code gl ${open?"":"lock"}">${st==="updating"?'<i class="spin"></i>':""}<code></code><button class="btn sm"></button></div>`;
   const c=box.querySelector("code"),b=box.querySelector("button");
   c.textContent=open?CONFIG.free.script:lockMsg();
   b.textContent=open?"Copy":"Locked";b.disabled=!open;
@@ -732,21 +761,72 @@ function status(){
   const iv=setInterval(()=>{const e=$("#lc");if(e)e.textContent=stamp()},1000);onClose=()=>clearInterval(iv);
 }
 
-/* redeem */
+/* redeem: the form melts away, a key flies into a lock, turns, and the lock opens */
 function redeem(){
   panel("Redeem key",`<div class="ico">⚿</div><p style="text-align:center">Enter your key to unlock the script.</p><input type="text" id="rk" placeholder="MYST-XXXX-0000" autocomplete="off" spellcheck="false"><div class="err" id="re"></div><button class="btn w" id="rg" style="width:100%">Redeem</button>`);
-  const go=()=>{
+  let busy=false;
+  const A=(e,k,o)=>e.animate(k,Object.assign({fill:"forwards"},o)).finished.catch(()=>{});
+  const go=async()=>{
+    if(busy)return;
     const v=norm($("#rk").value),k=CONFIG.keys.find(x=>norm(x.key)===v);
     if(!v||!k){$("#re").textContent=v?"That key isn't valid. Check it and try again.":"Enter your key first.";SFX.play("error");$("#rk").animate([{transform:"translateX(0)"},{transform:"translateX(-9px)"},{transform:"translateX(9px)"},{transform:"translateX(-5px)"},{transform:"translateX(0)"}],{duration:340});return}
-    SFX.play("success");burst();const db=getDB(),first=!db[v];if(first){db[v]=Date.now();ls.set(DBK,JSON.stringify(db))}
-    const end=db[v]+k.days*864e5,live=end>Date.now();
-    $("#pt").textContent=first?"Key redeemed":live?"Already redeemed":"Key expired";
-    $("#pb").innerHTML=`<div class="kv"><span class="mut">Key</span><b id="a1"></b></div><div class="kv"><span class="mut">Type</span><b id="a2"></b></div><div class="kv"><span class="mut">Duration</span><b id="a3"></b></div><div class="kv"><span class="mut">Expires</span><b id="a4"></b></div>
-      ${live?`<p style="margin-top:16px">${open?"Your script is unlocked. Copy it and run it in your executor:":"Your key is valid, but the script is locked right now."}</p><div class="code gl ${open?"":"lock"}" style="margin:10px 0 14px"><code id="kl"></code><button class="btn sm" id="kc"></button></div>`:'<p style="margin-top:16px">This key has expired. Get a new one on Discord.</p>'}
-      <button class="btn" id="rm" style="width:100%">Redeem another key</button>`;
+    busy=true;
+    const db=getDB(),first=!db[v];if(first){db[v]=Date.now();ls.set(DBK,JSON.stringify(db))}
+    const end=db[v]+k.days*864e5,live=end>Date.now(),pb=$("#pb");
+    /* 1. the redeem UI melts away */
+    SFX.play("whoosh");
+    await Promise.all([...pb.children].map((e,i)=>A(e,[{opacity:1,transform:"none",filter:"blur(0)"},{opacity:0,transform:"translateY(-18px) scale(.94)",filter:"blur(6px)"}],{duration:380,delay:i*50,easing:"ease-in"})));
+    $("#pt").textContent=live?"Unlocking…":"Checking key…";
+    pb.innerHTML=`<div class="vault"><div class="ring"></div>
+      <svg class="lk" viewBox="0 0 120 150" fill="none"><path class="sh" d="M32 70V48a28 28 0 0 1 56 0v22" stroke="#fff" stroke-width="9" stroke-linecap="round"/><rect x="16" y="68" width="88" height="68" rx="14" fill="rgba(255,255,255,.08)" stroke="#fff" stroke-width="3"/><circle cx="60" cy="96" r="9" fill="#000" stroke="#a6efe6" stroke-width="2"/><rect x="56.5" y="100" width="7" height="18" rx="3" fill="#000"/></svg>
+      <svg class="ky" viewBox="0 0 100 30" width="100" height="30" fill="none" stroke="#a6efe6" stroke-width="3"><circle cx="15" cy="15" r="11"/><rect x="26" y="12.5" width="74" height="5" rx="2" fill="#a6efe6"/><rect x="74" y="17" width="7" height="8" fill="#a6efe6"/><rect x="85" y="17" width="5" height="6" fill="#a6efe6"/></svg></div>
+      <div class="big vt" id="vt"></div><div id="vd"></div>`;
+    const vault=$(".vault"),ky=$(".ky"),lk=$(".lk"),sh=$(".sh"),vt=$("#vt"),ring=$(".ring"),alive=()=>ov.classList.contains("on")&&document.body.contains(vault);
+    /* 2. a key flies in */
+    SFX.play("keyfly");
+    await A(ky,[{transform:"translate(-230px,-60px) rotate(-30deg)",opacity:0},{transform:"translate(-40px,-8px) rotate(-6deg)",opacity:1,offset:.7},{transform:"none",opacity:1}],{duration:950,easing:"cubic-bezier(.2,.8,.2,1)"});
+    if(!alive())return;
+    /* 3. it slides into the lock */
+    SFX.play("insert");
+    A(lk,[{transform:"none"},{transform:"translateX(4px)"},{transform:"translateX(-3px)"},{transform:"none"}],{duration:260});
+    await A(ky,[{transform:"none"},{transform:"scaleX(.58)"}],{duration:300,easing:"ease-out"});
+    if(!alive())return;
+    /* 4. it turns */
+    SFX.play("turn");
+    await A(ky,[{transform:"rotate(0) scaleX(.58)"},{transform:"rotate(90deg) scaleX(.58)"}],{duration:650,easing:"cubic-bezier(.5,0,.2,1)"});
+    if(!alive())return;
+    if(!live){
+      SFX.play("error");$(".lk rect").style.stroke="#f87171";
+      await A(lk,[{transform:"none"},{transform:"translateX(-8px)"},{transform:"translateX(8px)"},{transform:"translateX(-5px)"},{transform:"none"}],{duration:420});
+      vt.textContent="Key expired";$("#pt").textContent="Key expired";A(vt,[{opacity:0,transform:"translateY(14px)"},{opacity:1,transform:"none"}],{duration:600});
+      await wait(300);if(!alive())return;
+      $("#vd").innerHTML='<p class="rise" style="text-align:center;margin-top:12px">This key has expired. Get a new one on Discord.</p><button class="btn rise" style="--k:2;width:100%;margin-top:14px" id="rm">Redeem another key</button>';
+      $("#rm").onclick=redeem;return;
+    }
+    /* 5. click: shackle pops open, shockwave, confetti */
+    SFX.play("unlock");SFX.play("shock");
+    A(sh,[{transform:"none"},{transform:"translateY(-18px)"},{transform:"translateY(-14px) rotate(-32deg)"}],{duration:650,easing:"cubic-bezier(.3,1.4,.5,1)"});
+    A(lk,[{filter:"drop-shadow(0 0 0 rgba(166,239,230,0))"},{filter:"drop-shadow(0 0 28px rgba(166,239,230,.9))"}],{duration:700});
+    A(ring,[{transform:"scale(.2)",opacity:.9},{transform:"scale(3.4)",opacity:0}],{duration:1100,easing:"cubic-bezier(.1,.7,.3,1)"});
+    A(pn,[{transform:"scale(1)"},{transform:"scale(1.025)",offset:.2},{transform:"scale(1)"}],{duration:500});
+    await wait(450);if(!alive())return;
+    SFX.play("fanfare");SFX.play("sparkle");SFX.play("success");burst();setTimeout(burst,350);
+    const t=first?"Key redeemed":"Already redeemed";$("#pt").textContent=t;vt.textContent=t;
+    A(vt,[{opacity:0,transform:"translateY(14px) scale(.9)",filter:"blur(8px)"},{opacity:1,transform:"none",filter:"blur(0)"}],{duration:800,easing:"cubic-bezier(.2,.9,.2,1)"});
+    await wait(900);if(!alive())return;
+    /* 6. shrink the lock, reveal the details */
+    vault.style.transition="margin .8s cubic-bezier(.2,.9,.2,1)";vault.style.margin="-42px auto -42px";
+    A(vault,[{transform:"scale(1)"},{transform:"scale(.62)"}],{duration:800,easing:"cubic-bezier(.2,.9,.2,1)"});
+    SFX.play("air");
+    const row=(l,id,i)=>`<div class="kv rise" style="--k:${i}"><span class="mut">${l}</span><b id="${id}"></b></div>`;
+    $("#vd").innerHTML=row("Key","a1",0)+row("Type","a2",1)+row("Duration","a3",2)+row("Expires","a4",3)
+      +`<p class="rise" style="--k:4;margin-top:16px">${open?"Your script is unlocked. Copy it and run it in your executor:":"Your key is valid. The script is updating, so it unlocks when the update finishes."}</p>
+      <div class="code gl rise ${open?"":"lock"}" style="--k:5;margin:10px 0 14px">${st==="updating"?'<i class="spin"></i>':""}<code id="kl"></code><button class="btn sm" id="kc"></button></div>
+      <button class="btn rise" style="--k:6;width:100%" id="rm">Redeem another key</button>`;
     $("#a1").textContent=k.key;$("#a2").textContent=k.type;$("#a3").textContent=k.days>=3650?"Lifetime":k.days+" day"+(k.days===1?"":"s");
-    $("#a4").textContent=live?(k.days>=3650?"Never":new Date(end).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})):"Expired";
-    if(live){$("#kl").textContent=open?CONFIG.free.script:lockMsg();$("#kc").textContent=open?"Copy":"Locked";$("#kc").disabled=!open;if(open)$("#kc").onclick=()=>copy(CONFIG.free.script,"Script copied");else $("#kl").oncopy=e=>e.preventDefault()}
+    $("#a4").textContent=k.days>=3650?"Never":new Date(end).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+    $("#kl").textContent=open?CONFIG.free.script:lockMsg();$("#kc").textContent=open?"Copy":"Locked";$("#kc").disabled=!open;
+    if(open)$("#kc").onclick=()=>copy(CONFIG.free.script,"Script copied");else $("#kl").oncopy=e=>e.preventDefault();
     $("#rm").onclick=redeem;
   };
   $("#rg").onclick=go;$("#rk").onkeydown=e=>{if(e.key==="Enter")go()};$("#rk").focus();
@@ -794,6 +874,20 @@ function burst(){const r=$("#pn").getBoundingClientRect(),x0=r.left+r.width/2,y0
   document.addEventListener("pointerdown",e=>{const b=e.target.closest&&e.target.closest(".btn:not(:disabled)");if(!b)return;const r=b.getBoundingClientRect(),s=document.createElement("span"),d=Math.max(r.width,r.height)*2;
     s.style.cssText=`position:absolute;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px;width:${d}px;height:${d}px;border-radius:50%;background:rgba(120,210,200,.45);pointer-events:none`;b.append(s);
     s.animate([{transform:"scale(0)",opacity:1},{transform:"scale(1)",opacity:0}],{duration:600,easing:"ease-out"}).finished.then(()=>s.remove())});
+})();
+/* sparkle trail, click shockwave, decrypting headings */
+(function(){
+  if(matchMedia("(pointer:fine)").matches){let last=0;
+    addEventListener("pointermove",e=>{const n=performance.now();if(n-last<45)return;last=n;
+      const s=document.createElement("i");s.className="spk";s.style.left=e.clientX+"px";s.style.top=e.clientY+"px";document.body.append(s);
+      s.animate([{transform:"translate(0,0) scale(1)",opacity:.9},{transform:`translate(${(Math.random()-.5)*30}px,${14+Math.random()*24}px) scale(0)`,opacity:0}],{duration:800,easing:"ease-out"}).finished.then(()=>s.remove())},{passive:true})}
+  document.addEventListener("pointerdown",e=>{const w=document.createElement("i");w.className="sw";w.style.left=e.clientX+"px";w.style.top=e.clientY+"px";document.body.append(w);
+    w.animate([{transform:"scale(.3)",opacity:1},{transform:"scale(4)",opacity:0}],{duration:650,easing:"cubic-bezier(.1,.7,.3,1)"}).finished.then(()=>w.remove())});
+  const ch="abcdefghijklmnopqrstuvwxyz#%&*";
+  const io=new IntersectionObserver(es=>es.forEach(en=>{if(!en.isIntersecting)return;io.unobserve(en.target);
+    const el=en.target,t=el.textContent,n=26;let f=0;
+    (function s(){el.textContent=[...t].map((c,i)=>c===" "?c:i<f/n*t.length?c:ch[Math.random()*ch.length|0]).join("");if(f++<n)setTimeout(s,32);else el.textContent=t})()}),{root:snap,threshold:.5});
+  ["#h2f","#h2","#h4"].forEach(s=>io.observe($(s)));
 })();
 route();
 </script>
