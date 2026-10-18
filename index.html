@@ -32,7 +32,7 @@ h1{font-size:clamp(2.8rem,8vw,6rem)}h2{font-size:clamp(2.2rem,6vw,4.2rem)}
 .cta{display:flex;gap:10px;margin-top:30px;flex-wrap:wrap;justify-content:center}
 nav{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:16px 24px}
 nav b{font:300 1.55rem Spectral,serif;display:flex;align-items:center;gap:10px}nav b img{height:26px}
-nav div{display:flex;gap:2px;flex-wrap:wrap;justify-content:flex-end}
+#nl{display:flex;gap:2px;flex-wrap:wrap;justify-content:flex-end}
 nav a{padding:7px 12px;border-radius:9px;color:rgba(255,255,255,.8);font-size:.85rem;text-decoration:none;cursor:pointer}
 nav a:hover{background:rgba(255,255,255,.12);color:#fff}
 .dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:5;display:grid;gap:12px}
@@ -50,7 +50,7 @@ nav a:hover{background:rgba(255,255,255,.12);color:#fff}
 .steps b{display:block;font:300 1.3rem Spectral,serif;color:#fff;margin-bottom:3px}
 .code{display:flex;align-items:center;gap:14px;margin-top:26px;padding:14px 14px 14px 22px;max-width:94vw}
 .code code{font:.82rem ui-monospace,Consolas,monospace;overflow-x:auto;white-space:nowrap}
-.code.lock code{color:rgba(255,255,255,.55);font-family:Spectral,serif}
+.code.lock code{color:rgba(255,255,255,.55);font-family:Spectral,serif;font-size:.9rem;user-select:none;-webkit-user-select:none}
 .note{margin-top:18px;font-size:.76rem;color:rgba(255,255,255,.58);max-width:54ch}
 .sale{margin-top:18px;padding:6px 14px;border-radius:99px;font-size:.82rem;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.2)}
 .plans{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap;justify-content:center}
@@ -65,9 +65,9 @@ nav a:hover{background:rgba(255,255,255,.12);color:#fff}
 .faq summary::after{content:"+";opacity:.7}.faq details[open] summary::after{content:"–"}
 .faq p{padding:0 0 16px;font-size:.86rem;line-height:1.6;color:rgba(255,255,255,.7)}
 .foot{margin-top:34px;font-size:.78rem;color:rgba(255,255,255,.55);display:grid;gap:10px;justify-items:center}
-.foot div{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}.foot a{color:rgba(255,255,255,.8);text-decoration:none;cursor:pointer}.foot a:hover{color:#fff}
+#fl{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}.foot a{color:rgba(255,255,255,.8);text-decoration:none;cursor:pointer}.foot a:hover{color:#fff}
 
-/* panels (docs, status, redeem, changelog, checkout) */
+/* panels */
 #ov{position:fixed;inset:0;z-index:50;display:none;place-items:center;background:rgba(0,0,0,.42);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:18px}
 #ov.on{display:grid}
 #pn{width:min(560px,100%);max-height:92vh;display:flex;flex-direction:column;background:rgba(6,6,6,.68);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.14);border-radius:18px;overflow:hidden;animation:pop .25s ease}
@@ -87,7 +87,6 @@ input:focus{outline:none;border-color:rgba(255,255,255,.6)}
 .ck{display:flex;gap:10px;align-items:flex-start;margin:12px 0;font-size:.85rem;color:rgba(255,255,255,.8)}
 .kv{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.88rem}
 .wd{display:flex;gap:10px}
-/* docs */
 .dg{display:grid;grid-template-columns:210px 1fr;gap:22px;height:100%}
 .dg aside{overflow:auto;display:flex;flex-direction:column;gap:2px}
 .dg aside button{text-align:left;padding:8px 11px;border-radius:9px;border:0;background:none;color:rgba(255,255,255,.75);font-size:.88rem;cursor:pointer}
@@ -97,7 +96,6 @@ input:focus{outline:none;border-color:rgba(255,255,255,.6)}
 .fn h4{font-size:1.3rem}.fn p{font-size:.84rem;margin:3px 0 8px}
 .fn code{display:block;padding:9px 12px;border-radius:9px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.1);font:.8rem ui-monospace,Consolas,monospace;overflow-x:auto;white-space:nowrap}
 .fn small{color:rgba(255,255,255,.5);font-size:.72rem}
-/* status */
 .sb{display:flex;align-items:center;gap:14px;padding:18px 20px;border-radius:14px;border:1px solid color-mix(in srgb,var(--c) 55%,transparent);background:linear-gradient(100deg,color-mix(in srgb,var(--c) 20%,transparent),rgba(0,0,0,.25) 75%)}
 .sb .dot{width:14px;height:14px}.sb b{font:300 1.7rem Spectral,serif;display:block;line-height:1.1}.sb small{font-size:.78rem;color:rgba(255,255,255,.65)}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:99px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.3);font-size:.8rem}
@@ -110,36 +108,35 @@ input:focus{outline:none;border-color:rgba(255,255,255,.6)}
 .bars{display:flex;gap:2px;margin-top:11px}.bars i{flex:1;min-width:2px;height:24px;border-radius:3px;background:var(--c)}.bars i:hover{filter:brightness(1.35)}
 .ax{display:flex;justify-content:space-between;font-size:.68rem;color:rgba(255,255,255,.45);margin-top:5px}
 .leg{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1);font-size:.76rem;color:rgba(255,255,255,.6)}.leg span{display:inline-flex;align-items:center;gap:6px}.leg .dot{width:7px;height:7px;box-shadow:none}
-/* changelog */
 .cl{padding:16px 0;border-bottom:1px solid rgba(255,255,255,.1)}.cl h4{font-size:1.5rem}.cl h4 small{font:.78rem Spectral;color:rgba(255,255,255,.55);margin-left:8px}
 .cl ul{margin:8px 0 0 18px;font-size:.86rem;line-height:1.7;color:rgba(255,255,255,.75)}
 #toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,30px);z-index:99998;background:#000;border:1px solid rgba(255,255,255,.2);padding:9px 18px;border-radius:99px;font-size:.86rem;opacity:0;transition:.3s;pointer-events:none}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 
-/* enter gate (only shown if the browser blocks sound) */
+/* enter gate (only if the browser blocks sound) */
 #gt{position:fixed;inset:0;z-index:9500;background:#000;display:grid;place-items:center;cursor:pointer;text-align:center}
 #gt[hidden]{display:none}
 #gp{font:italic 300 1.5rem Spectral,Georgia,serif;color:rgba(255,255,255,.85)}
 #gt i{display:block;width:min(240px,60vw);height:1px;background:#fff;margin:16px auto 0;animation:gl 2.4s ease-in-out infinite}
 @keyframes gl{50%{transform:scaleX(.25);opacity:.35}}
 #gs{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);background:none;border:0;color:rgba(255,255,255,.5);font-size:.8rem;cursor:pointer;padding:8px 14px}#gs:hover{color:#fff}
-/* loading screen: line charges, splits open onto the live background, name flies into the nav */
+
+/* ===== intro: the live gradient stays visible, blurred, with the name resolving out of it ===== */
 #ld{position:fixed;inset:0;z-index:9000;cursor:pointer;overflow:hidden}
-#ld .pn{position:absolute;left:0;right:0;background:#000;will-change:transform}
-#ld .t{top:0;height:50%}#ld .b{top:50%;bottom:0}
-#lt,#lf{position:absolute;top:50%;height:1px}
-#lt{left:0;right:0;background:rgba(255,255,255,.14)}
-#lf{left:50%;width:0;background:linear-gradient(90deg,rgba(255,255,255,0),#fff 5%,#fff 95%,rgba(255,255,255,0));box-shadow:0 0 14px rgba(255,255,255,.4)}
-#lx{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
-#lw{position:absolute;left:0;right:0;bottom:calc(50% + 12px);text-align:center;font:300 clamp(4.2rem,16vw,12rem)/1.12 Spectral,Georgia,serif;white-space:nowrap;pointer-events:none}
+#lv{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,.05) 0,rgba(0,0,0,.55) 70%,rgba(0,0,0,.92) 100%)}
+#lgl{position:absolute;left:50%;top:50%;width:70vmin;height:70vmin;margin:-35vmin 0 0 -35vmin;border-radius:50%;background:radial-gradient(circle,rgba(166,239,230,.28),rgba(166,239,230,0) 65%);opacity:0;filter:blur(8px)}
+.rg{position:absolute;left:50%;top:50%;width:22vmin;height:22vmin;margin:-11vmin 0 0 -11vmin;border-radius:50%;border:1px solid rgba(255,255,255,.85);box-shadow:0 0 50px rgba(166,239,230,.4),inset 0 0 50px rgba(166,239,230,.25);opacity:0}
+#lw{position:absolute;left:0;right:0;top:50%;transform:translateY(-62%);text-align:center;font:300 clamp(4.2rem,16vw,12rem)/1.12 Spectral,Georgia,serif;white-space:nowrap;pointer-events:none}
 #lwi{display:inline-block}
-.lc{display:inline-block;overflow:hidden;vertical-align:bottom;padding:0 .02em .18em;margin-bottom:-.18em}
-.lc>span{display:inline-block;transform:translateY(112%);color:transparent;background:linear-gradient(100deg,#fff 0 42%,#a6efe6 50%,#fff 58% 100%) 100% 0/300% 100%;-webkit-background-clip:text;background-clip:text}
-#lg{position:absolute;left:0;right:0;top:calc(50% + 16px);text-align:center;font:italic 300 1.2rem Spectral,Georgia,serif;color:rgba(255,255,255,.7);opacity:0}
+.lc{display:inline-block;padding:0 .02em .18em;margin-bottom:-.18em}
+.lc>span{display:inline-block;opacity:0;color:transparent;background:linear-gradient(100deg,#fff 0 40%,#a6efe6 50%,#fff 60% 100%) 100% 0/300% 100%;-webkit-background-clip:text;background-clip:text}
+#lt{position:absolute;left:50%;top:calc(50% + 56px);width:min(260px,56vw);height:1px;transform:translateX(-50%);background:rgba(255,255,255,.16)}
+#lf{height:100%;background:#fff;transform:scaleX(0);transform-origin:left;box-shadow:0 0 14px rgba(255,255,255,.6)}
+#lg{position:absolute;left:0;right:0;top:calc(50% + 76px);text-align:center;font:italic 300 1.15rem Spectral,Georgia,serif;color:rgba(255,255,255,.72);opacity:0}
 #lm{position:absolute;left:28px;right:28px;bottom:30px;display:flex;justify-content:space-between;align-items:flex-end;font-size:.8rem;color:rgba(255,255,255,.55);opacity:0}
 #lp{font:300 3.2rem Spectral,serif;color:#fff;line-height:1}
-#bg{transition:filter 2.4s cubic-bezier(.2,.7,.2,1),transform 2.4s cubic-bezier(.2,.7,.2,1)}
-body.bgb #bg{filter:blur(18px);transform:scale(1.14)}
+#bg{transition:filter 2.2s cubic-bezier(.2,.7,.2,1),transform 2.2s cubic-bezier(.2,.7,.2,1)}
+body.bgb #bg{filter:blur(22px) saturate(1.2);transform:scale(1.14)}
 nav b .nm{transition:opacity .3s}body.fly nav b .nm{opacity:0}
 #snd{display:inline-flex;align-items:center}
 .ln{display:block;overflow:hidden;padding-bottom:.14em;margin-bottom:-.14em}
@@ -156,11 +153,10 @@ body.pre nav,body.pre #snap,body.pre .dots{opacity:0}
 <body class="pre bgb">
 <div id="gt" hidden><div><p id="gp">Click to enter</p><i></i></div><button id="gs" type="button">Continue without sound</button></div>
 <div id="ld">
-  <div class="pn t"></div><div class="pn b"></div>
-  <div id="lt"></div><div id="lf"></div>
-  <div id="lw"><span id="lwi"></span></div><p id="lg"></p>
+  <div id="lv"></div><div id="lgl"></div><div class="rg"></div><div class="rg"></div>
+  <div id="lw"><span id="lwi"></span></div>
+  <div id="lt"><div id="lf"></div></div><p id="lg"></p>
   <div id="lm"><span id="lp">0</span><span id="ls">Starting up</span></div>
-  <div id="lx"></div>
 </div>
 <canvas id="bg"></canvas>
 <img id="cur" alt="">
@@ -168,10 +164,7 @@ body.pre nav,body.pre #snap,body.pre .dots{opacity:0}
 
 <nav>
   <b><img src="assets/store.png" alt="" onerror="this.remove()"><span class="nm"></span></b>
-  <div>
-    <a class="hm" data-go="1">Features</a><a data-m="docs">Docs</a><a data-m="status">Status</a>
-    <a data-m="redeem">Redeem</a><a class="hm" data-m="changelog">Changelog</a><a id="disc" target="_blank" rel="noopener">Discord</a><a id="snd" aria-label="Toggle sound" title="Sound"></a>
-  </div>
+  <div id="nl"></div>
 </nav>
 <div class="dots" id="dots"></div>
 
@@ -195,7 +188,7 @@ body.pre nav,body.pre #snap,body.pre .dots{opacity:0}
   </section>
   <section class="s">
     <h2 id="h4"></h2><div class="faq" id="faq"></div>
-    <div class="foot"><div><a data-m="docs">Docs</a><a data-m="status">Status</a><a data-m="changelog">Changelog</a><a data-m="redeem">Redeem</a><a id="disc2" target="_blank" rel="noopener">Discord</a><a id="tos" target="_blank" rel="noopener">Terms</a></div><span id="copy"></span></div>
+    <div class="foot"><div id="fl"></div><span id="copy"></span></div>
   </section>
 </main>
 
@@ -208,17 +201,41 @@ const CONFIG={
   tagline:"The #1 Free Rivals cheat.",
   discordLink:"https://discord.gg/mysti",
   tosLink:"",
-  status:"working",                       /* store: working | updating | down (updating/down pauses buying) */
 
-  loader:{enabled:true,respectReducedMotion:false,minMs:2400,messages:["Starting up","Loading assets","Checking status","Ready"]},
-  /* SOUND: effects are generated in the browser. To use your own audio instead, add files, e.g. files:{click:"assets/click.mp3"}.
+  /* STORE + SCRIPT STATUS: working | updating | down
+     updating/down pauses buying AND locks the loadstring (cannot be copied).
+     statusFile: if set, the site reads the status from that file instead, so ONE file (assets/status.json)
+     controls the site and the Lua loader together. Set to "" to use the value below only. */
+  status:"working",
+  statusFile:"assets/status.json",
+
+  /* ---- TABS: add a line to add a tab, set enabled:false to hide one ----
+     type: "panel"   built-in page (docs, status, redeem, changelog)
+           "custom"  your own page: title + html
+           "section" scrolls to a section (section: 0-4)
+           "link"    opens a url (href, or "@discord" / "@tos")
+     nav:false      hide from the top bar      footer:true  also show in the footer
+     mobile:false   hide on phones (top bar)   enabled:false  turn the tab off completely */
+  tabs:[
+    {id:"features", label:"Features",  type:"section", section:1, mobile:false},
+    {id:"docs",     label:"Docs",      type:"panel",   footer:true},
+    {id:"status",   label:"Status",    type:"panel",   footer:true},
+    {id:"redeem",   label:"Redeem",    type:"panel",   footer:true},
+    {id:"changelog",label:"Changelog", type:"panel",   footer:true, mobile:false},
+    {id:"rules",    label:"Rules",     type:"custom",  enabled:false, footer:true, title:"Rules", html:"<p>Be cool.</p>"},
+    {id:"discord",  label:"Discord",   type:"link",    href:"@discord", footer:true},
+    {id:"terms",    label:"Terms",     type:"link",    href:"@tos", nav:false, footer:true}
+  ],
+
+  loader:{enabled:true,respectReducedMotion:false,minMs:2600,messages:["Starting up","Loading assets","Checking status","Ready"]},
+  /* SOUND: effects are generated in the browser. To use your own audio add files, e.g. files:{click:"assets/click.mp3"}.
      names: enter letter tick riser boom whoosh land air click hover open close copy error success section toggle */
-  sound:{enabled:true,volume:.55,gate:"auto",files:{}},   /* gate "auto" = show "Click to enter" only if the browser blocks sound; true = always; false = never */
+  sound:{enabled:true,volume:.55,gate:"auto",files:{}},
   cursor:{src:"assets/cursor.gif",size:32,hotX:0,hotY:0},
 
   hero:{headline:"Free forever.\nCompletely undetected.\nYou heard that right.",text:"We firmly believe you should never have to pay for a cheat."},
   features:{headline:"Built to win.",
-    stats:[{n:"10k+",l:"Users"},{n:"99.9%",l:"Uptime"},{n:"24/7",l:"Support"}],        /* placeholders: use your real numbers */
+    stats:[{n:"10k+",l:"Users"},{n:"99.9%",l:"Uptime"},{n:"24/7",l:"Support"}],
     list:[
       {t:"Aim assist",d:"Smooth, configurable assistance with full control over strength and FOV."},
       {t:"Visuals",d:"Clean ESP options you can tune or switch off per feature."},
@@ -228,7 +245,8 @@ const CONFIG={
       {t:"Real support",d:"Open a ticket on Discord and get help from people who use it."}]},
   free:{headline:"So, what are you waiting for?",text:"Free, no key needed.",
     steps:[{t:"Copy the script",d:"Press copy on the line below."},{t:"Paste it in your executor",d:"Join a Rivals game and paste it in."},{t:"Run it, you're done",d:"No key and no setup."}],
-    script:'loadstring(game:HttpGet("https://mystical-indol.vercel.app/assets/script.lua"))()',   /* the file assets/script.lua is what this actually runs */
+    script:'loadstring(game:HttpGet("https://mystical-indol.vercel.app/assets/script.lua"))()',
+    lockedText:{updating:"Script is being updated. Check back soon.",down:"Script is currently down."},
     note:"Want more features? Premium keys unlock extras. Redeem them on the Redeem tab."},
   paid:{headline:"Want more? Go premium.",text:"Extra features, priority updates and support coming soon."},
   faq:{headline:"Questions",list:[
@@ -258,8 +276,7 @@ const CONFIG={
     {coin:"SOLANA",network:"Solana",address:"9doEbFbBvWnDkAP3rXf9mf2Aot7n2bm3uvjW24RSF33E"}],
     checkoutLinks:{weekly:"",monthly:""}},
 
-
-  /* ---- VALID KEYS: one line per key. days = how long it lasts after it is first redeemed ---- */
+  /* ---- VALID KEYS: days = how long it lasts after it is first redeemed ---- */
   keys:[
     {key:"MYST-LIFE-0001", type:"Lifetime Key", days:36500},
     {key:"MYST-WEEK-0002", type:"Weekly Key",   days:7},
@@ -270,12 +287,10 @@ const CONFIG={
     headlines:{operational:"All systems operational",degraded:"Some systems degraded",outage:"Major outage"},
     labels:{operational:"Operational",degraded:"Degraded",outage:"Outage"},
     colors:{operational:"#4ade80",degraded:"#fbbf24",outage:"#f87171"},
-    /* services: status = operational | degraded | outage. incidents = { daysAgo: state } for the history bars */
     services:[
       {name:"Mystical Free",status:"degraded",incidents:{}},
       {name:"Mystical Paid",status:"outage",incidents:{}},
       {name:"Mystical Script API",status:"outage",incidents:{}}],
-    /* notices shown at the top of the status tab */
     incidents:[
       {date:"12 days ago",state:"outage",title:"Update delivery outage",text:"Resolved. A bad release blocked updates for a short time."},
       {date:"6 days ago",state:"degraded",title:"Slow logins",text:"Resolved. Login times were higher than normal."}]},
@@ -404,8 +419,10 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
 function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),2000)}
 const copy=(t,m)=>navigator.clipboard?navigator.clipboard.writeText(t).then(()=>{toast(m);SFX.play("copy")},()=>toast("Copy failed")):toast("Copy failed");
 const SP=CONFIG.statusPage,SC=SP.colors,SL=SP.labels,rank={operational:0,degraded:1,outage:2};
-const st=["working","updating","down"].includes(CONFIG.status)?CONFIG.status:"working",open=st==="working";
-const storeState={working:"operational",updating:"degraded",down:"outage"}[st];
+/* store status (mutable so status.json can override it) */
+let st="working",open=true,storeState="operational";
+const setSt=s=>{st=["working","updating","down"].includes(s)?s:"working";open=st==="working";storeState={working:"operational",updating:"degraded",down:"outage"}[st]};
+setSt(CONFIG.status);
 const allSvc=()=>[{name:"Store",status:storeState,incidents:{}}].concat(SP.services);
 const overall=()=>allSvc().reduce((a,s)=>rank[s.status]>rank[a]?s.status:a,"operational");
 
@@ -423,10 +440,21 @@ $("#h3").textContent=CONFIG.paid.headline;$("#sub3").textContent=CONFIG.paid.tex
 $("#h4").textContent=CONFIG.faq.headline;
 $("#faq").innerHTML=CONFIG.faq.list.map(f=>`<details class="gl"><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("");
 $("#copy").textContent="© "+new Date().getFullYear()+" "+CONFIG.storeName;
-[$("#disc"),$("#disc2")].forEach(a=>{if(CONFIG.discordLink)a.href=CONFIG.discordLink;else a.onclick=e=>{e.preventDefault();toast("Discord link coming soon")}});
-if(CONFIG.tosLink)$("#tos").href=CONFIG.tosLink;else $("#tos").onclick=e=>{e.preventDefault();toast("Terms link coming soon")};
 function pill(){const o=overall(),p=$("#pill");p.style.setProperty("--c",SC[o]);p.querySelector("span").textContent=SP.headlines[o]+" · "+CONFIG.tagline}
 pill();$("#pill").onclick=()=>location.hash="#/status";
+
+/* ---------- tabs (built from CONFIG.tabs) ---------- */
+const TABS=CONFIG.tabs.filter(t=>t.enabled!==false),BUILTIN={docs,status,redeem,changelog},pages={};
+const hrefOf=t=>t.href==="@discord"?CONFIG.discordLink:t.href==="@tos"?CONFIG.tosLink:t.href;
+TABS.forEach(t=>{if(t.type==="panel"&&BUILTIN[t.id])pages[t.id]=BUILTIN[t.id];if(t.type==="custom")pages[t.id]=()=>panel(t.title||t.label,t.html||"")});
+const tabLink=(t,f)=>{const cls=!f&&t.mobile===false?' class="hm"':"";
+  if(t.type==="section")return `<a${cls} data-go="${+t.section||0}">${esc(t.label)}</a>`;
+  if(t.type==="link"){const h=hrefOf(t);return h?`<a${cls} href="${esc(h)}" target="_blank" rel="noopener">${esc(t.label)}</a>`:`<a${cls} data-soon>${esc(t.label)}</a>`}
+  return `<a${cls} data-m="${esc(t.id)}">${esc(t.label)}</a>`};
+$("#nl").innerHTML=TABS.filter(t=>t.nav!==false).map(t=>tabLink(t)).join("")+'<a id="snd" aria-label="Toggle sound" title="Sound"></a>';
+$("#fl").innerHTML=TABS.filter(t=>t.footer).map(t=>tabLink(t,1)).join("");
+$$("[data-soon]").forEach(a=>a.onclick=()=>toast("Link coming soon"));
+if(!TABS.some(t=>t.id==="status"&&t.type==="panel"))$("#pill").onclick=null;
 
 /* ---------- sound (Web Audio, no files needed) ---------- */
 const SFX=(()=>{
@@ -484,14 +512,13 @@ const SFX=(()=>{
              stop(){const t=a.currentTime;g.gain.cancelScheduledValues(t);g.gain.setTargetAtTime(.0001,t,.08);o.stop(t+.6)}}}
   };
 })();
-/* sound button + UI sounds */
 const ICON={on:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>',
   off:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M22 9l-6 6M16 9l6 6"/></svg>'};
 const updSnd=()=>{$("#snd").innerHTML=SFX.on?ICON.on:ICON.off};
 if(CONFIG.sound&&CONFIG.sound.enabled===false)$("#snd").hidden=true;
 $("#snd").onclick=e=>{e.preventDefault();SFX.set(!SFX.on);updSnd();SFX.play("toggle")};updSnd();
 (function(){
-  const UI=".btn,nav a,.pill,.dots i,summary,.foot a,.chips button,.dg aside button,.fn button";let hv=null;
+  const UI=".btn,nav a,.pill,.dots i,summary,.foot a,.dg aside button,.fn button";let hv=null;
   document.addEventListener("pointerdown",e=>{const t=e.target.closest&&e.target.closest(UI);if(t&&t.id!=="snd")SFX.play("click")},true);
   document.addEventListener("pointerover",e=>{if(e.pointerType==="touch")return;const t=e.target.closest&&e.target.closest(UI);if(!t||t===hv)return;hv=t;SFX.play("hover")});
   document.addEventListener("pointerout",e=>{if(hv&&!hv.contains(e.relatedTarget))hv=null});
@@ -510,14 +537,14 @@ async function gate(){
   });
 }
 
-/* ---------- loading screen ---------- */
+/* ---------- intro ---------- */
 function runLoader(){
   const L=$("#ld"),b=document.body,C=CONFIG.loader;let over=false,split=false,skip=false,ready=false,hum=null;
   const show=()=>{b.classList.remove("pre","fly","bgb");b.classList.add("in")};
   const end=()=>{if(over)return;over=true;if(hum)hum.stop();show();L.animate([{opacity:1},{opacity:0}],{duration:400,fill:"forwards"}).finished.then(()=>L.remove(),()=>L.remove())};
   setTimeout(end,18000);
   if(C.enabled===false||(C.respectReducedMotion===true&&matchMedia("(prefers-reduced-motion:reduce)").matches)){over=true;L.remove();show();return}
-  const inner=$("#lwi"),fill=$("#lf"),lp=$("#lp"),lm=$("#ls");
+  const inner=$("#lwi"),fill=$("#lf"),lp=$("#lp"),lm=$("#ls"),rings=$$(".rg");
   [...CONFIG.storeName].forEach(ch=>{const c=document.createElement("span");c.className="lc";const t=document.createElement("span");t.textContent=ch===" "?"\u00a0":ch;c.append(t);inner.append(c)});
   const letters=[...inner.querySelectorAll(".lc>span")];$("#lg").textContent=CONFIG.tagline;
   const A=(e,k,o)=>e.animate(k,Object.assign({fill:"forwards"},o)).finished.catch(()=>{});
@@ -525,43 +552,39 @@ function runLoader(){
   Promise.race([Promise.all([document.fonts.load('300 100px Spectral'),img(CONFIG.cursor.src),img("assets/store.png")]),wait(5000)]).catch(()=>{}).then(()=>ready=true);
   L.onclick=()=>{if(split)end();else skip=true};
   (async()=>{
-    SFX.play("enter");
-    await wait(250);
-
-    /* 1. letters rise one by one, then a light sweeps across them */
-    const intro=Promise.all(letters.map((l,i)=>A(l,[{transform:"translateY(112%)"},{transform:"translateY(0)"}],{duration:900,delay:i*70,easing:"cubic-bezier(.2,.9,.2,1)"})));
-    letters.forEach((_,i)=>setTimeout(()=>SFX.play("letter",i),i*70));
+    SFX.play("enter");await wait(250);
+    /* 1. glow swells, letters resolve out of blur one by one, spacing tightens, light sweeps across */
+    A($("#lgl"),[{opacity:0,transform:"scale(.6)"},{opacity:1,transform:"scale(1)"}],{duration:2200,easing:"cubic-bezier(.2,.9,.2,1)"});
+    const intro=Promise.all(letters.map((l,i)=>A(l,[{opacity:0,transform:"translateY(55%) scale(.82)",filter:"blur(20px)"},{opacity:1,transform:"none",filter:"blur(0)"}],{duration:1100,delay:i*90,easing:"cubic-bezier(.2,.9,.2,1)"})));
+    A(inner,[{letterSpacing:".24em"},{letterSpacing:"0em"}],{duration:2000,easing:"cubic-bezier(.2,.9,.2,1)"});
+    letters.forEach((_,i)=>setTimeout(()=>SFX.play("letter",i),i*90));
     intro.then(()=>letters.forEach((l,i)=>l.animate([{backgroundPosition:"100% 0"},{backgroundPosition:"0 0"}],{duration:1000,delay:i*80,easing:"ease-in-out"})));
-    A($("#lg"),[{opacity:0},{opacity:1}],{duration:900,delay:800});A($("#lm"),[{opacity:0},{opacity:1}],{duration:600,delay:300});
-
-    /* 2. the line charges outward from the centre, the hum rises with it */
+    A($("#lg"),[{opacity:0,transform:"translateY(8px)"},{opacity:1,transform:"none"}],{duration:900,delay:900});A($("#lm"),[{opacity:0},{opacity:1}],{duration:600,delay:300});
+    /* 2. progress line fills, hum rises */
     hum=SFX.hum();let lastT=0;const t0=performance.now(),M=C.messages;
     await new Promise(r=>{(function f(){
       const t=Math.min(1,(performance.now()-t0)/(skip?300:C.minMs));let p=1-Math.pow(1-t,2.4);if(!ready)p=Math.min(p,.93);
-      fill.style.width=p*100+"%";fill.style.left=(50-p*50)+"%";lp.textContent=Math.floor(p*100);hum.set(p);
+      fill.style.transform=`scaleX(${p})`;lp.textContent=Math.floor(p*100);hum.set(p);
       const n=Math.floor(p*10);if(n>lastT){lastT=n;SFX.play("tick",p)}
       lm.textContent=M[p>=1?M.length-1:Math.min(M.length-2,Math.floor(p*(M.length-1)))];
       if(p>=1&&ready)r();else requestAnimationFrame(f)})()});
     hum.stop();SFX.play("riser");
-    await intro;if(over)return;await wait(650);if(over)return;
-
-    /* 3. impact: flash, the line splits open, the background snaps into focus */
-    split=true;b.classList.remove("bgb");const rr=inner.getBoundingClientRect(),ease="cubic-bezier(.76,0,.24,1)";
+    await intro;if(over)return;await wait(500);if(over)return;
+    /* 3. impact: two rings burst out, the dark veil lifts, the background snaps into focus */
+    split=true;b.classList.remove("bgb");const rr=inner.getBoundingClientRect();
     SFX.play("boom");
-    A($("#lx"),[{opacity:0},{opacity:.4,offset:.12},{opacity:0}],{duration:800});
-    A(inner,[{transform:"scale(1)"},{transform:"scale(1.07)",offset:.2},{transform:"scale(1)"}],{duration:600,easing:"ease-out"});
-    [$("#lm"),$("#lg")].forEach(e=>A(e,[{opacity:1},{opacity:0}],{duration:300}));
-    [$("#lt"),fill].forEach(e=>A(e,[{opacity:1},{opacity:0}],{duration:450,delay:100}));
-    A(L.querySelector(".t"),[{transform:"none"},{transform:"translateY(-101%)"}],{duration:1200,easing:ease});
-    A(L.querySelector(".b"),[{transform:"none"},{transform:"translateY(101%)"}],{duration:1200,easing:ease});
-    await wait(600);if(over)return;
-
-    /* 4. the name flies into the nav on a curve, the hero text rises in */
+    rings.forEach((r,i)=>A(r,[{opacity:.9,transform:"scale(.2)"},{opacity:0,transform:"scale(9)"}],{duration:1600,delay:i*180,easing:"cubic-bezier(.1,.7,.2,1)"}));
+    A($("#lv"),[{opacity:1},{opacity:0}],{duration:1500,easing:"ease-out"});
+    A($("#lgl"),[{opacity:1,transform:"scale(1)"},{opacity:0,transform:"scale(2.2)"}],{duration:1400,easing:"ease-out"});
+    A(inner,[{transform:"scale(1)"},{transform:"scale(1.08)",offset:.25},{transform:"scale(1)"}],{duration:700,easing:"ease-out"});
+    [$("#lm"),$("#lg"),$("#lt")].forEach(e=>A(e,[{opacity:1},{opacity:0}],{duration:350}));
+    await wait(700);if(over)return;
+    /* 4. the name flies into the nav on a curve, the hero rises in */
     const nm=document.querySelector("nav b .nm"),tr=nm.getBoundingClientRect();
     b.classList.add("fly");b.classList.remove("pre");setTimeout(()=>{b.classList.add("in");SFX.play("air")},700);SFX.play("whoosh");
     if(tr.width>0){const s=tr.width/rr.width,dx=tr.left+tr.width/2-(rr.left+rr.width/2),dy=tr.top+tr.height/2-(rr.top+rr.height/2);
       await A(inner,[{transform:"none"},{transform:`translate(${dx*.55}px,${dy*.55-34}px) scale(${1-(1-s)*.6})`,offset:.55},{transform:`translate(${dx}px,${dy}px) scale(${s})`}],{duration:1300,easing:"cubic-bezier(.7,0,.2,1)"})}
-    else await A(inner,[{opacity:1,transform:"none"},{opacity:0,transform:"translateY(-30px) scale(.92)"}],{duration:700,easing:"ease"});
+    else await A(inner,[{opacity:1},{opacity:0,transform:"translateY(-30px) scale(.92)"}],{duration:700,easing:"ease"});
     SFX.play("land");b.classList.remove("fly");
     await A(inner,[{opacity:1},{opacity:0}],{duration:250});
     end();
@@ -634,30 +657,37 @@ function saleTick(){
 }
 renderPlans();saleTick();setInterval(saleTick,1000);
 
-/* ---------- keys + locked script ---------- */
+/* ---------- keys + loadstring (locked when status is updating / down) ---------- */
 const DBK="myst_redeemed",getDB=()=>{try{return JSON.parse(ls.get(DBK)||"{}")}catch(e){return{}}};
-const liveKey=()=>{const db=getDB();return CONFIG.keys.find(k=>db[norm(k.key)]&&db[norm(k.key)]+k.days*864e5>Date.now())};
+const lockMsg=()=>(CONFIG.free.lockedText||{})[st]||"Script is unavailable right now.";
 function renderLock(){
-  const box=$("#lock");box.innerHTML=`<div class="code gl"><code></code><button class="btn sm">Copy</button></div>`;
-  box.querySelector("code").textContent=CONFIG.free.script;box.querySelector("button").onclick=()=>copy(CONFIG.free.script,"Script copied");
+  const box=$("#lock");
+  box.innerHTML=`<div class="code gl ${open?"":"lock"}"><code></code><button class="btn sm"></button></div>`;
+  const c=box.querySelector("code"),b=box.querySelector("button");
+  c.textContent=open?CONFIG.free.script:lockMsg();
+  b.textContent=open?"Copy":"Locked";b.disabled=!open;
+  if(open)b.onclick=()=>copy(CONFIG.free.script,"Script copied");
+  else{c.oncopy=e=>e.preventDefault();c.oncontextmenu=e=>e.preventDefault()}
 }
+function applyStatus(s){setSt(s);pill();renderPlans();renderLock();if(pn.dataset.page==="status")status()}
 renderLock();
+/* one file controls site + loader: assets/status.json  ->  {"status":"working"} */
+if(CONFIG.statusFile)fetch(CONFIG.statusFile+"?t="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.status&&j.status!==st)applyStatus(j.status)}).catch(()=>{});
 
 /* ---------- panels ---------- */
 const ov=$("#ov"),pn=$("#pn");let onClose=null;
 function panel(title,html,wide){if(!ov.classList.contains("on"))SFX.play("open");$("#pt").textContent=title;$("#pb").innerHTML=html;pn.classList.toggle("wide",!!wide);ov.classList.add("on");return $("#pb")}
-function closeP(){if(onClose){onClose();onClose=null}if(ov.classList.contains("on"))SFX.play("close");ov.classList.remove("on");if(location.hash)history.replaceState(null,"",location.pathname+location.search)}
+function closeP(){if(onClose){onClose();onClose=null}if(ov.classList.contains("on"))SFX.play("close");ov.classList.remove("on");delete pn.dataset.page;if(location.hash)history.replaceState(null,"",location.pathname+location.search)}
 $("#x").onclick=closeP;ov.onclick=e=>{if(e.target===ov)closeP()};addEventListener("keydown",e=>{if(e.key==="Escape"&&ov.classList.contains("on"))closeP()});
-const pages={docs,status,redeem,changelog};
-function route(){const n=location.hash.replace(/^#\/?/,"");if(pages[n]){if(onClose){onClose();onClose=null}pages[n]()}else if(!n&&ov.classList.contains("on")&&!pn.dataset.keep)closeP()}
+function route(){const n=location.hash.replace(/^#\/?/,"");if(pages[n]){if(onClose){onClose();onClose=null}pn.dataset.page=n;pages[n]()}else if(!n&&ov.classList.contains("on")&&!pn.dataset.keep)closeP()}
 addEventListener("hashchange",route);
 $$("[data-m]").forEach(a=>a.onclick=e=>{e.preventDefault();location.hash="#/"+a.dataset.m});
-addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();location.hash="#/docs";setTimeout(()=>{const q=$("#dq");q&&q.focus()},60)}});
+addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"&&pages.docs){e.preventDefault();location.hash="#/docs";setTimeout(()=>{const q=$("#dq");q&&q.focus()},60)}});
 
 /* docs */
 function docs(){
   let cat=0;
-  const m=panel("Documentation",`<div class="dg"><aside><input type="search" id="dq" placeholder="Search functions" autocomplete="off" spellcheck="false"><div id="dc"></div></aside><main id="dm"></main></div>`,true);
+  panel("Documentation",`<div class="dg"><aside><input type="search" id="dq" placeholder="Search functions" autocomplete="off" spellcheck="false"><div id="dc"></div></aside><main id="dm"></main></div>`,true);
   const draw=()=>{
     const q=$("#dq").value.trim().toLowerCase(),dc=$("#dc"),dm=$("#dm");
     dc.innerHTML=DOC.map((c,i)=>`<button class="${!q&&i===cat?"on":""}" data-i="${i}">${esc(c.t)}</button>`).join("");
@@ -693,7 +723,7 @@ function status(){
 
 /* redeem */
 function redeem(){
-  const m=panel("Redeem key",`<p>Enter the key you received after payment.</p><input type="text" id="rk" placeholder="MYST-XXXX-0000" autocomplete="off" spellcheck="false"><div class="err" id="re"></div><button class="btn w" id="rg" style="width:100%">Redeem</button>`);
+  panel("Redeem key",`<p>Enter the key you received after payment.</p><input type="text" id="rk" placeholder="MYST-XXXX-0000" autocomplete="off" spellcheck="false"><div class="err" id="re"></div><button class="btn w" id="rg" style="width:100%">Redeem</button>`);
   const go=()=>{
     const v=norm($("#rk").value),k=CONFIG.keys.find(x=>norm(x.key)===v);
     if(!v||!k){$("#re").textContent=v?"That key isn't valid. Check it and try again.":"Enter your key first.";SFX.play("error");return}
@@ -701,12 +731,12 @@ function redeem(){
     const end=db[v]+k.days*864e5,live=end>Date.now();
     $("#pt").textContent=first?"Key redeemed":live?"Already redeemed":"Key expired";
     $("#pb").innerHTML=`<div class="kv"><span class="mut">Key</span><b id="a1"></b></div><div class="kv"><span class="mut">Type</span><b id="a2"></b></div><div class="kv"><span class="mut">Duration</span><b id="a3"></b></div><div class="kv"><span class="mut">Expires</span><b id="a4"></b></div>
-      ${live?`<p style="margin-top:16px">Your script is unlocked. Copy it and run it in your executor:</p><div class="code gl" style="margin:10px 0 14px"><code id="kl"></code><button class="btn sm" id="kc">Copy</button></div>`:'<p style="margin-top:16px">This key has expired. Get a new one from the premium section or on Discord.</p>'}
+      ${live?`<p style="margin-top:16px">${open?"Your script is unlocked. Copy it and run it in your executor:":"Your key is valid, but the script is locked right now."}</p><div class="code gl ${open?"":"lock"}" style="margin:10px 0 14px"><code id="kl"></code><button class="btn sm" id="kc"></button></div>`:'<p style="margin-top:16px">This key has expired. Get a new one from the premium section or on Discord.</p>'}
       <button class="btn" id="rm" style="width:100%">Redeem another key</button>`;
     $("#a1").textContent=k.key;$("#a2").textContent=k.type;$("#a3").textContent=k.days>=3650?"Lifetime":k.days+" day"+(k.days===1?"":"s");
     $("#a4").textContent=live?(k.days>=3650?"Never":new Date(end).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})):"Expired";
-    if(live){$("#kl").textContent=CONFIG.free.script;$("#kc").onclick=()=>copy(CONFIG.free.script,"Script copied")}
-    $("#rm").onclick=redeem;renderLock();
+    if(live){$("#kl").textContent=open?CONFIG.free.script:lockMsg();$("#kc").textContent=open?"Copy":"Locked";$("#kc").disabled=!open;if(open)$("#kc").onclick=()=>copy(CONFIG.free.script,"Script copied");else $("#kl").oncopy=e=>e.preventDefault()}
+    $("#rm").onclick=redeem;
   };
   $("#rg").onclick=go;$("#rk").onkeydown=e=>{if(e.key==="Enter")go()};$("#rk").focus();
 }
@@ -721,6 +751,7 @@ function checkout(p){
   let promo=null,coin=CONFIG.crypto.wallets[0];const CC=CONFIG.codes||{},H=(CONFIG.crypto.checkoutLinks||{})[p.id];
   const final=()=>{const sp=+price(p);if(!promo)return sp.toFixed(2);const cp=+p.price*(100-promo.percent)/100;
     return(Math.round((CC.stackWithSale===false?Math.min(sp,cp):sp*(100-promo.percent)/100)*100)/100).toFixed(2)};
+  pn.dataset.page="checkout";
   panel(p.name,`<p>${p.days} days${onSale()?" · "+esc(S.name):""}</p>
     <div style="margin:12px 0"><span class="big" id="np"></span> <s class="mut" id="op"></s></div>
     <div ${CC.enabled===false?"hidden":""}><div class="wd"><input type="text" id="pi" placeholder="Discount code" style="margin:0;flex:1;min-width:0"><button class="btn" id="pg">Apply</button></div><div class="err" id="pm"></div></div>
