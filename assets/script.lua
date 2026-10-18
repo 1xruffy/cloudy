@@ -1209,7 +1209,7 @@ print("[Mystical] Zombie Sky Farm loaded")
 
 createCheckbox("Key Aimlock (RMB)", AimbotFrame, "Aimlock")
 createSlider("Aimbot FOV", AimbotFrame, 50, 400, "FOV")
-createCheckbox("Auto Collect", AimbotFrame, "AutoCollect")
+createCheckbox("Auto Collect (Soon)", AimbotFrame, "AutoCollect")
 
 -- Populate UI Tab 2 (ESP)
 createCheckbox("Box ESP", ESPFrame, "ESP")
