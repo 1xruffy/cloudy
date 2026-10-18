@@ -45,35 +45,66 @@ local function post(data)
     end
 end
 
+
 post({
-    username = "Roblox Script Logger",
+    username = "✦ Mystical | System",
     embeds = {{
-        title = "Script Loaded",
-        color = 5793266,
+        title = "✧  Mystical Loaded Successfully",
+        description = table.concat({
+            "Welcome to **Mystical**.",
+            "",
+            "```ansi",
+            "\27[1;35m✦  INITIALIZATION COMPLETE\27[0m",
+            "\27[0;37mAll systems are up and running.\27[0m",
+            "```",
+            "",
+            "### 👤  User Information",
+            "Your session details are displayed below."
+        }, "\n"),
+
+        color = 0x8B5CF6,
+
         fields = {
             {
-                name = "Username",
-                value = player.Name,
+                name = "👤  Username",
+                value = "```" .. player.Name .. "```",
                 inline = true
             },
             {
-                name = "User ID",
-                value = tostring(player.UserId),
+                name = "🆔  User ID",
+                value = "```" .. tostring(player.UserId) .. "```",
                 inline = true
             },
             {
-                name = "Profile",
-                value = "https://www.roblox.com/users/"
-                    .. player.UserId .. "/profile",
+                name = "🔗  Roblox Profile",
+                value = "[View Profile](https://www.roblox.com/users/"
+                    .. player.UserId .. "/profile)",
                 inline = false
             },
+            {
+                name = "🟢  Status",
+                value = "`● ONLINE`",
+                inline = true
+            },
+            {
+                name = "✨  Platform",
+                value = "`ROBLOX`",
+                inline = true
+            }
         },
+
         thumbnail = {
             url = "https://www.roblox.com/headshot-thumbnail/image?userId="
                 .. player.UserId
                 .. "&width=420&height=420&format=png"
         },
-    }},
+
+        footer = {
+            text = "MYSTICAL  •  Premium Experience"
+        },
+
+        timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
+    }}
 })
 
 pcall(function()
