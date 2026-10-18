@@ -121,20 +121,17 @@ input:focus{outline:none;border-color:rgba(255,255,255,.6)}
 @keyframes gl{50%{transform:scaleX(.25);opacity:.35}}
 #gs{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);background:none;border:0;color:rgba(255,255,255,.5);font-size:.8rem;cursor:pointer;padding:8px 14px}#gs:hover{color:#fff}
 
-/* ===== intro: the live gradient stays visible, blurred, with the name resolving out of it ===== */
+/* ===== intro: particles spiral in from the dark and assemble the name, then detonate ===== */
 #ld{position:fixed;inset:0;z-index:9000;cursor:pointer;overflow:hidden}
-#lv{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,.05) 0,rgba(0,0,0,.55) 70%,rgba(0,0,0,.92) 100%)}
-#lgl{position:absolute;left:50%;top:50%;width:70vmin;height:70vmin;margin:-35vmin 0 0 -35vmin;border-radius:50%;background:radial-gradient(circle,rgba(166,239,230,.28),rgba(166,239,230,0) 65%);opacity:0;filter:blur(8px)}
-.rg{position:absolute;left:50%;top:50%;width:22vmin;height:22vmin;margin:-11vmin 0 0 -11vmin;border-radius:50%;border:1px solid rgba(255,255,255,.85);box-shadow:0 0 50px rgba(166,239,230,.4),inset 0 0 50px rgba(166,239,230,.25);opacity:0}
-#lw{position:absolute;left:0;right:0;top:50%;transform:translateY(-62%);text-align:center;font:300 clamp(4.2rem,16vw,12rem)/1.12 Spectral,Georgia,serif;white-space:nowrap;pointer-events:none}
-#lwi{display:inline-block}
-.lc{display:inline-block;padding:0 .02em .18em;margin-bottom:-.18em}
-.lc>span{display:inline-block;opacity:0;color:transparent;background:linear-gradient(100deg,#fff 0 40%,#a6efe6 50%,#fff 60% 100%) 100% 0/300% 100%;-webkit-background-clip:text;background-clip:text}
-#lt{position:absolute;left:50%;top:calc(50% + 56px);width:min(260px,56vw);height:1px;transform:translateX(-50%);background:rgba(255,255,255,.16)}
-#lf{height:100%;background:#fff;transform:scaleX(0);transform-origin:left;box-shadow:0 0 14px rgba(255,255,255,.6)}
-#lg{position:absolute;left:0;right:0;top:calc(50% + 76px);text-align:center;font:italic 300 1.15rem Spectral,Georgia,serif;color:rgba(255,255,255,.72);opacity:0}
-#lm{position:absolute;left:28px;right:28px;bottom:30px;display:flex;justify-content:space-between;align-items:flex-end;font-size:.8rem;color:rgba(255,255,255,.55);opacity:0}
+#lv{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,.1),rgba(0,0,0,.7) 75%,rgba(0,0,0,.95))}
+#lc{position:absolute;inset:0;width:100%;height:100%}
+#lw{position:absolute;left:0;right:0;top:50%;transform:translateY(-55%);text-align:center;font:300 clamp(4.2rem,16vw,12rem)/1.12 Spectral,Georgia,serif;white-space:nowrap;pointer-events:none}
+#lwi{display:inline-block;opacity:0;color:#fff;text-shadow:0 0 40px rgba(166,239,230,.35)}
+#lg{position:absolute;left:0;right:0;top:calc(50% + clamp(2.6rem,9vw,7rem));text-align:center;font:italic 300 1.15rem Spectral,Georgia,serif;color:rgba(255,255,255,.72);opacity:0}
+#lm{position:absolute;left:28px;right:28px;bottom:26px;display:flex;justify-content:space-between;align-items:flex-end;font-size:.8rem;color:rgba(255,255,255,.55);opacity:0}
 #lp{font:300 3.2rem Spectral,serif;color:#fff;line-height:1}
+#lt{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.1)}
+#lf{height:100%;background:linear-gradient(90deg,#a6efe6,#fff);transform:scaleX(0);transform-origin:left;box-shadow:0 0 16px rgba(166,239,230,.7)}
 #bg{transition:filter 2.2s cubic-bezier(.2,.7,.2,1),transform 2.2s cubic-bezier(.2,.7,.2,1)}
 body.bgb #bg{filter:blur(22px) saturate(1.2);transform:scale(1.14)}
 nav b .nm{transition:opacity .3s}body.fly nav b .nm{opacity:0}
@@ -152,12 +149,10 @@ body.pre nav,body.pre #snap,body.pre .dots{opacity:0}
 </head>
 <body class="pre bgb">
 <div id="gt" hidden><div><p id="gp">Click to enter</p><i></i></div><button id="gs" type="button">Continue without sound</button></div>
-<div id="ld">
-  <div id="lv"></div><div id="lgl"></div><div class="rg"></div><div class="rg"></div>
-  <div id="lw"><span id="lwi"></span></div>
-  <div id="lt"><div id="lf"></div></div><p id="lg"></p>
+<div id="ld"><div id="lv"></div><canvas id="lc"></canvas>
+  <div id="lw"><span id="lwi"></span></div><p id="lg"></p>
   <div id="lm"><span id="lp">0</span><span id="ls">Starting up</span></div>
-</div>
+  <div id="lt"><div id="lf"></div></div></div>
 <canvas id="bg"></canvas>
 <img id="cur" alt="">
 <div id="toast"></div>
@@ -539,47 +534,68 @@ async function gate(){
 
 /* ---------- intro ---------- */
 function runLoader(){
-  const L=$("#ld"),b=document.body,C=CONFIG.loader;let over=false,split=false,skip=false,ready=false,hum=null;
+  const L=$("#ld"),b=document.body,C=CONFIG.loader;let over=false,split=false,skip=false,ready=false,hum=null,raf=0;
   const show=()=>{b.classList.remove("pre","fly","bgb");b.classList.add("in")};
-  const end=()=>{if(over)return;over=true;if(hum)hum.stop();show();L.animate([{opacity:1},{opacity:0}],{duration:400,fill:"forwards"}).finished.then(()=>L.remove(),()=>L.remove())};
+  const end=()=>{if(over)return;over=true;cancelAnimationFrame(raf);if(hum)hum.stop();show();L.animate([{opacity:1},{opacity:0}],{duration:400,fill:"forwards"}).finished.then(()=>L.remove(),()=>L.remove())};
   setTimeout(end,18000);
   if(C.enabled===false||(C.respectReducedMotion===true&&matchMedia("(prefers-reduced-motion:reduce)").matches)){over=true;L.remove();show();return}
-  const inner=$("#lwi"),fill=$("#lf"),lp=$("#lp"),lm=$("#ls"),rings=$$(".rg");
-  [...CONFIG.storeName].forEach(ch=>{const c=document.createElement("span");c.className="lc";const t=document.createElement("span");t.textContent=ch===" "?"\u00a0":ch;c.append(t);inner.append(c)});
-  const letters=[...inner.querySelectorAll(".lc>span")];$("#lg").textContent=CONFIG.tagline;
+  const inner=$("#lwi"),fill=$("#lf"),lp=$("#lp"),lm=$("#ls"),cv=$("#lc"),cx=cv.getContext("2d");
+  inner.textContent=CONFIG.storeName;$("#lg").textContent=CONFIG.tagline;
   const A=(e,k,o)=>e.animate(k,Object.assign({fill:"forwards"},o)).finished.catch(()=>{});
   const img=src=>new Promise(r=>{const i=new Image();i.onload=i.onerror=r;i.src=src});
-  Promise.race([Promise.all([document.fonts.load('300 100px Spectral'),img(CONFIG.cursor.src),img("assets/store.png")]),wait(5000)]).catch(()=>{}).then(()=>ready=true);
+  const fontsP=Promise.race([document.fonts.load('300 100px Spectral'),wait(2500)]).catch(()=>{});
+  Promise.race([Promise.all([img(CONFIG.cursor.src),img("assets/store.png")]),wait(5000)]).then(()=>ready=true);
   L.onclick=()=>{if(split)end();else skip=true};
   (async()=>{
-    SFX.play("enter");await wait(250);
-    /* 1. glow swells, letters resolve out of blur one by one, spacing tightens, light sweeps across */
-    A($("#lgl"),[{opacity:0,transform:"scale(.6)"},{opacity:1,transform:"scale(1)"}],{duration:2200,easing:"cubic-bezier(.2,.9,.2,1)"});
-    const intro=Promise.all(letters.map((l,i)=>A(l,[{opacity:0,transform:"translateY(55%) scale(.82)",filter:"blur(20px)"},{opacity:1,transform:"none",filter:"blur(0)"}],{duration:1100,delay:i*90,easing:"cubic-bezier(.2,.9,.2,1)"})));
-    A(inner,[{letterSpacing:".24em"},{letterSpacing:"0em"}],{duration:2000,easing:"cubic-bezier(.2,.9,.2,1)"});
-    letters.forEach((_,i)=>setTimeout(()=>SFX.play("letter",i),i*90));
-    intro.then(()=>letters.forEach((l,i)=>l.animate([{backgroundPosition:"100% 0"},{backgroundPosition:"0 0"}],{duration:1000,delay:i*80,easing:"ease-in-out"})));
-    A($("#lg"),[{opacity:0,transform:"translateY(8px)"},{opacity:1,transform:"none"}],{duration:900,delay:900});A($("#lm"),[{opacity:0},{opacity:1}],{duration:600,delay:300});
-    /* 2. progress line fills, hum rises */
+    await fontsP;if(over)return;
+    SFX.play("enter");
+    const W=cv.width=innerWidth,H=cv.height=innerHeight,mx=W/2,my=H/2,R=Math.max(W,H),clamp=v=>Math.max(0,Math.min(1,v));
+    /* sample the name's pixels: every lit pixel becomes a particle that spirals in to its spot */
+    const rr=inner.getBoundingClientRect(),fs=parseFloat(getComputedStyle($("#lw")).fontSize);
+    const oc=document.createElement("canvas");oc.width=W;oc.height=H;const o=oc.getContext("2d");
+    o.font=`300 ${fs}px Spectral,Georgia,serif`;o.textAlign="center";o.textBaseline="alphabetic";o.fillStyle="#fff";
+    const mt=o.measureText(CONFIG.storeName),fa=mt.fontBoundingBoxAscent||fs*.9,fd=mt.fontBoundingBoxDescent||fs*.3;
+    o.fillText(CONFIG.storeName,rr.left+rr.width/2,rr.top+(rr.height-(fa+fd))/2+fa);
+    const d=o.getImageData(0,0,W,H).data,step=Math.max(3,Math.round(fs/55)),P=[];
+    for(let y=0;y<H;y+=step)for(let x=0;x<W;x+=step)if(d[(y*W+x)*4+3]>128){
+      const a=Math.random()*6.283,r=R*(.55+Math.random()*.4);
+      P.push({tx:x,ty:y,sx:mx+Math.cos(a)*r,sy:my+Math.sin(a)*r,a,de:Math.random(),sw:(Math.random()-.5)*7,s:1.4+Math.random()*1.8,x:0,y:0,vx:0,vy:0})}
+    while(P.length>6500)P.splice(Math.random()*P.length|0,1);
+    let prog=0,phase=0,bt=0,last=performance.now();
+    const frame=now=>{
+      const dt=Math.min(.05,(now-last)/1000);last=now;cx.globalAlpha=1;cx.globalCompositeOperation="source-over";cx.clearRect(0,0,W,H);cx.globalCompositeOperation="lighter";
+      if(phase===0){
+        for(const p of P){
+          const u=clamp((prog-p.de*.45)/.55),e=1-Math.pow(1-u,3),k=1-e,ox=(p.sx-p.tx)*k,oy=(p.sy-p.ty)*k,c=Math.cos(p.sw*k),s=Math.sin(p.sw*k);
+          cx.globalAlpha=.2+.8*e;cx.fillStyle=u<1?"#a6efe6":"#fff";
+          cx.fillRect(p.tx+ox*c-oy*s+Math.sin(now/400+p.a)*.6*e,p.ty+ox*s+oy*c+Math.cos(now/430+p.a)*.6*e,p.s,p.s)}
+      }else{
+        bt+=dt;const dr=Math.pow(.18,dt);cx.globalAlpha=clamp(1-bt/1.5);cx.fillStyle="#cffaf4";
+        for(const p of P){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=dr;p.vy*=dr;cx.fillRect(p.x,p.y,p.s,p.s)}
+        cx.globalCompositeOperation="source-over";cx.lineWidth=2;cx.strokeStyle="#fff";
+        [0,.16].forEach(dl=>{const q=bt-dl;if(q>0&&q<1.3){cx.globalAlpha=(1-q/1.3)*.7;cx.beginPath();cx.arc(mx,my,q*R*.75,0,7);cx.stroke()}});
+      }
+      raf=requestAnimationFrame(frame)};
+    raf=requestAnimationFrame(frame);
+    A($("#lg"),[{opacity:0,transform:"translateY(8px)"},{opacity:1,transform:"none"}],{duration:900,delay:900});A($("#lm"),[{opacity:0},{opacity:1}],{duration:600,delay:200});
+    /* 1. particles gather, the hum rises with them */
     hum=SFX.hum();let lastT=0;const t0=performance.now(),M=C.messages;
     await new Promise(r=>{(function f(){
-      const t=Math.min(1,(performance.now()-t0)/(skip?300:C.minMs));let p=1-Math.pow(1-t,2.4);if(!ready)p=Math.min(p,.93);
-      fill.style.transform=`scaleX(${p})`;lp.textContent=Math.floor(p*100);hum.set(p);
+      const t=Math.min(1,(performance.now()-t0)/(skip?300:C.minMs));let p=1-Math.pow(1-t,2.2);if(!ready)p=Math.min(p,.93);
+      prog=p;fill.style.transform=`scaleX(${p})`;lp.textContent=Math.floor(p*100);hum.set(p);
       const n=Math.floor(p*10);if(n>lastT){lastT=n;SFX.play("tick",p)}
       lm.textContent=M[p>=1?M.length-1:Math.min(M.length-2,Math.floor(p*(M.length-1)))];
       if(p>=1&&ready)r();else requestAnimationFrame(f)})()});
-    hum.stop();SFX.play("riser");
-    await intro;if(over)return;await wait(500);if(over)return;
-    /* 3. impact: two rings burst out, the dark veil lifts, the background snaps into focus */
-    split=true;b.classList.remove("bgb");const rr=inner.getBoundingClientRect();
-    SFX.play("boom");
-    rings.forEach((r,i)=>A(r,[{opacity:.9,transform:"scale(.2)"},{opacity:0,transform:"scale(9)"}],{duration:1600,delay:i*180,easing:"cubic-bezier(.1,.7,.2,1)"}));
+    if(over)return;hum.stop();SFX.play("riser");await wait(550);if(over)return;
+    /* 2. detonation: particles blast outward, shockwaves ring, the name snaps in, the background focuses */
+    split=true;b.classList.remove("bgb");SFX.play("boom");
+    for(const p of P){p.x=p.tx;p.y=p.ty;const a=Math.atan2(p.ty-my,p.tx-mx),sp=250+Math.random()*950;p.vx=Math.cos(a)*sp+(Math.random()-.5)*220;p.vy=Math.sin(a)*sp+(Math.random()-.5)*220}
+    phase=1;
     A($("#lv"),[{opacity:1},{opacity:0}],{duration:1500,easing:"ease-out"});
-    A($("#lgl"),[{opacity:1,transform:"scale(1)"},{opacity:0,transform:"scale(2.2)"}],{duration:1400,easing:"ease-out"});
-    A(inner,[{transform:"scale(1)"},{transform:"scale(1.08)",offset:.25},{transform:"scale(1)"}],{duration:700,easing:"ease-out"});
+    A(inner,[{opacity:0,filter:"blur(12px)",transform:"scale(.96)"},{opacity:1,filter:"blur(0)",transform:"scale(1)"}],{duration:600,easing:"cubic-bezier(.2,.9,.2,1)"});
     [$("#lm"),$("#lg"),$("#lt")].forEach(e=>A(e,[{opacity:1},{opacity:0}],{duration:350}));
-    await wait(700);if(over)return;
-    /* 4. the name flies into the nav on a curve, the hero rises in */
+    await wait(1000);if(over)return;
+    /* 3. the name flies up into the nav on a curve while the page rises in */
     const nm=document.querySelector("nav b .nm"),tr=nm.getBoundingClientRect();
     b.classList.add("fly");b.classList.remove("pre");setTimeout(()=>{b.classList.add("in");SFX.play("air")},700);SFX.play("whoosh");
     if(tr.width>0){const s=tr.width/rr.width,dx=tr.left+tr.width/2-(rr.left+rr.width/2),dy=tr.top+tr.height/2-(rr.top+rr.height/2);
