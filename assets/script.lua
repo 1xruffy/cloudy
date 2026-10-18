@@ -913,6 +913,32 @@ local function createSlider(text, parent, min, max, configKey)
 end
 
 -- Populate UI Tab 1 (Aimbot)
+-- Zombie Targeting Toggle (below AIMBOT / SILENT)
+local ZombieToggle = Instance.new("TextButton")
+ZombieToggle.Name = "ZombieToggle"
+ZombieToggle.Size = UDim2.new(1, -20, 0, 30)
+ZombieToggle.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+ZombieToggle.BorderSizePixel = 0
+ZombieToggle.Text = "Zombie Targeting: OFF"
+ZombieToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+ZombieToggle.TextSize = 13
+ZombieToggle.Font = Enum.Font.SourceSansBold
+ZombieToggle.LayoutOrder = 0
+ZombieToggle.Parent = AimbotFrame
+
+local zombieFarmEnabled = false
+
+ZombieToggle.MouseButton1Click:Connect(function()
+    zombieFarmEnabled = not zombieFarmEnabled
+
+    ZombieToggle.Text = zombieFarmEnabled
+        and "Zombie Targeting: ON"
+        or "Zombie Targeting: OFF"
+
+    ZombieToggle.BackgroundColor3 = zombieFarmEnabled
+        and Color3.fromRGB(0, 140, 60)
+        or Color3.fromRGB(48, 48, 48)
+end)
 createCheckbox("Joint Silent Aim", AimbotFrame, "SilentAim")
 createCheckbox("Key Aimlock (Q)", AimbotFrame, "Aimlock")
 createSlider("Aimbot FOV", AimbotFrame, 50, 400, "FOV")
@@ -988,42 +1014,5 @@ UnloadButton.MouseButton1Click:Connect(function()
     FOVCircle:Remove()
     print("[Mystical] UI removed")
 end)
-
--- Zombie Target Toggle
-local zombieFarmEnabled = false
-
-local targetNames = {
-    "Helmet Zombie",
-    "Reanimating Zombie",
-    "Explosive Zombie",
-}
-
-local ZombieToggle = Instance.new("TextButton")
-ZombieToggle.Name = "ZombieToggle"
-ZombieToggle.Size = UDim2.new(1, -20, 0, 30)
-ZombieToggle.Position = UDim2.new(0, 10, 0, 0)
-ZombieToggle.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
-ZombieToggle.BorderSizePixel = 0
-ZombieToggle.TextColor3 = Color3.new(1, 1, 1)
-ZombieToggle.Font = Enum.Font.SourceSansBold
-ZombieToggle.TextSize = 13
-ZombieToggle.Parent = FeatureFrame
-
-local function updateZombieToggle()
-    ZombieToggle.Text = zombieFarmEnabled
-        and "Zombie Targeting: ON"
-        or "Zombie Targeting: OFF"
-
-    ZombieToggle.BackgroundColor3 = zombieFarmEnabled
-        and Color3.fromRGB(0, 140, 60)
-        or Color3.fromRGB(48, 48, 48)
-end
-
-ZombieToggle.MouseButton1Click:Connect(function()
-    zombieFarmEnabled = not zombieFarmEnabled
-    updateZombieToggle()
-end)
-
-updateZombieToggle()
 
 print("[Rivals] Joint Silent Aim & UI Loaded.")
