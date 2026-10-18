@@ -920,18 +920,21 @@ end
 
 
 
+
 -- ========================================
--- MYSTICAL: ZOMBIE TARGETING SYSTEM
+-- MYSTICAL: ZOMBIE CONTROLS
+-- Requires AimbotFrame and LocalPlayer
 -- ========================================
 
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
 local LocalPlayer = Players.LocalPlayer
 
 local zombieFarmEnabled = false
 local targetingTaskRunning = false
 local currentTarget = nil
 local originalPosition = nil
-local lastMissingWarning = 0
 
 local targetNames = {
     "Helmet Zombie",
@@ -941,7 +944,7 @@ local targetNames = {
 }
 
 -- ========================================
--- UI CONTAINER
+-- UI
 -- ========================================
 
 local Container = Instance.new("Frame")
@@ -950,10 +953,6 @@ Container.Size = UDim2.new(1, 0, 0, 70)
 Container.BackgroundTransparency = 1
 Container.LayoutOrder = 1
 Container.Parent = AimbotFrame
-
--- ========================================
--- ZOMBIE TARGETING CHECKBOX
--- ========================================
 
 local Button = Instance.new("TextButton")
 Button.Name = "ZombieToggle"
@@ -975,10 +974,6 @@ Label.Font = Enum.Font.SourceSans
 Label.TextXAlignment = Enum.TextXAlignment.Left
 Label.Parent = Container
 
--- ========================================
--- COORDINATE TELEPORT BUTTON
--- ========================================
-
 local TeleportButton = Instance.new("TextButton")
 TeleportButton.Name = "CoordinateTeleportButton"
 TeleportButton.Size = UDim2.new(1, -20, 0, 30)
@@ -992,66 +987,78 @@ TeleportButton.Font = Enum.Font.SourceSans
 TeleportButton.Parent = Container
 
 -- ========================================
--- CHARACTER HELPERS
+-- CHARACTER
 -- ========================================
 
-local function getCharacterRoot()
-    local character = LocalPlayer.Character
+local function getCharacter()
+    return LocalPlayer.Character
+end
 
-    if not character then
-        return nil
-    end
-
-    return character:FindFirstChild("HumanoidRootPart")
+local function getRoot(character)
+    return character
+        and character:FindFirstChild("HumanoidRootPart")
 end
 
 -- ========================================
--- FIND ENTITIES FOLDER
+-- COORDINATE TELEPORT
 -- ========================================
 
-local function getEntitiesFolder()
+TeleportButton.MouseButton1Click:Connect(function()
+    local character = getCharacter()
+    local root = getRoot(character)
+
+    print("[Mystical] Coordinate button clicked")
+
+    if not character or not root then
+        warn("[Mystical] Character/root not found")
+        return
+    end
+
+    local destination = Vector3.new(
+        6997.80,
+        2819.50,
+        2041.65
+    )
+
+    local ok, err = pcall(function()
+        character:PivotTo(CFrame.new(destination))
+    end)
+
+    if not ok then
+        warn("[Mystical] Teleport error:", err)
+        return
+    end
+
+    print("[Mystical] Requested destination:", destination)
+    print("[Mystical] Current position:", root.Position)
+end)
+
+-- ========================================
+-- FIND ZOMBIES
+-- ========================================
+
+local function getEntities()
     local tower = workspace:FindFirstChild("Gargoyle Tower")
 
     if not tower then
+        warn("[Mystical] Gargoyle Tower not found")
         return nil
     end
 
     local entities = tower:FindFirstChild("Entities")
 
-    if entities then
-        return entities
-    end
-
-    -- Also check for alternate capitalization.
-    for _, child in ipairs(tower:GetChildren()) do
-        if string.lower(child.Name) == "entities" then
-            return child
-        end
-    end
-
-    local now = os.clock()
-
-    if now - lastMissingWarning > 5 then
-        lastMissingWarning = now
-
-        local names = {}
+    if not entities then
+        warn("[Mystical] Entities not found inside Gargoyle Tower")
 
         for _, child in ipairs(tower:GetChildren()) do
-            table.insert(names, child.Name)
+            print("[Mystical] Tower child:", child.Name)
         end
 
-        warn(
-            "[Mystical] Entities folder not found. Tower children: "
-            .. table.concat(names, ", ")
-        )
+        return nil
     end
 
-    return nil
+    return entities
 end
-
--- ========================================
--- ZOMBIE HEALTH CHECK
--- ========================================
 
 local function isAlive(zombie)
     if not zombie
@@ -1065,12 +1072,8 @@ local function isAlive(zombie)
     return humanoid ~= nil and humanoid.Health > 0
 end
 
--- ========================================
--- FIND NEXT ZOMBIE
--- ========================================
-
 local function findNextZombie()
-    local entities = getEntitiesFolder()
+    local entities = getEntities()
 
     if not entities then
         return nil
@@ -1088,33 +1091,27 @@ local function findNextZombie()
 end
 
 -- ========================================
--- TARGET TRACKING
+-- ZOMBIE TARGET TRACKING
 -- ========================================
 
-local function updateZombieTarget()
+local function updateTarget()
     if not zombieFarmEnabled then
         currentTarget = nil
-        return nil
+        return
     end
 
-    if isAlive(currentTarget) then
-        return currentTarget
+    if not isAlive(currentTarget) then
+        currentTarget = findNextZombie()
+
+        if currentTarget then
+            print("[Mystical] Selected:", currentTarget.Name)
+        else
+            print("[Mystical] No living zombies found")
+        end
     end
-
-    currentTarget = findNextZombie()
-
-    if currentTarget then
-        print("[Mystical] Selected:", currentTarget.Name)
-    end
-
-    return currentTarget
 end
 
--- ========================================
--- TARGETING LOOP
--- ========================================
-
-local function startZombieTargeting()
+local function startTargeting()
     if targetingTaskRunning then
         return
     end
@@ -1123,17 +1120,17 @@ local function startZombieTargeting()
 
     task.spawn(function()
         while zombieFarmEnabled do
-            updateZombieTarget()
+            updateTarget()
             task.wait(0.5)
         end
 
-        currentTarget = nil
         targetingTaskRunning = false
+        currentTarget = nil
     end)
 end
 
 -- ========================================
--- CHECKBOX HANDLER
+-- CHECKBOX
 -- ========================================
 
 local function setZombieTargeting(enabled)
@@ -1144,51 +1141,28 @@ local function setZombieTargeting(enabled)
         or Color3.fromRGB(48, 48, 48)
 
     if enabled then
-        local root = getCharacterRoot()
-
+        local root = getRoot(getCharacter())
         originalPosition = root and root.CFrame or nil
 
         if originalPosition then
             print("[Mystical] Original position saved")
         end
 
-        startZombieTargeting()
+        startTargeting()
     else
         currentTarget = nil
         originalPosition = nil
-
-        print("[Mystical] Zombie Targeting disabled")
     end
+
+    print("[Mystical] Zombie Targeting:", enabled)
 end
 
 Button.MouseButton1Click:Connect(function()
     setZombieTargeting(not zombieFarmEnabled)
 end)
 
--- ========================================
--- COORDINATE TELEPORT
--- ========================================
+print("[Mystical] Controls loaded")
 
-TeleportButton.MouseButton1Click:Connect(function()
-    local character = LocalPlayer.Character
-
-    if not character or not getCharacterRoot() then
-        warn("[Mystical] Character not ready")
-        return
-    end
-
-    local destination = Vector3.new(
-        6997.80,
-        2819.50,
-        2041.65
-    )
-
-    character:PivotTo(CFrame.new(destination))
-
-    print("[Mystical] Coordinate teleport requested")
-end)
-
-print("[Mystical] Zombie controls loaded")
 
 
 createCheckbox("Joint Silent Aim", AimbotFrame, "SilentAim")
