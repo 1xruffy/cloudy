@@ -972,14 +972,17 @@ end
 
 Button.MouseButton1Click:Connect(function()
     setZombieTargeting(not zombieFarmEnabled)
+    print("[Mystical] Zombie Targeting:", zombieFarmEnabled)
 end)
 
 -- Target selection helper
 -- Selects any living matching model, not the nearest.
 local function findNextZombie()
     local workspaceFolder = workspace:FindFirstChild("Gargoyle Tower")
+	print("[Mystical] Gargoyle Tower folder:", workspaceFolder)
     local entities = workspaceFolder
         and workspaceFolder:FindFirstChild("Entites")
+	print("[Mystical] Entities folder:", entities)
 
     if not entities then
         return nil
