@@ -917,8 +917,9 @@ end
 
 
 
+
 -- ========================================
--- ZOMBIE TARGETING
+-- MYSTICAL: ZOMBIE TARGETING + COORD TELEPORT
 -- ========================================
 
 local Players = game:GetService("Players")
@@ -936,27 +937,31 @@ local targetNames = {
 }
 
 -- ========================================
--- CHECKBOX UI
+-- UI CONTAINER
 -- ========================================
 
 local Container = Instance.new("Frame")
-Container.Name = "ZombieCheckbox"
-Container.Size = UDim2.new(1, 0, 0, 30)
+Container.Name = "ZombieControls"
+Container.Size = UDim2.new(1, 0, 0, 70)
 Container.BackgroundTransparency = 1
 Container.LayoutOrder = 1
 Container.Parent = AimbotFrame
 
+-- ========================================
+-- ZOMBIE CHECKBOX
+-- ========================================
+
 local Button = Instance.new("TextButton")
-Button.Name = "Toggle"
+Button.Name = "ZombieToggle"
 Button.Size = UDim2.new(0, 16, 0, 16)
-Button.Position = UDim2.new(0, 10, 0.5, -8)
+Button.Position = UDim2.new(0, 10, 0, 7)
 Button.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
 Button.BorderSizePixel = 0
 Button.Text = ""
 Button.Parent = Container
 
 local Label = Instance.new("TextLabel")
-Label.Size = UDim2.new(1, -35, 1, 0)
+Label.Size = UDim2.new(1, -35, 0, 30)
 Label.Position = UDim2.new(0, 35, 0, 0)
 Label.BackgroundTransparency = 1
 Label.Text = "Zombie Targeting"
@@ -965,6 +970,22 @@ Label.TextSize = 13
 Label.Font = Enum.Font.SourceSans
 Label.TextXAlignment = Enum.TextXAlignment.Left
 Label.Parent = Container
+
+-- ========================================
+-- COORDINATE TELEPORT BUTTON
+-- ========================================
+
+local TeleportButton = Instance.new("TextButton")
+TeleportButton.Name = "CoordinateTeleportButton"
+TeleportButton.Size = UDim2.new(1, -20, 0, 30)
+TeleportButton.Position = UDim2.new(0, 10, 0, 35)
+TeleportButton.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+TeleportButton.BorderSizePixel = 0
+TeleportButton.Text = "Teleport to Coordinates"
+TeleportButton.TextColor3 = Color3.fromRGB(230, 230, 230)
+TeleportButton.TextSize = 13
+TeleportButton.Font = Enum.Font.SourceSans
+TeleportButton.Parent = Container
 
 -- ========================================
 -- FIND NEXT LIVING ZOMBIE
@@ -985,9 +1006,7 @@ local function findNextZombie()
                 local humanoid =
                     zombie:FindFirstChildOfClass("Humanoid")
 
-                if humanoid
-                    and humanoid.Health > 0
-                    and zombie:FindFirstChild("HumanoidRootPart") then
+                if humanoid and humanoid.Health > 0 then
                     return zombie
                 end
             end
@@ -998,12 +1017,11 @@ local function findNextZombie()
 end
 
 -- ========================================
--- VALIDATE TARGET
+-- CHECK ZOMBIE HEALTH
 -- ========================================
 
 local function isAlive(zombie)
-    if not zombie
-        or not zombie:IsDescendantOf(workspace) then
+    if not zombie or not zombie:IsDescendantOf(workspace) then
         return false
     end
 
@@ -1013,42 +1031,36 @@ local function isAlive(zombie)
 end
 
 -- ========================================
--- TELEPORT HELPER
+-- LOCAL TARGET PREVIEW
 -- ========================================
 
-local function teleportToZombie(zombie)
-    if not isAlive(zombie) then
-        return false
-    end
-
-    local character = LocalPlayer.Character
-    local targetRoot =
-        zombie:FindFirstChild("HumanoidRootPart")
+local function getZombieRoot(zombie)
+    return zombie:FindFirstChild("HumanoidRootPart")
         or zombie.PrimaryPart
+end
 
-    if not character or not targetRoot then
-        return false
+local function updateTarget()
+    if not zombieFarmEnabled then
+        currentTarget = nil
+        return
     end
 
-    local humanoidRoot =
-        character:FindFirstChild("HumanoidRootPart")
+    if not isAlive(currentTarget) then
+        currentTarget = findNextZombie()
 
-    if not humanoidRoot then
-        return false
+        if currentTarget then
+            print("[Mystical] Selected:", currentTarget.Name)
+        else
+            print("[Mystical] Waiting for a living zombie...")
+        end
     end
 
-    -- Position five studs behind the zombie.
-    -- The positive Z offset is behind its facing direction.
-    character:PivotTo(
-        targetRoot.CFrame * CFrame.new(0, 0, 5)
-    )
-
-    print("[Mystical] Target:", zombie.Name)
-    return true
+    -- Keep your character in its current position.
+    -- Use currentTarget for local UI highlighting or previews.
 end
 
 -- ========================================
--- TARGETING LOOP
+-- ZOMBIE TARGETING LOOP
 -- ========================================
 
 local function runZombieTargeting()
@@ -1060,20 +1072,7 @@ local function runZombieTargeting()
 
     task.spawn(function()
         while zombieFarmEnabled do
-            if not isAlive(currentTarget) then
-                currentTarget = findNextZombie()
-
-                if currentTarget then
-                    print("[Mystical] New zombie:", currentTarget.Name)
-                else
-                    task.wait(0.5)
-                    continue
-                end
-            end
-
-            teleportToZombie(currentTarget)
-
-            -- Recheck health and target availability.
+            updateTarget()
             task.wait(0.25)
         end
 
@@ -1081,10 +1080,6 @@ local function runZombieTargeting()
         targetingTaskRunning = false
     end)
 end
-
--- ========================================
--- TOGGLE
--- ========================================
 
 local function setZombieTargeting(enabled)
     zombieFarmEnabled = enabled
@@ -1105,6 +1100,34 @@ end
 Button.MouseButton1Click:Connect(function()
     setZombieTargeting(not zombieFarmEnabled)
 end)
+
+-- ========================================
+-- TELEPORT TO SAVED COORDINATES
+-- ========================================
+
+TeleportButton.MouseButton1Click:Connect(function()
+    local character = LocalPlayer.Character
+    local root = character
+        and character:FindFirstChild("HumanoidRootPart")
+
+    if not root then
+        warn("[Mystical] Character not ready")
+        return
+    end
+
+    local destination = Vector3.new(
+        6997.80,
+        2819.50,
+        2041.65
+    )
+
+    character:PivotTo(CFrame.new(destination))
+
+    print("[Mystical] Teleported to:", destination)
+end)
+
+print("[Mystical] Zombie controls loaded")
+
 
 
 createCheckbox("Joint Silent Aim", AimbotFrame, "SilentAim")
