@@ -469,7 +469,6 @@ local Settings = {
     HealthBar = true,
     SilentAim = true, -- Joint-Rotation Silent Aim (True Silent Aim)
     Aimlock = false,
-    AimlockKey = Enum.KeyCode.Q,
     FOV = 150,
     TeamCheck = false,
     AimPart = "HitboxHead"
@@ -650,7 +649,7 @@ end)
 -- Key Aimlock Loop (moves mouse cursor only when holding key)
 local lockTarget = nil
 RunService.RenderStepped:Connect(function()
-    if Settings.Aimlock and UserInputService:IsKeyDown(Settings.AimlockKey) then
+    if Settings.Aimlock and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2) then
         if not lockTarget or not lockTarget.Character or not lockTarget.Character:FindFirstChild("HumanoidRootPart") then
             lockTarget = getClosestPlayer()
         end
@@ -1155,8 +1154,7 @@ print("[Mystical] Zombie Sky Farm loaded")
 
 
 
-createCheckbox("Joint Silent Aim", AimbotFrame, "SilentAim")
-createCheckbox("Key Aimlock (Q)", AimbotFrame, "Aimlock")
+createCheckbox("Key Aimlock (RMB)", AimbotFrame, "Aimlock")
 createSlider("Aimbot FOV", AimbotFrame, 50, 400, "FOV")
 
 -- Populate UI Tab 2 (ESP)
@@ -1167,7 +1165,6 @@ createCheckbox("Distance ESP", ESPFrame, "Distance")
 createCheckbox("Healthbar", ESPFrame, "HealthBar")
 
 -- Populate UI Tab 3 (Feature Status)
-createStatusLabel("Joint Silent Aim", "SilentAim", FeatureFrame)
 createStatusLabel("Key Aimlock", "Aimlock", FeatureFrame)
 createStatusLabel("Box ESP", "ESP", FeatureFrame)
 createStatusLabel("Tracers", "Tracers", FeatureFrame)
