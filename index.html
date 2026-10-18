@@ -180,7 +180,7 @@ body.pre nav,body.pre #snap,body.pre .dots{opacity:0}
 <nav>
   <b><img src="assets/store.png" alt="" onerror="this.remove()"><span class="nm"></span></b>
   <div>
-    <a class="hm" data-go="1">Features</a><a data-m="docs">Docs</a><a data-m="status">Status</a>
+    <a class="hm" data-go="1">Features</a><a data-go="3">Premium</a><a data-m="docs">Docs</a><a data-m="status">Status</a>
     <a data-m="redeem">Redeem</a><a class="hm" data-m="changelog">Changelog</a><a id="disc" target="_blank" rel="noopener">Discord</a>
   </div>
 </nav>
@@ -190,7 +190,7 @@ body.pre nav,body.pre #snap,body.pre .dots{opacity:0}
   <section class="s">
     <button class="pill gl rv" style="--i:0" id="pill" type="button"><i></i><span></span></button>
     <h1 id="h1"></h1><p class="sub rv" style="--i:4" id="sub"></p>
-    <div class="cta rv" style="--i:5"><button class="btn w" data-go="2">Get the script</button></div>
+    <div class="cta rv" style="--i:5"><button class="btn w" data-go="2">Get the script</button><button class="btn" data-go="3">View premium</button></div>
     <span class="hint rv" style="--i:7">Scroll</span>
   </section>
   <section class="s">
@@ -199,6 +199,10 @@ body.pre nav,body.pre #snap,body.pre .dots{opacity:0}
   <section class="s">
     <h2 id="h2"></h2><p class="sub" id="sub2"></p><div class="steps" id="steps"></div>
     <div id="lock"></div><p class="note" id="n2"></p>
+  </section>
+  <section class="s">
+    <h2 id="h3"></h2><p class="sub" id="sub3"></p><div class="sale" id="sale"></div><div class="plans" id="plans"></div>
+    <p class="note">Crypto payments. Keys are delivered after your payment is confirmed.</p>
   </section>
   <section class="s">
     <h2 id="h4"></h2><div class="faq" id="faq"></div>
@@ -611,59 +615,4 @@ function redeem(){
     const end=db[v]+k.days*864e5,live=end>Date.now();
     $("#pt").textContent=first?"Key redeemed":live?"Already redeemed":"Key expired";
     $("#pb").innerHTML=`<div class="kv"><span class="mut">Key</span><b id="a1"></b></div><div class="kv"><span class="mut">Type</span><b id="a2"></b></div><div class="kv"><span class="mut">Duration</span><b id="a3"></b></div><div class="kv"><span class="mut">Expires</span><b id="a4"></b></div>
-      ${live?`<p style="margin-top:16px">Your script is unlocked. Copy it and run it in your executor:</p><div class="code gl" style="margin:10px 0 14px"><code id="kl"></code><button class="btn sm" id="kc">Copy</button></div>`:'<p style="margin-top:16px">This key has expired. Get a new one from the premium section or on Discord.</p>'}
-      <button class="btn" id="rm" style="width:100%">Redeem another key</button>`;
-    $("#a1").textContent=k.key;$("#a2").textContent=k.type;$("#a3").textContent=k.days>=3650?"Lifetime":k.days+" day"+(k.days===1?"":"s");
-    $("#a4").textContent=live?(k.days>=3650?"Never":new Date(end).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})):"Expired";
-    if(live){$("#kl").textContent=CONFIG.free.script;$("#kc").onclick=()=>copy(CONFIG.free.script,"Script copied")}
-    $("#rm").onclick=redeem;renderLock();
-  };
-  $("#rg").onclick=go;$("#rk").onkeydown=e=>{if(e.key==="Enter")go()};$("#rk").focus();
-}
-
-/* changelog */
-function changelog(){
-  panel("Changelog",CONFIG.changelog.map(c=>`<div class="cl"><h4>${esc(c.v)}<small>${esc(c.date)}</small></h4><ul>${c.items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul></div>`).join(""));
-}
-
-/* checkout (crypto) */
-function checkout(p){
-  let promo=null,coin=CONFIG.crypto.wallets[0];const CC=CONFIG.codes||{},H=(CONFIG.crypto.checkoutLinks||{})[p.id];
-  const final=()=>{const sp=+price(p);if(!promo)return sp.toFixed(2);const cp=+p.price*(100-promo.percent)/100;
-    return(Math.round((CC.stackWithSale===false?Math.min(sp,cp):sp*(100-promo.percent)/100)*100)/100).toFixed(2)};
-  panel(p.name,`<p>${p.days} days${onSale()?" · "+esc(S.name):""}</p>
-    <div style="margin:12px 0"><span class="big" id="np"></span> <s class="mut" id="op"></s></div>
-    <div ${CC.enabled===false?"hidden":""}><div class="wd"><input type="text" id="pi" placeholder="Discount code" style="margin:0;flex:1;min-width:0"><button class="btn" id="pg">Apply</button></div><div class="err" id="pm"></div></div>
-    <p>Send the value above in your chosen coin (at the current rate) to the address below.</p>
-    <div class="row" id="coins"></div>
-    <div class="addr"><div class="mut" id="net"></div><code id="ad"></code><button class="btn sm" id="ca">Copy address</button></div>
-    <label class="ck"><input type="checkbox" id="tc"><span>I am at least 18 and agree to the <a href="${esc(CONFIG.tosLink||"#")}" id="tl" target="_blank" rel="noopener" style="color:#fff">Terms of Service</a>.</span></label>
-    ${H?`<a class="btn" href="${esc(H)}" target="_blank" rel="noopener" style="width:100%;margin-bottom:8px">Pay via checkout link</a>`:""}
-    <button class="btn w" id="paid" style="width:100%" disabled>I've sent the payment</button>
-    <p style="text-align:center;margin-top:10px;font-size:.8rem">Keys are delivered after your payment is confirmed</p>`);
-  const showP=()=>{$("#np").textContent=money(final());const o=promo?price(p):"";$("#op").textContent=o&&o!==final()?money(o):""};
-  const showC=w=>{coin=w;$("#net").textContent=w.coin+" · "+w.network;$("#ad").textContent=w.address;[...$("#coins").children].forEach(b=>b.classList.toggle("on",b.dataset.c===w.coin))};
-  CONFIG.crypto.wallets.forEach(w=>{const b=document.createElement("button");b.className="btn sm";b.textContent=w.coin;b.dataset.c=w.coin;b.onclick=()=>showC(w);$("#coins").append(b)});
-  showC(coin);showP();
-  $("#ca").onclick=()=>copy(coin.address,"Address copied");
-  if(!CONFIG.tosLink)$("#tl").onclick=e=>{e.preventDefault();toast("Terms link coming soon")};
-  $("#tc").onchange=e=>$("#paid").disabled=!e.target.checked;
-  const apply=()=>{const v=norm($("#pi").value),c=(CC.list||[]).find(x=>norm(x.code)===v),pm=$("#pm");let err="";
-    if(!v)err="Enter a code first.";else if(!c||c.active===false)err="That code isn't valid.";
-    else if(c.expiresAt&&Date.now()>new Date(c.expiresAt))err="That code has expired.";
-    else if(c.plans&&!c.plans.includes(p.id))err="That code doesn't work for this product.";
-    promo=err?null:c;pm.className=err?"err":"err ok";pm.textContent=err||c.code+" applied: "+c.percent+"% off";showP()};
-  $("#pg").onclick=apply;$("#pi").onkeydown=e=>{if(e.key==="Enter")apply()};
-  $("#paid").onclick=()=>{
-    const ref="MYST-"+Math.random().toString(36).slice(2,8).toUpperCase(),amt=money(final()),pc=promo;
-    $("#pt").textContent="Almost done";
-    $("#pb").innerHTML=`<p>Open a ticket on Discord and send this reference plus your transaction hash. Your ${esc(p.name)} key is delivered once the payment confirms. Amount: ${amt}.${pc?" Discount code used: "+esc(pc.code)+".":""}</p>
-      <div class="addr" style="margin-top:16px"><code id="rf" style="margin:0;cursor:pointer">${ref}</code></div><p>Save this reference. It is only shown once.</p>
-      <div class="row"><a class="btn w" href="${esc(CONFIG.discordLink||"#")}" target="_blank" rel="noopener">Open Discord</a><button class="btn" id="dn">Done</button></div>`;
-    $("#rf").onclick=()=>copy(ref,"Reference copied");$("#dn").onclick=closeP;
-  };
-}
-route();
-</script>
-</body>
-</html>
+      ${live?`<p style="margin-top:16px">Your script is unlocked. Copy it and run it in your e... (5 KB left)
