@@ -916,22 +916,11 @@ end
 
 
 
-
 -- ========================================
--- ZOMBIE TARGETING + TELEPORT
--- For an experience you own or are authorized to modify
+-- ZOMBIE TARGETING
 -- ========================================
-
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-local LocalPlayer = Players.LocalPlayer
 
 local zombieFarmEnabled = false
-local currentTarget = nil
-local teleportDistance = 4
-local targetUpdateInterval = 0.25
-local lastTargetUpdate = 0
 
 local targetNames = {
     "Helmet Zombie",
@@ -940,10 +929,9 @@ local targetNames = {
     "Zombie",
 }
 
--- The server must validate and handle this request.
-local teleportEvent =
-    ReplicatedStorage:WaitForChild("TeleportBehindZombie", 10)
+local currentTarget = nil
 
+-- Small checkbox, matching the other menu options
 local Container = Instance.new("Frame")
 Container.Name = "ZombieCheckbox"
 Container.Size = UDim2.new(1, 0, 0, 30)
@@ -963,54 +951,12 @@ local Label = Instance.new("TextLabel")
 Label.Size = UDim2.new(1, -35, 1, 0)
 Label.Position = UDim2.new(0, 35, 0, 0)
 Label.BackgroundTransparency = 1
-Label.Text = "Zombie Teleport"
+Label.Text = "Zombie Targeting"
 Label.TextColor3 = Color3.fromRGB(200, 200, 200)
 Label.TextSize = 13
 Label.Font = Enum.Font.SourceSans
 Label.TextXAlignment = Enum.TextXAlignment.Left
 Label.Parent = Container
-
-local function findNextZombie()
-    local tower = workspace:FindFirstChild("Gargoyle Tower")
-    local entities = tower and tower:FindFirstChild("Entites")
-
-    if not entities then
-        return nil
-    end
-
-    local character = LocalPlayer.Character
-    local playerRoot = character
-        and character:FindFirstChild("HumanoidRootPart")
-
-    local bestTarget = nil
-    local bestDistance = math.huge
-
-    for _, zombieName in ipairs(targetNames) do
-        for _, model in ipairs(entities:GetChildren()) do
-            if model:IsA("Model") and model.Name == zombieName then
-                local humanoid = model:FindFirstChildOfClass("Humanoid")
-                local root = model:FindFirstChild("HumanoidRootPart")
-
-                if humanoid and root and humanoid.Health > 0 then
-                    local distance = playerRoot
-                        and (playerRoot.Position - root.Position).Magnitude
-                        or 0
-
-                    if distance < bestDistance then
-                        bestDistance = distance
-                        bestTarget = model
-                    end
-                end
-            end
-        end
-
-        if bestTarget then
-            break
-        end
-    end
-
-    return bestTarget
-end
 
 local function setZombieTargeting(enabled)
     zombieFarmEnabled = enabled
@@ -1028,47 +974,71 @@ Button.MouseButton1Click:Connect(function()
     setZombieTargeting(not zombieFarmEnabled)
 end)
 
-task.spawn(function()
-    while Container.Parent do
-        task.wait(targetUpdateInterval)
+-- Target selection helper
+-- Selects any living matching model, not the nearest.
+local function findNextZombie()
+    local workspaceFolder = workspace:FindFirstChild("Gargoyle Tower")
+    local entities = workspaceFolder
+        and workspaceFolder:FindFirstChild("Entites")
 
-        if not zombieFarmEnabled then
-            continue
-        end
+    if not entities then
+        return nil
+    end
 
-        if not currentTarget
-            or not currentTarget:IsDescendantOf(workspace) then
-            currentTarget = findNextZombie()
-        end
+    for _, name in ipairs(targetNames) do
+        for _, model in ipairs(entities:GetChildren()) do
+            if model.Name == name and model:IsA("Model") then
+                local humanoid = model:FindFirstChildOfClass("Humanoid")
 
-        local target = currentTarget
-        local humanoid = target
-            and target:FindFirstChildOfClass("Humanoid")
-        local targetRoot = target
-            and target:FindFirstChild("HumanoidRootPart")
-
-        if not target
-            or not humanoid
-            or humanoid.Health <= 0
-            or not targetRoot then
-            currentTarget = findNextZombie()
-            target = currentTarget
-            humanoid = target
-                and target:FindFirstChildOfClass("Humanoid")
-            targetRoot = target
-                and target:FindFirstChild("HumanoidRootPart")
-        end
-
-        if target and humanoid and humanoid.Health > 0 and targetRoot then
-            if teleportEvent and os.clock() - lastTargetUpdate >= 1 then
-                lastTargetUpdate = os.clock()
-                teleportEvent:FireServer(target, teleportDistance)
+                if humanoid and humanoid.Health > 0 then
+                    return model
+                end
             end
         end
     end
-end)
 
-print("[Mystical] Zombie teleport targeting initialized")
+    return nil
+end
+
+-- Call this from your authorized game's NPC/teleport controller.
+local function updateZombieTarget()
+    if not zombieFarmEnabled then
+        currentTarget = nil
+        return nil
+    end
+
+    if currentTarget then
+        local humanoid = currentTarget:FindFirstChildOfClass("Humanoid")
+
+        if humanoid and humanoid.Health > 0
+            and currentTarget:IsDescendantOf(workspace) then
+            return currentTarget
+        end
+    end
+
+    currentTarget = findNextZombie()
+    return currentTarget
+end
+local zombie = updateZombieTarget()
+if zombie then
+    teleportToZombie(zombie)
+end
+local function teleportToZombie(zombie)
+    if not zombie or not zombie:IsDescendantOf(workspace) then
+        return
+    end
+
+    local character = LocalPlayer.Character
+    local root = character and character:FindFirstChild("HumanoidRootPart")
+    local targetRoot = zombie:FindFirstChild("HumanoidRootPart")
+        or zombie.PrimaryPart
+
+    if root and targetRoot then
+        character:PivotTo(
+            targetRoot.CFrame * CFrame.new(0, 0, -5)
+        )
+    end
+end
 
 
 createCheckbox("Joint Silent Aim", AimbotFrame, "SilentAim")
