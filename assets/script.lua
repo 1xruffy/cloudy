@@ -3,6 +3,8 @@
 -- Put your real script below, then redeploy. Everything here runs inside the game.
 
 
+print("jew")
+
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 
