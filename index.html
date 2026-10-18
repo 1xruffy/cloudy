@@ -4,7 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mystical</title>
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#a6efe6">
+<meta name="description" content="Mystical: the #1 free Rivals cheat. Free forever. Completely undetected.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mystical">
+<meta property="og:title" content="Mystical">
+<meta property="og:description" content="The #1 Free Rivals cheat. Free forever. Completely undetected. No key, no setup.">
+<meta property="og:url" content="https://mystical-indol.vercel.app/">
+<meta property="og:image" content="https://mystical-indol.vercel.app/assets/store.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mystical">
+<meta name="twitter:description" content="The #1 Free Rivals cheat. Free forever. Completely undetected.">
+<meta name="twitter:image" content="https://mystical-indol.vercel.app/assets/store.png">
 <link rel="icon" href="assets/store.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
@@ -121,24 +132,12 @@ input:focus{outline:none;border-color:rgba(255,255,255,.6)}
 @keyframes gl{50%{transform:scaleX(.25);opacity:.35}}
 #gs{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);background:none;border:0;color:rgba(255,255,255,.5);font-size:.8rem;cursor:pointer;padding:8px 14px}#gs:hover{color:#fff}
 
-/* ===== intro: orbit sigil, iris reveal ===== */
-@property --r{syntax:"<length>";inherits:false;initial-value:0px}
-#ld{position:fixed;inset:0;z-index:9000;cursor:pointer;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 42%,#0c2833 0%,#050b10 55%,#000 100%);-webkit-mask-image:radial-gradient(circle at 50% 50%,transparent var(--r),#000 calc(var(--r) + 2px));mask-image:radial-gradient(circle at 50% 50%,transparent var(--r),#000 calc(var(--r) + 2px))}
-#ld::before{content:"";position:absolute;inset:-20%;background:conic-gradient(from 0deg at 50% 45%,transparent,rgba(166,239,230,.09),transparent 30%,rgba(157,128,190,.09),transparent 60%);animation:rot 18s linear infinite;pointer-events:none}
-.lin{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
-.sg{position:relative;width:min(260px,64vw);aspect-ratio:1}
-.sg::before{content:"";position:absolute;inset:18%;border-radius:50%;background:radial-gradient(circle,rgba(166,239,230,.35),transparent 70%);filter:blur(18px);animation:pls 3s ease-in-out infinite}
-@keyframes pls{50%{transform:scale(1.35);opacity:.6}}
-.sg svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.sg .r1,.sg .r2,.sg .r3{transform-box:view-box;transform-origin:120px 120px}
-.sg .r1{animation:rot 40s linear infinite}.sg .r2{animation:rot 14s linear infinite reverse}.sg .r3{animation:rot 9s linear infinite}
-#lring{stroke-dasharray:603.2;stroke-dashoffset:603.2;filter:drop-shadow(0 0 6px rgba(166,239,230,.7))}
-#lp{position:absolute;inset:0;display:grid;place-items:center;font:300 clamp(2.6rem,9vw,3.4rem) Spectral,serif;font-variant-numeric:tabular-nums}
-#lw{margin-top:38px;font:300 clamp(2.2rem,7vw,3.6rem)/1.1 Spectral,Georgia,serif;white-space:nowrap}
-#lwi{display:inline-block;letter-spacing:.28em;margin-right:-.28em}
-.lc{display:inline-block;opacity:0}
-#lg{margin-top:12px;font:italic 300 1.1rem Spectral,Georgia,serif;color:rgba(255,255,255,.7);opacity:0}
-#ls{margin-top:30px;font-size:.78rem;letter-spacing:.2em;color:rgba(166,239,230,.8);opacity:0}
+/* ===== intro: just the name and a thin line ===== */
+#ld{position:fixed;inset:0;z-index:9000;background:#000;display:grid;place-items:center;text-align:center;cursor:pointer;transition:opacity .6s ease}
+#ld.out{opacity:0;pointer-events:none}
+#lw{font:300 clamp(2.4rem,8vw,4.4rem)/1.1 Spectral,Georgia,serif;opacity:0}
+#lf{display:block;position:relative;overflow:hidden;width:min(180px,50vw);height:1px;margin:22px auto 0;background:rgba(255,255,255,.15)}
+#lf::after{content:"";position:absolute;inset:0;background:#fff;transform:scaleX(var(--p,0));transform-origin:left}
 #bg{transition:filter 2.2s cubic-bezier(.2,.7,.2,1),transform 2.2s cubic-bezier(.2,.7,.2,1)}
 body.bgb #bg{filter:blur(22px) saturate(1.2);transform:scale(1.14)}
 nav b .nm{transition:opacity .3s}body.fly nav b .nm{opacity:0}
@@ -240,18 +239,7 @@ body.in h1 .ln>span{background:linear-gradient(100deg,#fff 40%,#a6efe6 50%,#fff 
 </head>
 <body class="pre bgb">
 <div id="gt" hidden><div><p id="gp">Click to enter</p><i></i></div><button id="gs" type="button">Continue without sound</button></div>
-<div id="ld"><div class="lin">
-  <div class="sg"><svg viewBox="0 0 240 240" fill="none">
-    <defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a6efe6"/><stop offset="1" stop-color="#fff"/></linearGradient></defs>
-    <g class="r1"><circle cx="120" cy="120" r="116" stroke="rgba(255,255,255,.22)" stroke-width="2" stroke-dasharray="2 9" stroke-linecap="round"/><circle cx="120" cy="4" r="3.5" fill="#fff"/></g>
-    <g class="r2"><circle cx="120" cy="120" r="106" stroke="rgba(166,239,230,.45)" stroke-width="1.2" stroke-dasharray="40 24 6 24"/></g>
-    <circle cx="120" cy="120" r="96" stroke="rgba(255,255,255,.1)" stroke-width="3"/>
-    <circle id="lring" cx="120" cy="120" r="96" stroke="url(#lg1)" stroke-width="3" stroke-linecap="round" transform="rotate(-90 120 120)"/>
-    <g class="r3"><path d="M120 52 172 148H68Z" stroke="rgba(255,255,255,.35)"/><path d="M120 188 68 92h104Z" stroke="rgba(166,239,230,.35)"/></g>
-    <circle cx="120" cy="120" r="46" fill="rgba(166,239,230,.06)" stroke="rgba(255,255,255,.25)"/>
-  </svg><span id="lp">0</span></div>
-  <div id="lw"><span id="lwi"></span></div><p id="lg"></p><p id="ls">Starting up</p>
-</div></div>
+<div id="ld"><div><div id="lw"></div><i id="lf"></i></div></div>
 <canvas id="bg"></canvas>
 <div id="spot"></div><canvas id="dust"></canvas>
 <img id="cur" alt="">
@@ -288,19 +276,19 @@ body.in h1 .ln>span{background:linear-gradient(100deg,#fff 40%,#a6efe6 50%,#fff 
 <script>
 /* ===================== EDIT THIS SECTION ===================== */
 const CONFIG={
+  /* >>> LOADSTRING: change this one word:  "working"  |  "updating"  |  "down"
+     updating / down = locked and cannot be copied.
+     (assets/status.json can override it too: {"loadstring":"down"}, and ?loadstring=down on the url previews it) */
+  loadstring:"updating",
+
   storeName:"Mystical",
   tagline:"The #1 Free Rivals cheat.",
   discordLink:"https://discord.gg/mysti",
   tosLink:"",
 
-  /* SITE STATUS (status) and SCRIPT STATUS (scriptStatus) are separate.
-     status:        working | updating | down   (the website)
-     scriptStatus:  up | updating | down        (the loadstring: when updating or down it is locked and cannot be copied)
-     statusFile:    if set, assets/status.json overrides both, so one file controls everything:
-                    {"status":"working","script":"up"}   or   {"script":"updating"}   or   {"script":"down"}
-     Preview without editing: add ?script=up, ?script=updating or ?script=down to the page url. */
+  /* website status: working | updating | down
+     statusFile: if set, assets/status.json can override both settings, e.g. {"loadstring":"working"} */
   status:"working",
-  scriptStatus:"updating",
   statusFile:"assets/status.json",
 
   /* ---- TABS: add a line to add a tab, set enabled:false to hide one ----
@@ -322,7 +310,7 @@ const CONFIG={
     {id:"terms",    label:"Terms",     type:"link",    href:"@tos", nav:false, footer:true}
   ],
 
-  loader:{enabled:true,respectReducedMotion:false,minMs:2600,messages:["Starting up","Loading assets","Checking status","Ready"]},
+  loader:{enabled:true,respectReducedMotion:false,minMs:1200,messages:["Starting up","Loading assets","Checking status","Ready"]},
   /* SOUND: effects are generated in the browser. To use your own audio add files, e.g. files:{click:"assets/click.mp3"}.
      names: enter letter tick riser boom whoosh land air click hover open close copy error success section toggle keyfly insert turn unlock shock fanfare sparkle */
   sound:{enabled:true,volume:.55,gate:"auto",files:{}},
@@ -501,7 +489,7 @@ let st="working",open=true,storeState="operational";
 const setSt=s=>{st=["working","updating","down"].includes(s)?s:"working";open=st==="working";storeState={working:"operational",updating:"degraded",down:"outage"}[st]};
 setSt(CONFIG.status);
 let sst="up",sopen=true;const setSs=s=>{s=s==="working"?"up":s;sst=["up","updating","down"].includes(s)?s:"up";sopen=sst==="up"};
-const QS=new URLSearchParams(location.search).get("script");setSs(QS||CONFIG.scriptStatus);
+const QP=new URLSearchParams(location.search),QS=QP.get("loadstring")||QP.get("script");setSs(QS||CONFIG.loadstring);
 const scrState=()=>({up:"operational",updating:"degraded",down:"outage"}[sst]);
 const allSvc=()=>[{name:"Website",status:storeState,incidents:{}},{name:"Loadstring",status:scrState(),incidents:{}}].concat(SP.services);
 const overall=()=>allSvc().reduce((a,s)=>rank[s.status]>rank[a]?s.status:a,"operational");
@@ -628,48 +616,20 @@ async function gate(){
   });
 }
 
-/* ---------- intro: sigil charges up, bursts, then an iris opens onto the site ---------- */
+/* ---------- intro: name fades in, thin line fills, done ---------- */
 function runLoader(){
-  const L=$("#ld"),b=document.body,C=CONFIG.loader;let over=false,skip=false,done=false,ready=false,hum=null;
+  const L=$("#ld"),b=document.body,C=CONFIG.loader;let over=false,ready=false;
   const show=()=>{b.classList.remove("pre","fly","bgb");b.classList.add("in")};
-  const end=()=>{if(over)return;over=true;if(hum)hum.stop();show();L.remove()};
-  setTimeout(end,18000);
+  const end=()=>{if(over)return;over=true;show();L.classList.add("out");setTimeout(()=>L.remove(),700)};
+  setTimeout(end,12000);
   if(C.enabled===false||(C.respectReducedMotion===true&&matchMedia("(prefers-reduced-motion:reduce)").matches)){over=true;L.remove();show();return}
-  const ring=$("#lring"),lp=$("#lp"),lm=$("#ls"),lg=$("#lg"),inner=$("#lwi"),sg=$(".sg"),LEN=603.2,M=C.messages;
-  [...CONFIG.storeName].forEach(ch=>{const c=document.createElement("span");c.className="lc";c.textContent=ch===" "?"\u00a0":ch;inner.append(c)});
-  const letters=[...inner.children];lg.textContent=CONFIG.tagline;
-  const A=(e,k,o)=>e.animate(k,Object.assign({fill:"forwards"},o)).finished.catch(()=>{});
+  const lw=$("#lw");lw.textContent=CONFIG.storeName;
   const img=src=>new Promise(r=>{const i=new Image();i.onload=i.onerror=r;i.src=src});
-  Promise.race([Promise.all([document.fonts.load('300 100px Spectral'),img(CONFIG.cursor.src),img("assets/store.png")]),wait(5000)]).catch(()=>{}).then(()=>ready=true);
-  L.onclick=()=>{if(done)end();else skip=true};
-  (async()=>{
-    SFX.play("enter");
-    /* 1. the sigil spins in, the name blurs into focus letter by letter */
-    A(sg,[{opacity:0,transform:"scale(.6) rotate(-50deg)",filter:"blur(14px)"},{opacity:1,transform:"none",filter:"blur(0)"}],{duration:1400,easing:"cubic-bezier(.2,.9,.2,1)"});
-    letters.forEach((l,i)=>{A(l,[{opacity:0,transform:"translateY(16px)",filter:"blur(10px)"},{opacity:1,transform:"none",filter:"blur(0)"}],{duration:900,delay:500+i*90,easing:"cubic-bezier(.2,.9,.2,1)"});setTimeout(()=>SFX.play("letter",i),500+i*90)});
-    A(inner,[{letterSpacing:".7em"},{letterSpacing:".28em"}],{duration:2800,easing:"cubic-bezier(.2,.9,.2,1)"});
-    A(lg,[{opacity:0,transform:"translateY(8px)"},{opacity:1,transform:"none"}],{duration:900,delay:1300});
-    A(lm,[{opacity:0},{opacity:1}],{duration:600,delay:600});
-    /* 2. the ring charges while the number climbs */
-    hum=SFX.hum();let lastT=0;const t0=performance.now();
-    await new Promise(r=>{(function f(){
-      const t=Math.min(1,(performance.now()-t0)/(skip?300:C.minMs));let p=1-Math.pow(1-t,2.4);if(!ready)p=Math.min(p,.93);
-      ring.style.strokeDashoffset=LEN*(1-p);lp.textContent=Math.floor(p*100);hum.set(p);
-      const n=Math.floor(p*10);if(n>lastT){lastT=n;SFX.play("tick",p)}
-      lm.textContent=M[p>=1?M.length-1:Math.min(M.length-2,Math.floor(p*(M.length-1)))];
-      if(p>=1&&ready)r();else requestAnimationFrame(f)})()});
-    hum.stop();SFX.play("riser");await wait(450);if(over)return;
-    /* 3. burst */
-    done=true;SFX.play("boom");
-    A(sg,[{transform:"scale(1)"},{transform:"scale(1.2)",offset:.3},{transform:"scale(1)"}],{duration:700,easing:"ease-out"});
-    A(ring,[{filter:"drop-shadow(0 0 6px rgba(166,239,230,.7))"},{filter:"drop-shadow(0 0 26px #a6efe6)"}],{duration:500});
-    await wait(650);if(over)return;
-    /* 4. content fades, an iris opens and the site is revealed */
-    b.classList.remove("bgb","pre");b.classList.add("in");SFX.play("whoosh");
-    [sg,lg,lm,$("#lw")].forEach(e=>A(e,[{opacity:1,transform:"none"},{opacity:0,transform:"scale(1.12)"}],{duration:500,easing:"ease-in"}));
-    await A(L,[{"--r":"0px",opacity:1},{opacity:1,offset:.7},{"--r":"150vmax",opacity:0}],{duration:1500,easing:"cubic-bezier(.7,0,.2,1)"});
-    SFX.play("land");end();
-  })().catch(end);
+  Promise.race([Promise.all([document.fonts.load('300 100px Spectral'),img(CONFIG.cursor.src),img("assets/store.png")]),wait(4000)]).catch(()=>{}).then(()=>ready=true);
+  L.onclick=end;
+  lw.animate([{opacity:0,transform:"translateY(8px)"},{opacity:1,transform:"none"}],{duration:700,fill:"forwards",easing:"ease-out"});
+  const t0=performance.now();
+  (function f(){const t=Math.min(1,(performance.now()-t0)/C.minMs);L.style.setProperty("--p",t);if(t>=1&&ready)end();else requestAnimationFrame(f)})();
 }
 gate().then(runLoader);
 
@@ -727,10 +687,10 @@ function renderLock(){
   if(sopen)b.onclick=()=>{if(sopen)copy(CONFIG.free.script,"Script copied")};
   else{c.oncopy=e=>e.preventDefault();c.oncontextmenu=e=>e.preventDefault()}
 }
-function applyStatus(j){if(j.status)setSt(j.status);if(j.script&&!QS)setSs(j.script);pill();renderLock();if(pn.dataset.page==="status")status()}
+function applyStatus(j){if(j.status)setSt(j.status);const lsv=j.loadstring||j.script;if(lsv&&!QS)setSs(lsv);pill();renderLock();if(pn.dataset.page==="status")status()}
 renderLock();
 /* one file controls site + script: assets/status.json  ->  {"status":"working","script":"updating"} */
-if(CONFIG.statusFile)fetch(CONFIG.statusFile+"?t="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{if(j&&(j.status||j.script))applyStatus(j)}).catch(()=>{});
+if(CONFIG.statusFile)fetch(CONFIG.statusFile+"?t="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{if(j&&(j.status||j.script||j.loadstring))applyStatus(j)}).catch(()=>{});
 
 /* ---------- panels ---------- */
 const ov=$("#ov"),pn=$("#pn");let onClose=null;
