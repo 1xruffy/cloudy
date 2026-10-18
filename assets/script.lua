@@ -383,27 +383,56 @@ if vmmod then
 			return (weq and weq.Wrap) or ogw(self)
 		end
 	end
-	local onew = cvm.new
-	cvm.new = function(rdata, cliitm)
-		local wplr = cliitm.ClientFighter and cliitm.ClientFighter.Player
-		local wname = cwep or cliitm.Name
-		if wplr == lp and equip[wname] then
-			local rcls = require(reps.Modules.ReplicatedClass)
-			local dk = rcls:ToEnum("Data")
-			rdata[dk] = rdata[dk] or {}
-			local cos = equip[wname]
-			local slot = rdata[dk]
-			if cos.Skin then slot[rcls:ToEnum("Skin")] = cos.Skin end
-			if cos.Wrap then slot[rcls:ToEnum("Wrap")] = cos.Wrap end
-			if cos.Charm then slot[rcls:ToEnum("Charm")] = cos.Charm end
-		end
-		local res = onew(rdata, cliitm)
-		if wplr == lp and equip[wname] and equip[wname].Wrap and res._UpdateWrap then
-			res:_UpdateWrap()
-			task.delay(0.1, function() if not res._destroyed then res:_UpdateWrap() end end)
-		end
-		return res
-	end
+
+local onew = cvm.new
+
+cvm.new = function(rdata, cliitm)
+    local wplr = cliitm
+        and cliitm.ClientFighter
+        and cliitm.ClientFighter.Player
+
+    local wname = cwep or (cliitm and cliitm.Name)
+    local cos = (wplr == lp) and equip[wname]
+
+    if cos then
+        local ok, err = pcall(function()
+            local rcls = require(reps.Modules.ReplicatedClass)
+            local dk = rcls:ToEnum("Data")
+
+            rdata[dk] = rdata[dk] or {}
+            local slot = rdata[dk]
+
+            for _, ct in ipairs({"Skin", "Wrap", "Charm"}) do
+                local cd = cos[ct]
+
+                if cd then
+                    local key = rcls:ToEnum(ct)
+                    if key then
+                        slot[key] = cd
+                    end
+                end
+            end
+        end)
+
+        if not ok then
+            warn("[SkinChanger] Cosmetic injection error:", err)
+        end
+    end
+
+    local res = onew(rdata, cliitm)
+
+    if cos and cos.Wrap and res._UpdateWrap then
+        local ok, err = pcall(function()
+            res:_UpdateWrap()
+        end)
+
+        if not ok then
+            warn("[SkinChanger] Wrap update error:", err)
+        end
+    end
+
+    return res
+  end
 end
 
 local ogvi = ilib.GetViewModelImageFromWeaponData
