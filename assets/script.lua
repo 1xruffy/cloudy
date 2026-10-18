@@ -135,22 +135,23 @@ local function banned(n)
 end
 
 
+
 local function toenum(n)
     if not elib or type(n) ~= "string" then
         return nil
     end
 
     local ok, id = pcall(function()
-        return elib:ToEnum(n)
+        return elib:ToEnum(n, true)
     end)
 
     if not ok then
-        warn("[SkinChanger] Unknown enum:", n)
         return nil
     end
 
     return id
 end
+
 
 local function clonecos(name, ctype, inv, favonly)
 	if banned(name) then return nil end
@@ -160,8 +161,16 @@ local function clonecos(name, ctype, inv, favonly)
 	d.Name = name
 	d.Type = d.Type or ctype
 	d.Seed = d.Seed or math.random(1, 1000000)
-	local eid = toenum(name)
-	if eid then d.Enum = eid d.ObjectID = d.ObjectID or eid end
+
+local eid = toenum(name)
+
+if eid then
+    d.Enum = eid
+    d.ObjectID = d.ObjectID or eid
+else
+    d.Enum = nil
+end
+
 	if inv ~= nil then d.Inverted = inv end
 	if favonly ~= nil then d.OnlyUseFavorites = favonly end
 	return d
