@@ -622,7 +622,7 @@ function renderPlans(){
     c.innerHTML=`<small>${esc(p.tag)}</small><h3>${esc(p.name)}</h3><small>${esc(p.desc)}</small>
       <div class="pr">${onSale()?`<s>${money(p.price)}</s>`:""}${money(price(p))}<small> / ${esc(p.per)}</small></div>
       <div class="stk ${open&&!out&&lim&&p.stock<=5?"low":""}">${!open?"Store "+(st==="updating"?"updating":"unavailable"):out?"Sold out":!lim?"In stock":p.stock<=5?"Only "+p.stock+" left":p.stock+" in stock"}</div>
-      <ul><li>Full ${esc(CONFIG.storeName)} premium access</li><li>Latest releases and updates</li><li>Fast key delivery after payment</li>
+      <ul><li>Full ${esc(CONFIG.storeName)} ???</li><li>???</li><li>???</li>
       <li class="${p.best?"":"no"}">${p.days} days without repurchasing</li><li class="${p.best?"":"no"}">Save ${money(save)} vs. four weeks</li></ul>`;
     const b=document.createElement("button");b.className="btn w";b.disabled=dis;b.textContent=dis?(!open?"Unavailable":"Sold out"):"Get "+p.name.split(" ")[0].toLowerCase();
     b.onclick=()=>checkout(p);c.append(b);box.append(c);
