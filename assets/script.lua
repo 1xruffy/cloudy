@@ -1016,8 +1016,15 @@ local function updateZombieTarget()
         end
     end
 
-    currentTarget = findNextZombie()
-    return currentTarget
+currentTarget = findNextZombie()
+
+if currentTarget then
+    print("[Mystical] Found zombie:", currentTarget.Name)
+else
+    warn("[Mystical] No zombie found")
+end
+
+return currentTarget
 end
 local zombie = updateZombieTarget()
 if zombie then
@@ -1034,6 +1041,7 @@ local function teleportToZombie(zombie)
         or zombie.PrimaryPart
 
     if root and targetRoot then
+		print("[Mystical] Teleporting to:", zombie.Name)
         character:PivotTo(
             targetRoot.CFrame * CFrame.new(0, 0, -5)
         )
