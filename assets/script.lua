@@ -519,13 +519,13 @@ end
 local function createESP(player)
     local Box = Drawing.new("Square")
     Box.Visible = false
-    Box.Color = Color3.fromRGB(0, 255, 0)
+    Box.Color = Color3.fromRGB(255, 105, 180)
     Box.Thickness = 1.5
     Box.Filled = false
 
     local Tracer = Drawing.new("Line")
     Tracer.Visible = false
-    Tracer.Color = Color3.fromRGB(0, 255, 0)
+    Tracer.Color = Color3.fromRGB(255, 105, 180)
     Tracer.Thickness = 1
 
     local NameText = Drawing.new("Text")
@@ -537,7 +537,7 @@ local function createESP(player)
 
     local HealthBar = Drawing.new("Square")
     HealthBar.Visible = false
-    HealthBar.Color = Color3.fromRGB(0, 255, 0)
+    HealthBar.Color = Color3.fromRGB(255, 105, 180)
     HealthBar.Thickness = 1
     HealthBar.Filled = true
 
@@ -751,7 +751,7 @@ local AimbotTitle = Instance.new("TextLabel")
 AimbotTitle.Size = UDim2.new(1, 0, 0, 25)
 AimbotTitle.BackgroundTransparency = 1
 AimbotTitle.Text = "Halloween"
-AimbotTitle.TextColor3 = Color3.fromRGB(0, 255, 0)
+AimbotTitle.TextColor3 = Color3.fromRGB(255, 105, 180)
 AimbotTitle.TextSize = 13
 AimbotTitle.Font = Enum.Font.SourceSansBold
 AimbotTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -770,7 +770,7 @@ local ESPTitle = Instance.new("TextLabel")
 ESPTitle.Size = UDim2.new(1, 0, 0, 25)
 ESPTitle.BackgroundTransparency = 1
 ESPTitle.Text = "  VISUALS (ESP)"
-ESPTitle.TextColor3 = Color3.fromRGB(0, 255, 0)
+ESPTitle.TextColor3 = Color3.fromRGB(255, 105, 180)
 ESPTitle.TextSize = 13
 ESPTitle.Font = Enum.Font.SourceSansBold
 ESPTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -789,7 +789,7 @@ local FeatureTitle = Instance.new("TextLabel")
 FeatureTitle.Size = UDim2.new(1, 0, 0, 25)
 FeatureTitle.BackgroundTransparency = 1
 FeatureTitle.Text = "  FEATURE STATUS"
-FeatureTitle.TextColor3 = Color3.fromRGB(0, 255, 0)
+FeatureTitle.TextColor3 = Color3.fromRGB(255, 105, 180)
 FeatureTitle.TextSize = 13
 FeatureTitle.Font = Enum.Font.SourceSansBold
 FeatureTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -814,7 +814,7 @@ local function createStatusLabel(text, configKey, parent)
         local active = Settings[configKey]
         if active then
             Label.Text = "  [ON]  " .. text
-            Label.TextColor3 = Color3.fromRGB(0, 255, 0)
+            Label.TextColor3 = Color3.fromRGB(255, 105, 180)
         else
             Label.Text = "  [OFF] " .. text
             Label.TextColor3 = Color3.fromRGB(150, 150, 150)
@@ -831,7 +831,7 @@ local function createCheckbox(text, parent, configKey)
     local Button = Instance.new("TextButton")
     Button.Size = UDim2.new(0, 16, 0, 16)
     Button.Position = UDim2.new(0, 10, 0.5, -8)
-    Button.BackgroundColor3 = Settings[configKey] and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(48, 48, 48)
+    Button.BackgroundColor3 = Settings[configKey] and Color3.fromRGB(255, 105, 180) or Color3.fromRGB(48, 48, 48)
     Button.BorderSizePixel = 0
     Button.Text = ""
     Button.Parent = Container
@@ -849,7 +849,7 @@ local function createCheckbox(text, parent, configKey)
 
     Button.MouseButton1Click:Connect(function()
         Settings[configKey] = not Settings[configKey]
-        Button.BackgroundColor3 = Settings[configKey] and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(48, 48, 48)
+        Button.BackgroundColor3 = Settings[configKey] and Color3.fromRGB(255, 105, 180) or Color3.fromRGB(48, 48, 48)
     end)
 end
 
@@ -879,7 +879,7 @@ local function createSlider(text, parent, min, max, configKey)
 
     local Fill = Instance.new("Frame")
     Fill.Size = UDim2.new((Settings[configKey] - min) / (max - min), 0, 1, 0)
-    Fill.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+    Fill.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
     Fill.BorderSizePixel = 0
     Fill.Parent = SliderFrame
 
@@ -1133,7 +1133,7 @@ local function setZombieFarm(enabled)
     zombieFarmEnabled = enabled
 
     Button.BackgroundColor3 = enabled
-        and Color3.fromRGB(0, 255, 0)
+        and Color3.fromRGB(255, 105, 180)
         or Color3.fromRGB(48, 48, 48)
 
     if enabled then
@@ -1181,7 +1181,7 @@ ToggleButton.Position = UDim2.new(0, 10, 0, 10)
 ToggleButton.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
 ToggleButton.BorderSizePixel = 0
 ToggleButton.Text = "mysti"
-ToggleButton.TextColor3 = Color3.fromRGB(0, 255, 0)
+ToggleButton.TextColor3 = Color3.fromRGB(255, 105, 180)
 ToggleButton.TextSize = 13
 ToggleButton.Font = Enum.Font.SourceSansBold
 ToggleButton.Parent = ScreenGui
@@ -1192,7 +1192,7 @@ UICorner.Parent = ToggleButton
 
 local UIBorder = Instance.new("UIStroke")
 UIBorder.Thickness = 1.5
-UIBorder.Color = Color3.fromRGB(0, 255, 0)
+UIBorder.Color = Color3.fromRGB(255, 105, 180)
 UIBorder.Parent = ToggleButton
 
 ToggleButton.MouseButton1Click:Connect(function()
