@@ -517,11 +517,13 @@ local Settings = {
     Names = true,
     Distance = true,
     HealthBar = true,
-    SilentAim = true, -- Joint-Rotation Silent Aim (True Silent Aim)
+    SilentAim = true,
     Aimlock = false,
     FOV = 150,
     TeamCheck = false,
-    AimPart = "HitboxHead"
+    AimPart = "HitboxHead",
+
+    AutoCollect = false
 }
 
 -- Pink FOV Circle
@@ -1206,7 +1208,8 @@ print("[Mystical] Zombie Sky Farm loaded")
 
 
 createCheckbox("Key Aimlock (RMB)", AimbotFrame, "Aimlock")
-createSlider("Aimbot FOV", AimbotFrame, 50, 400, "FOV")
+createSlider("Aimbot FOV", AimbotFrame, 50, 400, "FOV")'
+createCheckbox("Auto Collect", AimbotFrame, "AutoCollect")
 
 -- Populate UI Tab 2 (ESP)
 createCheckbox("Box ESP", ESPFrame, "ESP")
@@ -1277,6 +1280,37 @@ UnloadButton.MouseButton1Click:Connect(function()
     ScreenGui:Destroy()
     FOVCircle:Remove()
     print("[Mystical] UI removed")
+end)
+
+local autoCollectRunning = false
+
+RunService.RenderStepped:Connect(function()
+    if not Settings.AutoCollect then
+        return
+    end
+
+local collectHealth = true
+local collectAmmo = true
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+RunService.RenderStepped:Connect(function()
+    local character = Players.LocalPlayer.Character
+    if not character then return end
+    local hrp = character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    local humanoid = character:FindFirstChild("Humanoid")
+    local needsHealth = humanoid and humanoid.Health < humanoid.MaxHealth
+    for _, obj in workspace:GetChildren() do
+        if obj.Name == "_drop" and obj:IsA("BasePart") then
+            if (collectHealth and obj:FindFirstChild("Health") and needsHealth) or (collectAmmo and obj:FindFirstChild("Ammo")) then
+                firetouchinterest(hrp, obj, 0)
+                firetouchinterest(hrp, obj, 1)
+            end
+        end
+    end
+end)
 end)
 
 print("[Rivals] Joint Silent Aim & UI Loaded.")
