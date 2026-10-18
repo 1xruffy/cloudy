@@ -920,8 +920,9 @@ end
 
 
 
+```lua
 -- ========================================
--- MYSTICAL: SAFER ZOMBIE TELEPORT FARM
+-- MYSTICAL: ZOMBIE SKY FARM
 -- Requires: AimbotFrame and LocalPlayer
 -- ========================================
 
@@ -932,8 +933,8 @@ local zombieFarmEnabled = false
 local targetingTaskRunning = false
 local currentTarget = nil
 
--- Survival settings
-local SAFE_DISTANCE = 14
+-- Settings
+local HEIGHT_ABOVE_ZOMBIE = 20
 local UPDATE_INTERVAL = 0.6
 
 local targetNames = {
@@ -967,7 +968,7 @@ local Label = Instance.new("TextLabel")
 Label.Size = UDim2.new(1, -35, 0, 25)
 Label.Position = UDim2.new(0, 35, 0, 0)
 Label.BackgroundTransparency = 1
-Label.Text = "Safer Zombie Farm"
+Label.Text = "Zombie Sky Farm"
 Label.TextColor3 = Color3.fromRGB(220, 220, 220)
 Label.TextSize = 13
 Label.Font = Enum.Font.SourceSans
@@ -1041,41 +1042,26 @@ local function findNextZombie()
 end
 
 -- ========================================
--- SAFER POSITIONING
+-- TELEPORT ABOVE ZOMBIE
 -- ========================================
 
-local function teleportToZombie(zombie)
+local function teleportAboveZombie(zombie)
     if not isAlive(zombie) then
         return false
     end
 
     local character = getCharacter()
     local root = getRoot(character)
-    local targetRoot = zombie:FindFirstChild("HumanoidRootPart")
+    local targetRoot =
+        zombie:FindFirstChild("HumanoidRootPart")
 
     if not root or not targetRoot then
         return false
     end
 
-    -- Stay farther from the zombie instead of
-    -- teleporting directly into its hit range.
-    local direction = root.Position - targetRoot.Position
-
-    if direction.Magnitude < 0.1 then
-        direction = -targetRoot.CFrame.LookVector
-    else
-        direction = direction.Unit
-    end
-
-    local destination =
-        targetRoot.Position + direction * SAFE_DISTANCE
-
-    -- Preserve a level position.
-    destination = Vector3.new(
-        destination.X,
-        targetRoot.Position.Y + 2,
-        destination.Z
-    )
+    -- Directly above the zombie.
+    local destination = targetRoot.Position
+        + Vector3.new(0, HEIGHT_ABOVE_ZOMBIE, 0)
 
     local ok, err = pcall(function()
         character:PivotTo(
@@ -1119,6 +1105,7 @@ local function startFarm()
                         "[Mystical] Target:",
                         currentTarget.Name
                     )
+
                     Status.Text =
                         "Target: " .. currentTarget.Name
                 else
@@ -1127,7 +1114,7 @@ local function startFarm()
             end
 
             if currentTarget and isAlive(currentTarget) then
-                teleportToZombie(currentTarget)
+                teleportAboveZombie(currentTarget)
             end
 
             task.wait(UPDATE_INTERVAL)
@@ -1151,21 +1138,22 @@ local function setZombieFarm(enabled)
         or Color3.fromRGB(48, 48, 48)
 
     if enabled then
-        Status.Text = "Starting safer farm..."
+        Status.Text = "Starting sky farm..."
         startFarm()
     else
         currentTarget = nil
         Status.Text = "Status: OFF"
     end
 
-    print("[Mystical] Safer farm:", enabled)
+    print("[Mystical] Zombie Sky Farm:", enabled)
 end
 
 Button.MouseButton1Click:Connect(function()
     setZombieFarm(not zombieFarmEnabled)
 end)
 
-print("[Mystical] Safer Zombie Farm loaded")
+print("[Mystical] Zombie Sky Farm loaded")
+```
 
 
 
