@@ -913,32 +913,48 @@ local function createSlider(text, parent, min, max, configKey)
 end
 
 -- Populate UI Tab 1 (Aimbot)
--- Zombie Targeting Toggle (below AIMBOT / SILENT)
-local ZombieToggle = Instance.new("TextButton")
-ZombieToggle.Name = "ZombieToggle"
-ZombieToggle.Size = UDim2.new(1, -20, 0, 30)
-ZombieToggle.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
-ZombieToggle.BorderSizePixel = 0
-ZombieToggle.Text = "Zombie Targeting: OFF"
-ZombieToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
-ZombieToggle.TextSize = 13
-ZombieToggle.Font = Enum.Font.SourceSansBold
-ZombieToggle.LayoutOrder = 0
-ZombieToggle.Parent = AimbotFrame
 
+-- Zombie Targeting Checkbox
 local zombieFarmEnabled = false
 
-ZombieToggle.MouseButton1Click:Connect(function()
-    zombieFarmEnabled = not zombieFarmEnabled
+local function createZombieCheckbox()
+    local Container = Instance.new("Frame")
+    Container.Name = "ZombieCheckbox"
+    Container.Size = UDim2.new(1, 0, 0, 30)
+    Container.BackgroundTransparency = 1
+    Container.LayoutOrder = 1
+    Container.Parent = AimbotFrame
 
-    ZombieToggle.Text = zombieFarmEnabled
-        and "Zombie Targeting: ON"
-        or "Zombie Targeting: OFF"
+    local Button = Instance.new("TextButton")
+    Button.Size = UDim2.new(0, 16, 0, 16)
+    Button.Position = UDim2.new(0, 10, 0.5, -8)
+    Button.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+    Button.BorderSizePixel = 0
+    Button.Text = ""
+    Button.Parent = Container
 
-    ZombieToggle.BackgroundColor3 = zombieFarmEnabled
-        and Color3.fromRGB(0, 140, 60)
-        or Color3.fromRGB(48, 48, 48)
-end)
+    local Label = Instance.new("TextLabel")
+    Label.Size = UDim2.new(1, -35, 1, 0)
+    Label.Position = UDim2.new(0, 35, 0, 0)
+    Label.BackgroundTransparency = 1
+    Label.Text = "Zombie Targeting"
+    Label.TextColor3 = Color3.fromRGB(200, 200, 200)
+    Label.TextSize = 13
+    Label.Font = Enum.Font.SourceSans
+    Label.TextXAlignment = Enum.TextXAlignment.Left
+    Label.Parent = Container
+
+    Button.MouseButton1Click:Connect(function()
+        zombieFarmEnabled = not zombieFarmEnabled
+
+        Button.BackgroundColor3 = zombieFarmEnabled
+            and Color3.fromRGB(0, 255, 0)
+            or Color3.fromRGB(48, 48, 48)
+    end)
+end
+
+createZombieCheckbox()
+
 createCheckbox("Joint Silent Aim", AimbotFrame, "SilentAim")
 createCheckbox("Key Aimlock (Q)", AimbotFrame, "Aimlock")
 createSlider("Aimbot FOV", AimbotFrame, 50, 400, "FOV")
