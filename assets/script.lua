@@ -916,11 +916,17 @@ end
 
 
 
+
 -- ========================================
 -- ZOMBIE TARGETING
 -- ========================================
 
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
 local zombieFarmEnabled = false
+local currentTarget = nil
+local targetingTaskRunning = false
 
 local targetNames = {
     "Helmet Zombie",
@@ -929,9 +935,10 @@ local targetNames = {
     "Zombie",
 }
 
-local currentTarget = nil
+-- ========================================
+-- CHECKBOX UI
+-- ========================================
 
--- Small checkbox, matching the other menu options
 local Container = Instance.new("Frame")
 Container.Name = "ZombieCheckbox"
 Container.Size = UDim2.new(1, 0, 0, 30)
@@ -940,6 +947,7 @@ Container.LayoutOrder = 1
 Container.Parent = AimbotFrame
 
 local Button = Instance.new("TextButton")
+Button.Name = "Toggle"
 Button.Size = UDim2.new(0, 16, 0, 16)
 Button.Position = UDim2.new(0, 10, 0.5, -8)
 Button.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
@@ -958,43 +966,29 @@ Label.Font = Enum.Font.SourceSans
 Label.TextXAlignment = Enum.TextXAlignment.Left
 Label.Parent = Container
 
-local function setZombieTargeting(enabled)
-    zombieFarmEnabled = enabled
+-- ========================================
+-- FIND NEXT LIVING ZOMBIE
+-- ========================================
 
-    if not enabled then
-        currentTarget = nil
-    end
-
-    Button.BackgroundColor3 = enabled
-        and Color3.fromRGB(0, 255, 0)
-        or Color3.fromRGB(48, 48, 48)
-end
-
-Button.MouseButton1Click:Connect(function()
-    setZombieTargeting(not zombieFarmEnabled)
-    print("[Mystical] Zombie Targeting:", zombieFarmEnabled)
-end)
-
--- Target selection helper
--- Selects any living matching model, not the nearest.
 local function findNextZombie()
-    local workspaceFolder = workspace:FindFirstChild("Gargoyle Tower")
-	print("[Mystical] Gargoyle Tower folder:", workspaceFolder)
-    local entities = workspaceFolder
-        and workspaceFolder:FindFirstChild("Entites")
-	print("[Mystical] Entities folder:", entities)
+    local tower = workspace:FindFirstChild("Gargoyle Tower")
+    local entities = tower and tower:FindFirstChild("Entities")
 
     if not entities then
+        warn("[Mystical] Gargoyle Tower/Entities not found")
         return nil
     end
 
     for _, name in ipairs(targetNames) do
-        for _, model in ipairs(entities:GetChildren()) do
-            if model.Name == name and model:IsA("Model") then
-                local humanoid = model:FindFirstChildOfClass("Humanoid")
+        for _, zombie in ipairs(entities:GetChildren()) do
+            if zombie:IsA("Model") and zombie.Name == name then
+                local humanoid =
+                    zombie:FindFirstChildOfClass("Humanoid")
 
-                if humanoid and humanoid.Health > 0 then
-                    return model
+                if humanoid
+                    and humanoid.Health > 0
+                    and zombie:FindFirstChild("HumanoidRootPart") then
+                    return zombie
                 end
             end
         end
@@ -1003,53 +997,114 @@ local function findNextZombie()
     return nil
 end
 
--- Call this from your authorized game's NPC/teleport controller.
-local function updateZombieTarget()
-    if not zombieFarmEnabled then
-        currentTarget = nil
-        return nil
+-- ========================================
+-- VALIDATE TARGET
+-- ========================================
+
+local function isAlive(zombie)
+    if not zombie
+        or not zombie:IsDescendantOf(workspace) then
+        return false
     end
 
-    if currentTarget then
-        local humanoid = currentTarget:FindFirstChildOfClass("Humanoid")
+    local humanoid = zombie:FindFirstChildOfClass("Humanoid")
 
-        if humanoid and humanoid.Health > 0
-            and currentTarget:IsDescendantOf(workspace) then
-            return currentTarget
-        end
-    end
-
-currentTarget = findNextZombie()
-
-if currentTarget then
-    print("[Mystical] Found zombie:", currentTarget.Name)
-else
-    warn("[Mystical] No zombie found")
+    return humanoid ~= nil and humanoid.Health > 0
 end
 
-return currentTarget
-end
-local zombie = updateZombieTarget()
-if zombie then
-    teleportToZombie(zombie)
-end
+-- ========================================
+-- TELEPORT HELPER
+-- ========================================
+
 local function teleportToZombie(zombie)
-    if not zombie or not zombie:IsDescendantOf(workspace) then
-        return
+    if not isAlive(zombie) then
+        return false
     end
 
     local character = LocalPlayer.Character
-    local root = character and character:FindFirstChild("HumanoidRootPart")
-    local targetRoot = zombie:FindFirstChild("HumanoidRootPart")
+    local targetRoot =
+        zombie:FindFirstChild("HumanoidRootPart")
         or zombie.PrimaryPart
 
-    if root and targetRoot then
-		print("[Mystical] Teleporting to:", zombie.Name)
-        character:PivotTo(
-            targetRoot.CFrame * CFrame.new(0, 0, -5)
-        )
+    if not character or not targetRoot then
+        return false
     end
+
+    local humanoidRoot =
+        character:FindFirstChild("HumanoidRootPart")
+
+    if not humanoidRoot then
+        return false
+    end
+
+    -- Position five studs behind the zombie.
+    -- The positive Z offset is behind its facing direction.
+    character:PivotTo(
+        targetRoot.CFrame * CFrame.new(0, 0, 5)
+    )
+
+    print("[Mystical] Target:", zombie.Name)
+    return true
 end
+
+-- ========================================
+-- TARGETING LOOP
+-- ========================================
+
+local function runZombieTargeting()
+    if targetingTaskRunning then
+        return
+    end
+
+    targetingTaskRunning = true
+
+    task.spawn(function()
+        while zombieFarmEnabled do
+            if not isAlive(currentTarget) then
+                currentTarget = findNextZombie()
+
+                if currentTarget then
+                    print("[Mystical] New zombie:", currentTarget.Name)
+                else
+                    task.wait(0.5)
+                    continue
+                end
+            end
+
+            teleportToZombie(currentTarget)
+
+            -- Recheck health and target availability.
+            task.wait(0.25)
+        end
+
+        currentTarget = nil
+        targetingTaskRunning = false
+    end)
+end
+
+-- ========================================
+-- TOGGLE
+-- ========================================
+
+local function setZombieTargeting(enabled)
+    zombieFarmEnabled = enabled
+
+    Button.BackgroundColor3 = enabled
+        and Color3.fromRGB(0, 255, 0)
+        or Color3.fromRGB(48, 48, 48)
+
+    if enabled then
+        runZombieTargeting()
+    else
+        currentTarget = nil
+    end
+
+    print("[Mystical] Zombie Targeting:", enabled)
+end
+
+Button.MouseButton1Click:Connect(function()
+    setZombieTargeting(not zombieFarmEnabled)
+end)
 
 
 createCheckbox("Joint Silent Aim", AimbotFrame, "SilentAim")
