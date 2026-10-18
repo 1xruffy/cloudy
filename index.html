@@ -121,20 +121,24 @@ input:focus{outline:none;border-color:rgba(255,255,255,.6)}
 @keyframes gl{50%{transform:scaleX(.25);opacity:.35}}
 #gs{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);background:none;border:0;color:rgba(255,255,255,.5);font-size:.8rem;cursor:pointer;padding:8px 14px}#gs:hover{color:#fff}
 
-/* ===== intro: frosted-glass shutters over the live gradient. big counter, masked-rise name, charging seam, then the shutters part ===== */
-#ld{position:fixed;inset:0;z-index:9000;cursor:pointer;overflow:hidden}
-#ld .pn{position:absolute;left:0;right:0;background:rgba(4,8,12,.5);backdrop-filter:blur(28px) saturate(1.3);-webkit-backdrop-filter:blur(28px) saturate(1.3);will-change:transform}
-#ld .t{top:0;height:50%}#ld .b{top:50%;bottom:0}
-#lt{position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(255,255,255,.14);opacity:0}
-#lf{position:absolute;top:50%;left:50%;width:0;height:1px;background:linear-gradient(90deg,transparent,#fff 8%,#fff 92%,transparent);box-shadow:0 0 18px 2px rgba(166,239,230,.55)}
-#lw{position:absolute;left:0;right:0;bottom:calc(50% + 14px);text-align:center;font:300 clamp(4rem,15vw,11rem)/1.12 Spectral,Georgia,serif;white-space:nowrap;pointer-events:none}
-#lwi{display:inline-block}
-.lc{display:inline-block;overflow:hidden;vertical-align:bottom;padding:0 .02em .18em;margin-bottom:-.18em}
-.lc>span{display:inline-block;transform:translateY(112%);color:transparent;background:linear-gradient(100deg,#fff 0 42%,#a6efe6 50%,#fff 58% 100%) 100% 0/300% 100%;-webkit-background-clip:text;background-clip:text}
-#lg{position:absolute;left:0;right:0;top:calc(50% + 20px);text-align:center;font:italic 300 1.2rem Spectral,Georgia,serif;color:rgba(255,255,255,.75);opacity:0}
-#lm{position:absolute;left:30px;right:30px;bottom:28px;display:flex;justify-content:space-between;align-items:flex-end;font-size:.82rem;color:rgba(255,255,255,.6);opacity:0}
-#lp{font:300 clamp(3rem,9vw,6rem) Spectral,serif;line-height:.9;color:#fff}
-#lx{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+/* ===== intro: orbit sigil, iris reveal ===== */
+@property --r{syntax:"<length>";inherits:false;initial-value:0px}
+#ld{position:fixed;inset:0;z-index:9000;cursor:pointer;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 42%,#0c2833 0%,#050b10 55%,#000 100%);-webkit-mask-image:radial-gradient(circle at 50% 50%,transparent var(--r),#000 calc(var(--r) + 2px));mask-image:radial-gradient(circle at 50% 50%,transparent var(--r),#000 calc(var(--r) + 2px))}
+#ld::before{content:"";position:absolute;inset:-20%;background:conic-gradient(from 0deg at 50% 45%,transparent,rgba(166,239,230,.09),transparent 30%,rgba(157,128,190,.09),transparent 60%);animation:rot 18s linear infinite;pointer-events:none}
+.lin{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
+.sg{position:relative;width:min(260px,64vw);aspect-ratio:1}
+.sg::before{content:"";position:absolute;inset:18%;border-radius:50%;background:radial-gradient(circle,rgba(166,239,230,.35),transparent 70%);filter:blur(18px);animation:pls 3s ease-in-out infinite}
+@keyframes pls{50%{transform:scale(1.35);opacity:.6}}
+.sg svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.sg .r1,.sg .r2,.sg .r3{transform-box:view-box;transform-origin:120px 120px}
+.sg .r1{animation:rot 40s linear infinite}.sg .r2{animation:rot 14s linear infinite reverse}.sg .r3{animation:rot 9s linear infinite}
+#lring{stroke-dasharray:603.2;stroke-dashoffset:603.2;filter:drop-shadow(0 0 6px rgba(166,239,230,.7))}
+#lp{position:absolute;inset:0;display:grid;place-items:center;font:300 clamp(2.6rem,9vw,3.4rem) Spectral,serif;font-variant-numeric:tabular-nums}
+#lw{margin-top:38px;font:300 clamp(2.2rem,7vw,3.6rem)/1.1 Spectral,Georgia,serif;white-space:nowrap}
+#lwi{display:inline-block;letter-spacing:.28em;margin-right:-.28em}
+.lc{display:inline-block;opacity:0}
+#lg{margin-top:12px;font:italic 300 1.1rem Spectral,Georgia,serif;color:rgba(255,255,255,.7);opacity:0}
+#ls{margin-top:30px;font-size:.78rem;letter-spacing:.2em;color:rgba(166,239,230,.8);opacity:0}
 #bg{transition:filter 2.2s cubic-bezier(.2,.7,.2,1),transform 2.2s cubic-bezier(.2,.7,.2,1)}
 body.bgb #bg{filter:blur(22px) saturate(1.2);transform:scale(1.14)}
 nav b .nm{transition:opacity .3s}body.fly nav b .nm{opacity:0}
@@ -223,13 +227,31 @@ body.in h1 .ln>span{background:linear-gradient(100deg,#fff 40%,#a6efe6 50%,#fff 
 @keyframes fl{50%{transform:translateY(-7px)}}
 .spk{position:fixed;width:5px;height:5px;border-radius:50%;background:#a6efe6;box-shadow:0 0 8px #a6efe6;pointer-events:none;z-index:99990}
 .sw{position:fixed;width:20px;height:20px;margin:-10px;border-radius:50%;border:1.5px solid rgba(166,239,230,.8);pointer-events:none;z-index:99990}
+.code.lock.dn code{color:#f87171}
+.code.lock.dn::after{background:linear-gradient(90deg,transparent,#f87171,transparent)}
+.hw{position:relative;width:160px;height:160px;margin:10px auto 0}
+.hw svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.hw .ok{opacity:0}
+.hw .ring{position:absolute;left:50%;top:50%;width:120px;height:120px;margin:-60px;border-radius:50%;border:2px solid #a6efe6;opacity:0;pointer-events:none}
+.hw .oc{stroke-dasharray:352;stroke-dashoffset:352}.hw .ot{stroke-dasharray:100;stroke-dashoffset:100}
+.hx{text-align:center;font:500 1.05rem ui-monospace,Consolas,monospace;letter-spacing:.14em;margin-top:18px;color:#a6efe6;min-height:1.4em}
+.hs{text-align:center;min-height:1.4em;margin-top:4px}
 </style>
 </head>
 <body class="pre bgb">
 <div id="gt" hidden><div><p id="gp">Click to enter</p><i></i></div><button id="gs" type="button">Continue without sound</button></div>
-<div id="ld"><div class="pn t"></div><div class="pn b"></div><div id="lt"></div><div id="lf"></div>
-  <div id="lw"><span id="lwi"></span></div><p id="lg"></p>
-  <div id="lm"><span id="lp">0</span><span id="ls">Starting up</span></div><div id="lx"></div></div>
+<div id="ld"><div class="lin">
+  <div class="sg"><svg viewBox="0 0 240 240" fill="none">
+    <defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a6efe6"/><stop offset="1" stop-color="#fff"/></linearGradient></defs>
+    <g class="r1"><circle cx="120" cy="120" r="116" stroke="rgba(255,255,255,.22)" stroke-width="2" stroke-dasharray="2 9" stroke-linecap="round"/><circle cx="120" cy="4" r="3.5" fill="#fff"/></g>
+    <g class="r2"><circle cx="120" cy="120" r="106" stroke="rgba(166,239,230,.45)" stroke-width="1.2" stroke-dasharray="40 24 6 24"/></g>
+    <circle cx="120" cy="120" r="96" stroke="rgba(255,255,255,.1)" stroke-width="3"/>
+    <circle id="lring" cx="120" cy="120" r="96" stroke="url(#lg1)" stroke-width="3" stroke-linecap="round" transform="rotate(-90 120 120)"/>
+    <g class="r3"><path d="M120 52 172 148H68Z" stroke="rgba(255,255,255,.35)"/><path d="M120 188 68 92h104Z" stroke="rgba(166,239,230,.35)"/></g>
+    <circle cx="120" cy="120" r="46" fill="rgba(166,239,230,.06)" stroke="rgba(255,255,255,.25)"/>
+  </svg><span id="lp">0</span></div>
+  <div id="lw"><span id="lwi"></span></div><p id="lg"></p><p id="ls">Starting up</p>
+</div></div>
 <canvas id="bg"></canvas>
 <div id="spot"></div><canvas id="dust"></canvas>
 <img id="cur" alt="">
@@ -271,11 +293,14 @@ const CONFIG={
   discordLink:"https://discord.gg/mysti",
   tosLink:"",
 
-  /* STORE + SCRIPT STATUS: working | updating | down
-     updating/down pauses buying AND locks the loadstring (cannot be copied).
-     statusFile: if set, the site reads the status from that file instead, so ONE file (assets/status.json)
-     controls the site and the Lua loader together. Set to "" to use the value below only. */
-  status:"updating",
+  /* SITE STATUS (status) and SCRIPT STATUS (scriptStatus) are separate.
+     status:        working | updating | down   (the website)
+     scriptStatus:  up | updating | down        (the loadstring: when updating or down it is locked and cannot be copied)
+     statusFile:    if set, assets/status.json overrides both, so one file controls everything:
+                    {"status":"working","script":"up"}   or   {"script":"updating"}   or   {"script":"down"}
+     Preview without editing: add ?script=up, ?script=updating or ?script=down to the page url. */
+  status:"working",
+  scriptStatus:"updating",
   statusFile:"assets/status.json",
 
   /* ---- TABS: add a line to add a tab, set enabled:false to hide one ----
@@ -289,6 +314,7 @@ const CONFIG={
     {id:"features", label:"Features",  type:"section", section:1, mobile:false},
     {id:"docs",     label:"Docs",      type:"panel",   footer:true},
     {id:"status",   label:"Status",    type:"panel",   footer:true},
+    {id:"hwid",     label:"Reset HWID",type:"panel",   footer:true},
     {id:"redeem",   label:"Redeem",    type:"panel",   footer:true},
     {id:"changelog",label:"Changelog", type:"panel",   footer:true, mobile:false},
     {id:"rules",    label:"Rules",     type:"custom",  enabled:false, footer:true, title:"Rules", html:"<p>Be cool.</p>"},
@@ -474,7 +500,10 @@ const SP=CONFIG.statusPage,SC=SP.colors,SL=SP.labels,rank={operational:0,degrade
 let st="working",open=true,storeState="operational";
 const setSt=s=>{st=["working","updating","down"].includes(s)?s:"working";open=st==="working";storeState={working:"operational",updating:"degraded",down:"outage"}[st]};
 setSt(CONFIG.status);
-const allSvc=()=>[{name:"Website",status:storeState,incidents:{}}].concat(SP.services);
+let sst="up",sopen=true;const setSs=s=>{s=s==="working"?"up":s;sst=["up","updating","down"].includes(s)?s:"up";sopen=sst==="up"};
+const QS=new URLSearchParams(location.search).get("script");setSs(QS||CONFIG.scriptStatus);
+const scrState=()=>({up:"operational",updating:"degraded",down:"outage"}[sst]);
+const allSvc=()=>[{name:"Website",status:storeState,incidents:{}},{name:"Loadstring",status:scrState(),incidents:{}}].concat(SP.services);
 const overall=()=>allSvc().reduce((a,s)=>rank[s.status]>rank[a]?s.status:a,"operational");
 
 /* ---------- static text ---------- */
@@ -494,7 +523,7 @@ function pill(){const o=overall(),p=$("#pill");p.style.setProperty("--c",SC[o]);
 pill();$("#pill").onclick=()=>location.hash="#/status";
 
 /* ---------- tabs (built from CONFIG.tabs) ---------- */
-const TABS=CONFIG.tabs.filter(t=>t.enabled!==false),BUILTIN={docs,status,redeem,changelog},pages={};
+const TABS=CONFIG.tabs.filter(t=>t.enabled!==false),BUILTIN={docs,status,hwid,redeem,changelog},pages={};
 const hrefOf=t=>t.href==="@discord"?CONFIG.discordLink:t.href==="@tos"?CONFIG.tosLink:t.href;
 TABS.forEach(t=>{if(t.type==="panel"&&BUILTIN[t.id])pages[t.id]=BUILTIN[t.id];if(t.type==="custom")pages[t.id]=()=>panel(t.title||t.label,t.html||"")});
 const tabLink=(t,f)=>{const cls=!f&&t.mobile===false?' class="hm"':"";
@@ -599,56 +628,47 @@ async function gate(){
   });
 }
 
-/* ---------- intro ---------- */
+/* ---------- intro: sigil charges up, bursts, then an iris opens onto the site ---------- */
 function runLoader(){
-  const L=$("#ld"),b=document.body,C=CONFIG.loader;let over=false,split=false,skip=false,ready=false,hum=null;
+  const L=$("#ld"),b=document.body,C=CONFIG.loader;let over=false,skip=false,done=false,ready=false,hum=null;
   const show=()=>{b.classList.remove("pre","fly","bgb");b.classList.add("in")};
-  const end=()=>{if(over)return;over=true;if(hum)hum.stop();show();L.animate([{opacity:1},{opacity:0}],{duration:400,fill:"forwards"}).finished.then(()=>L.remove(),()=>L.remove())};
+  const end=()=>{if(over)return;over=true;if(hum)hum.stop();show();L.remove()};
   setTimeout(end,18000);
   if(C.enabled===false||(C.respectReducedMotion===true&&matchMedia("(prefers-reduced-motion:reduce)").matches)){over=true;L.remove();show();return}
-  const inner=$("#lwi"),fill=$("#lf"),lp=$("#lp"),lm=$("#ls"),lg=$("#lg"),lt=$("#lt"),mt=$("#lm");
-  [...CONFIG.storeName].forEach(ch=>{const c=document.createElement("span");c.className="lc";const t=document.createElement("span");t.textContent=ch===" "?"\u00a0":ch;c.append(t);inner.append(c)});
-  const letters=[...inner.querySelectorAll(".lc>span")];lg.textContent=CONFIG.tagline;
+  const ring=$("#lring"),lp=$("#lp"),lm=$("#ls"),lg=$("#lg"),inner=$("#lwi"),sg=$(".sg"),LEN=603.2,M=C.messages;
+  [...CONFIG.storeName].forEach(ch=>{const c=document.createElement("span");c.className="lc";c.textContent=ch===" "?"\u00a0":ch;inner.append(c)});
+  const letters=[...inner.children];lg.textContent=CONFIG.tagline;
   const A=(e,k,o)=>e.animate(k,Object.assign({fill:"forwards"},o)).finished.catch(()=>{});
   const img=src=>new Promise(r=>{const i=new Image();i.onload=i.onerror=r;i.src=src});
   Promise.race([Promise.all([document.fonts.load('300 100px Spectral'),img(CONFIG.cursor.src),img("assets/store.png")]),wait(5000)]).catch(()=>{}).then(()=>ready=true);
-  L.onclick=()=>{if(split)end();else skip=true};
+  L.onclick=()=>{if(done)end();else skip=true};
   (async()=>{
-    SFX.play("enter");await wait(250);
-    /* 1. letters rise out of a mask on a scale of notes, spacing settles, a teal light sweeps across */
-    const intro=Promise.all(letters.map((l,i)=>A(l,[{transform:"translateY(112%)"},{transform:"translateY(0)"}],{duration:1000,delay:i*80,easing:"cubic-bezier(.2,.9,.2,1)"})));
-    letters.forEach((_,i)=>setTimeout(()=>SFX.play("letter",i),i*80));
-    A(inner,[{letterSpacing:".14em"},{letterSpacing:"0em"}],{duration:1900,easing:"cubic-bezier(.2,.9,.2,1)"});
-    intro.then(()=>letters.forEach((l,i)=>l.animate([{backgroundPosition:"100% 0"},{backgroundPosition:"0 0"}],{duration:1100,delay:i*80,easing:"ease-in-out"})));
-    A(lg,[{opacity:0,transform:"translateY(8px)"},{opacity:1,transform:"none"}],{duration:900,delay:900});A(mt,[{opacity:0},{opacity:1}],{duration:600,delay:300});A(lt,[{opacity:0},{opacity:1}],{duration:600,delay:200});
-    /* 2. the seam charges outward from the centre while the counter climbs */
-    hum=SFX.hum();let lastT=0;const t0=performance.now(),M=C.messages;
+    SFX.play("enter");
+    /* 1. the sigil spins in, the name blurs into focus letter by letter */
+    A(sg,[{opacity:0,transform:"scale(.6) rotate(-50deg)",filter:"blur(14px)"},{opacity:1,transform:"none",filter:"blur(0)"}],{duration:1400,easing:"cubic-bezier(.2,.9,.2,1)"});
+    letters.forEach((l,i)=>{A(l,[{opacity:0,transform:"translateY(16px)",filter:"blur(10px)"},{opacity:1,transform:"none",filter:"blur(0)"}],{duration:900,delay:500+i*90,easing:"cubic-bezier(.2,.9,.2,1)"});setTimeout(()=>SFX.play("letter",i),500+i*90)});
+    A(inner,[{letterSpacing:".7em"},{letterSpacing:".28em"}],{duration:2800,easing:"cubic-bezier(.2,.9,.2,1)"});
+    A(lg,[{opacity:0,transform:"translateY(8px)"},{opacity:1,transform:"none"}],{duration:900,delay:1300});
+    A(lm,[{opacity:0},{opacity:1}],{duration:600,delay:600});
+    /* 2. the ring charges while the number climbs */
+    hum=SFX.hum();let lastT=0;const t0=performance.now();
     await new Promise(r=>{(function f(){
       const t=Math.min(1,(performance.now()-t0)/(skip?300:C.minMs));let p=1-Math.pow(1-t,2.4);if(!ready)p=Math.min(p,.93);
-      fill.style.width=p*100+"%";fill.style.left=(50-p*50)+"%";lp.textContent=Math.floor(p*100);hum.set(p);
+      ring.style.strokeDashoffset=LEN*(1-p);lp.textContent=Math.floor(p*100);hum.set(p);
       const n=Math.floor(p*10);if(n>lastT){lastT=n;SFX.play("tick",p)}
       lm.textContent=M[p>=1?M.length-1:Math.min(M.length-2,Math.floor(p*(M.length-1)))];
       if(p>=1&&ready)r();else requestAnimationFrame(f)})()});
-    hum.stop();SFX.play("riser");
-    await intro;if(over)return;await wait(500);if(over)return;
-    /* 3. the seam flares, a soft flash, the glass shutters part and the background snaps into focus */
-    split=true;b.classList.remove("bgb");const rr=inner.getBoundingClientRect(),ease="cubic-bezier(.76,0,.24,1)";SFX.play("boom");
-    A(fill,[{transform:"scaleY(1)"},{transform:"scaleY(9)",offset:.25},{transform:"scaleY(1)",opacity:0}],{duration:1000});
-    A($("#lx"),[{opacity:0},{opacity:.3,offset:.12},{opacity:0}],{duration:800});
-    A(inner,[{transform:"scale(1)"},{transform:"scale(1.06)",offset:.25},{transform:"scale(1)"}],{duration:700,easing:"ease-out"});
-    [mt,lg,lt].forEach(e=>A(e,[{opacity:1},{opacity:0}],{duration:350}));
-    A(L.querySelector(".t"),[{transform:"none"},{transform:"translateY(-101%)"}],{duration:1300,easing:ease});
-    A(L.querySelector(".b"),[{transform:"none"},{transform:"translateY(101%)"}],{duration:1300,easing:ease});
+    hum.stop();SFX.play("riser");await wait(450);if(over)return;
+    /* 3. burst */
+    done=true;SFX.play("boom");
+    A(sg,[{transform:"scale(1)"},{transform:"scale(1.2)",offset:.3},{transform:"scale(1)"}],{duration:700,easing:"ease-out"});
+    A(ring,[{filter:"drop-shadow(0 0 6px rgba(166,239,230,.7))"},{filter:"drop-shadow(0 0 26px #a6efe6)"}],{duration:500});
     await wait(650);if(over)return;
-    /* 4. the name glides up into the nav on a curve while the hero rises in */
-    const nm=document.querySelector("nav b .nm"),tr=nm.getBoundingClientRect();
-    b.classList.add("fly");b.classList.remove("pre");setTimeout(()=>{b.classList.add("in");SFX.play("air")},700);SFX.play("whoosh");
-    if(tr.width>0){const s=tr.width/rr.width,dx=tr.left+tr.width/2-(rr.left+rr.width/2),dy=tr.top+tr.height/2-(rr.top+rr.height/2);
-      await A(inner,[{transform:"none"},{transform:`translate(${dx*.55}px,${dy*.55-34}px) scale(${1-(1-s)*.6})`,offset:.55},{transform:`translate(${dx}px,${dy}px) scale(${s})`}],{duration:1300,easing:"cubic-bezier(.7,0,.2,1)"})}
-    else await A(inner,[{opacity:1},{opacity:0,transform:"translateY(-30px) scale(.92)"}],{duration:700,easing:"ease"});
-    SFX.play("land");b.classList.remove("fly");
-    await A(inner,[{opacity:1},{opacity:0}],{duration:250});
-    end();
+    /* 4. content fades, an iris opens and the site is revealed */
+    b.classList.remove("bgb","pre");b.classList.add("in");SFX.play("whoosh");
+    [sg,lg,lm,$("#lw")].forEach(e=>A(e,[{opacity:1,transform:"none"},{opacity:0,transform:"scale(1.12)"}],{duration:500,easing:"ease-in"}));
+    await A(L,[{"--r":"0px",opacity:1},{opacity:1,offset:.7},{"--r":"150vmax",opacity:0}],{duration:1500,easing:"cubic-bezier(.7,0,.2,1)"});
+    SFX.play("land");end();
   })().catch(end);
 }
 gate().then(runLoader);
@@ -696,20 +716,21 @@ const snap=$("#snap"),secs=$$("#snap>.s");
 
 /* ---------- keys + loadstring (locked when status is updating / down) ---------- */
 const DBK="myst_redeemed",getDB=()=>{try{return JSON.parse(ls.get(DBK)||"{}")}catch(e){return{}}};
-const lockMsg=()=>(CONFIG.free.lockedText||{})[st]||"Script is unavailable right now.";
+const lockMsg=()=>(CONFIG.free.lockedText||{})[sst]||"Script is unavailable right now.";
+const lockIcon=()=>sst==="updating"?'<i class="spin"></i>':sst==="down"?'<i class="dot" style="--c:#f87171"></i>':"";
 function renderLock(){
   const box=$("#lock");
-  box.innerHTML=`<div class="code gl ${open?"":"lock"}">${st==="updating"?'<i class="spin"></i>':""}<code></code><button class="btn sm"></button></div>`;
+  box.innerHTML=`<div class="code gl ${sopen?"":"lock"} ${sst==="down"?"dn":""}">${lockIcon()}<code></code><button class="btn sm"></button></div>`;
   const c=box.querySelector("code"),b=box.querySelector("button");
-  c.textContent=open?CONFIG.free.script:lockMsg();
-  b.textContent=open?"Copy":"Locked";b.disabled=!open;
-  if(open)b.onclick=()=>copy(CONFIG.free.script,"Script copied");
+  c.textContent=sopen?CONFIG.free.script:lockMsg();
+  b.textContent=sopen?"Copy":"Locked";b.disabled=!sopen;
+  if(sopen)b.onclick=()=>{if(sopen)copy(CONFIG.free.script,"Script copied")};
   else{c.oncopy=e=>e.preventDefault();c.oncontextmenu=e=>e.preventDefault()}
 }
-function applyStatus(s){setSt(s);pill();renderLock();if(pn.dataset.page==="status")status()}
+function applyStatus(j){if(j.status)setSt(j.status);if(j.script&&!QS)setSs(j.script);pill();renderLock();if(pn.dataset.page==="status")status()}
 renderLock();
-/* one file controls site + loader: assets/status.json  ->  {"status":"working"} */
-if(CONFIG.statusFile)fetch(CONFIG.statusFile+"?t="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.status&&j.status!==st)applyStatus(j.status)}).catch(()=>{});
+/* one file controls site + script: assets/status.json  ->  {"status":"working","script":"updating"} */
+if(CONFIG.statusFile)fetch(CONFIG.statusFile+"?t="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{if(j&&(j.status||j.script))applyStatus(j)}).catch(()=>{});
 
 /* ---------- panels ---------- */
 const ov=$("#ov"),pn=$("#pn");let onClose=null;
@@ -754,7 +775,7 @@ function status(){
     return `<div class="sr ${s.status!=="operational"?"bad":""}" style="--c:${SC[s.status]}"><div class="sh"><span class="dot"></span>${esc(s.name)}${SP.showUptime?`<span class="up">${up}% uptime</span>`:""}<em>${SL[s.status]}</em></div><div class="bars">${bars.join("")}</div><div class="ax"><span>${days} days ago</span><span>Today</span></div></div>`}).join("");
   const inc=(SP.incidents||[]).map(i=>`<div class="inc" style="--c:${SC[i.state]||SC.operational}"><small>${esc(i.date)} · ${SL[i.state]||""}</small><b>${esc(i.title)}</b><p style="margin-top:2px">${esc(i.text)}</p></div>`).join("");
   panel("System status",`<div class="sb" style="--c:${SC[o]}"><span class="dot"></span><div><b>${SP.headlines[o]}</b><small>Last checked <span id="lc">${stamp()}</span> · refreshes automatically</small></div></div>
-    <div class="chips"><span class="chip"><span class="dot" style="--c:${SC[storeState]}"></span>Website: ${{working:"Working",updating:"Updating",down:"Down"}[st]}</span><span class="chip">${svc.filter(s=>s.status==="operational").length} of ${svc.length} operational</span></div>
+    <div class="chips"><span class="chip"><span class="dot" style="--c:${SC[storeState]}"></span>Website: ${{working:"Working",updating:"Updating",down:"Down"}[st]}</span><span class="chip"><span class="dot" style="--c:${SC[scrState()]}"></span>Script: ${{up:"Up",updating:"Updating",down:"Down"}[sst]}</span><span class="chip">${svc.filter(s=>s.status==="operational").length} of ${svc.length} operational</span></div>
     <div class="h5">Recent incidents</div>${inc||'<p class="mut">No incidents reported.</p>'}
     <div class="h5">Services</div>${rows}
     <div class="leg">${["operational","degraded","outage"].map(k=>`<span style="--c:${SC[k]}"><i class="dot"></i>${SL[k]}</span>`).join("")}</div>`);
@@ -803,7 +824,7 @@ function redeem(){
       $("#vd").innerHTML='<p class="rise" style="text-align:center;margin-top:12px">This key has expired. Get a new one on Discord.</p><button class="btn rise" style="--k:2;width:100%;margin-top:14px" id="rm">Redeem another key</button>';
       $("#rm").onclick=redeem;return;
     }
-    /* 5. click: shackle pops open, shockwave, confetti */
+    /* 5. click: shackle pops sopen, shockwave, confetti */
     SFX.play("unlock");SFX.play("shock");
     A(sh,[{transform:"none"},{transform:"translateY(-18px)"},{transform:"translateY(-14px) rotate(-32deg)"}],{duration:650,easing:"cubic-bezier(.3,1.4,.5,1)"});
     A(lk,[{filter:"drop-shadow(0 0 0 rgba(166,239,230,0))"},{filter:"drop-shadow(0 0 28px rgba(166,239,230,.9))"}],{duration:700});
@@ -820,16 +841,79 @@ function redeem(){
     SFX.play("air");
     const row=(l,id,i)=>`<div class="kv rise" style="--k:${i}"><span class="mut">${l}</span><b id="${id}"></b></div>`;
     $("#vd").innerHTML=row("Key","a1",0)+row("Type","a2",1)+row("Duration","a3",2)+row("Expires","a4",3)
-      +`<p class="rise" style="--k:4;margin-top:16px">${open?"Your script is unlocked. Copy it and run it in your executor:":"Your key is valid. The script is updating, so it unlocks when the update finishes."}</p>
-      <div class="code gl rise ${open?"":"lock"}" style="--k:5;margin:10px 0 14px">${st==="updating"?'<i class="spin"></i>':""}<code id="kl"></code><button class="btn sm" id="kc"></button></div>
+      +`<p class="rise" style="--k:4;margin-top:16px">${sopen?"Your script is unlocked. Copy it and run it in your executor:":"Your key is valid, but the script is "+(sst==="updating"?"updating":"down")+" right now, so it stays locked until it is back up."}</p>
+      <div class="code gl rise ${sopen?"":"lock"} ${sst==="down"?"dn":""}" style="--k:5;margin:10px 0 14px">${lockIcon()}<code id="kl"></code><button class="btn sm" id="kc"></button></div>
       <button class="btn rise" style="--k:6;width:100%" id="rm">Redeem another key</button>`;
     $("#a1").textContent=k.key;$("#a2").textContent=k.type;$("#a3").textContent=k.days>=3650?"Lifetime":k.days+" day"+(k.days===1?"":"s");
     $("#a4").textContent=k.days>=3650?"Never":new Date(end).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
-    $("#kl").textContent=open?CONFIG.free.script:lockMsg();$("#kc").textContent=open?"Copy":"Locked";$("#kc").disabled=!open;
-    if(open)$("#kc").onclick=()=>copy(CONFIG.free.script,"Script copied");else $("#kl").oncopy=e=>e.preventDefault();
+    $("#kl").textContent=sopen?CONFIG.free.script:lockMsg();$("#kc").textContent=sopen?"Copy":"Locked";$("#kc").disabled=!sopen;
+    if(sopen)$("#kc").onclick=()=>copy(CONFIG.free.script,"Script copied");else $("#kl").oncopy=e=>e.preventDefault();
     $("#rm").onclick=redeem;
   };
   $("#rg").onclick=go;$("#rk").onkeydown=e=>{if(e.key==="Enter")go()};$("#rk").focus();
+}
+
+/* reset hwid: key + email + confirm email, then a scan / unbind / reset animation */
+function hwid(){
+  panel("Reset HWID",`<div class="ico">⌬</div><p style="text-align:center">Switching PCs? Enter your key and email to unbind your hardware ID.</p><input type="text" id="hk" placeholder="Your key" autocomplete="off" spellcheck="false"><input type="text" id="he" placeholder="Email" autocomplete="off" spellcheck="false" inputmode="email"><input type="text" id="hc" placeholder="Confirm email" autocomplete="off" spellcheck="false" inputmode="email"><div class="err" id="hr"></div><button class="btn w" id="hg" style="width:100%">Reset HWID</button>`);
+  let busy=false;
+  const A=(e,k,o)=>e.animate(k,Object.assign({fill:"forwards"},o)).finished.catch(()=>{});
+  const rnd=n=>Array.from({length:n},()=>"0123456789ABCDEF"[Math.random()*16|0]).join(""),fmt=()=>[rnd(4),rnd(4),rnd(4),rnd(4)].join("-");
+  const fail=m=>{$("#hr").textContent=m;SFX.play("error");$("#pb").animate([{transform:"translateX(0)"},{transform:"translateX(-9px)"},{transform:"translateX(9px)"},{transform:"translateX(-5px)"},{transform:"translateX(0)"}],{duration:340})};
+  const go=async()=>{
+    if(busy)return;
+    const kv=norm($("#hk").value),k=CONFIG.keys.find(x=>norm(x.key)===kv),e1=$("#he").value.trim().toLowerCase(),e2=$("#hc").value.trim().toLowerCase();
+    if(!kv)return fail("Enter your key first.");
+    if(!k)return fail("That key isn't valid. Check it and try again.");
+    const at=getDB()[kv];if(at&&at+k.days*864e5<Date.now())return fail("This key has expired.");
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e1))return fail(e1?"Enter a valid email address.":"Enter your email.");
+    if(e1!==e2)return fail("The emails don't match.");
+    busy=true;
+    try{const r=JSON.parse(ls.get("myst_hwid")||"{}");r[kv]={t:Date.now(),email:e1};ls.set("myst_hwid",JSON.stringify(r))}catch(e){}
+    const pb=$("#pb");
+    SFX.play("whoosh");
+    await Promise.all([...pb.children].map((e,i)=>A(e,[{opacity:1,transform:"none",filter:"blur(0)"},{opacity:0,transform:"translateY(-18px) scale(.94)",filter:"blur(6px)"}],{duration:380,delay:i*50,easing:"ease-in"})));
+    $("#pt").textContent="Resetting HWID";
+    pb.innerHTML=`<div class="hw"><div class="ring"></div>
+      <svg class="chip" viewBox="0 0 160 160" fill="none"><path d="M50 22v16M80 22v16M110 22v16M50 122v16M80 122v16M110 122v16M22 50h16M22 80h16M22 110h16M122 50h16M122 80h16M122 110h16" stroke="#fff" stroke-width="3" stroke-linecap="round"/><rect x="38" y="38" width="84" height="84" rx="14" fill="rgba(255,255,255,.07)" stroke="#a6efe6" stroke-width="3"/><rect x="58" y="58" width="44" height="44" rx="8" stroke="rgba(255,255,255,.5)" stroke-width="2"/><rect class="scan" x="40" y="38" width="80" height="4" rx="2" fill="#a6efe6"/></svg>
+      <svg class="ok" viewBox="0 0 160 160" fill="none"><circle class="oc" cx="80" cy="80" r="56" stroke="#a6efe6" stroke-width="4" stroke-linecap="round" transform="rotate(-90 80 80)"/><path class="ot" d="M52 82l20 20 38-42" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="hx" id="hx"></div><div class="mut hs" id="hs"></div><div class="big vt" id="ht"></div><div id="hd"></div>`;
+    const hw=$(".hw"),chip=$(".chip"),ok=$(".ok"),ring=$(".ring"),scan=$(".scan"),hx=$("#hx"),hs=$("#hs"),ht=$("#ht"),alive=()=>ov.classList.contains("on")&&document.body.contains(hw);
+    const say=t=>{hs.textContent=t;A(hs,[{opacity:0,transform:"translateY(6px)"},{opacity:1,transform:"none"}],{duration:300})};
+    A(hw,[{opacity:0,transform:"scale(.6)"},{opacity:1,transform:"none"}],{duration:600,easing:"cubic-bezier(.2,.9,.2,1)"});
+    /* 1. scan */
+    const iv=setInterval(()=>{hx.textContent="HWID  "+fmt()},70);
+    const sc=scan.animate([{transform:"translateY(0)"},{transform:"translateY(78px)"}],{duration:650,iterations:Infinity,direction:"alternate",easing:"ease-in-out"});
+    say("Scanning hardware…");SFX.play("riser");for(let i=0;i<8;i++)setTimeout(()=>SFX.play("tick",i/8),i*170);
+    await wait(1500);if(!alive()){clearInterval(iv);return}
+    /* 2. unbind */
+    say("Unbinding device…");SFX.play("turn");
+    A(chip,[{transform:"none"},{transform:"translateX(-5px)"},{transform:"translateX(5px)"},{transform:"translateX(-3px)"},{transform:"none"}],{duration:380,iterations:2});
+    await wait(1000);clearInterval(iv);if(!alive())return;
+    /* 3. wipe + flash */
+    hx.textContent="HWID  0000-0000-0000-0000";say("Clearing record…");sc.cancel();
+    SFX.play("unlock");SFX.play("shock");
+    A(ring,[{transform:"scale(.2)",opacity:.9},{transform:"scale(3.6)",opacity:0}],{duration:1100,easing:"cubic-bezier(.1,.7,.3,1)"});
+    A(chip,[{transform:"none",filter:"drop-shadow(0 0 0 #a6efe6)",opacity:1},{transform:"rotate(180deg) scale(1.15)",filter:"drop-shadow(0 0 26px #a6efe6)",opacity:1,offset:.6},{transform:"rotate(360deg) scale(0)",filter:"drop-shadow(0 0 30px #fff)",opacity:0}],{duration:900,easing:"cubic-bezier(.6,0,.3,1)"});
+    A(pn,[{transform:"scale(1)"},{transform:"scale(1.025)",offset:.2},{transform:"scale(1)"}],{duration:500});
+    await wait(750);if(!alive())return;
+    /* 4. checkmark draws in */
+    ok.style.opacity=1;
+    A(ok,[{transform:"scale(.4)",opacity:0},{transform:"none",opacity:1}],{duration:500,easing:"cubic-bezier(.3,1.5,.5,1)"});
+    A($(".oc"),[{strokeDashoffset:352},{strokeDashoffset:0}],{duration:700,easing:"cubic-bezier(.5,0,.2,1)"});
+    A($(".ot"),[{strokeDashoffset:100},{strokeDashoffset:0}],{duration:500,delay:550,easing:"ease-out"});
+    SFX.play("fanfare");SFX.play("sparkle");SFX.play("success");burst();setTimeout(burst,350);
+    A(hx,[{opacity:1},{opacity:0}],{duration:400});
+    $("#pt").textContent="HWID reset!";ht.textContent="HWID reset!";
+    A(ht,[{opacity:0,transform:"translateY(14px) scale(.9)",filter:"blur(8px)"},{opacity:1,transform:"none",filter:"blur(0)"}],{duration:800,easing:"cubic-bezier(.2,.9,.2,1)"});
+    say("Your hardware ID is unbound.");
+    await wait(1000);if(!alive())return;
+    const row=(l,id,i)=>`<div class="kv rise" style="--k:${i}"><span class="mut">${l}</span><b id="${id}"></b></div>`;
+    $("#hd").innerHTML=row("Key","h1",0)+row("Email","h2",1)+row("Status","h3",2)+`<p class="rise" style="--k:3;margin-top:16px">Run the script on your new PC and it will bind to that device.</p><button class="btn w rise" style="--k:4;width:100%;margin-top:14px" id="hdn">Done</button>`;
+    $("#h1").textContent=k.key;$("#h2").textContent=e1.replace(/^(.).*(@.*)$/,"$1•••$2");$("#h3").textContent="Unbound";
+    $("#hdn").onclick=closeP;SFX.play("air");
+  };
+  $("#hg").onclick=go;[$("#hk"),$("#he"),$("#hc")].forEach(i=>i.onkeydown=e=>{if(e.key==="Enter")go()});$("#hk").focus();
 }
 
 /* changelog */
