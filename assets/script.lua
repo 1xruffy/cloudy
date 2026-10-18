@@ -134,10 +134,22 @@ local function banned(n)
 	return n:find("MISSING_") or n:find("Bubblegum") or n:find("Ragdoll") or n:find("Fall Apart") or n:find("Every Finisher Ever")
 end
 
+
 local function toenum(n)
-	if not elib then return nil end
-	local ok, id = pcall(elib.ToEnum, elib, n)
-	return ok and id or nil
+    if not elib or type(n) ~= "string" then
+        return nil
+    end
+
+    local ok, id = pcall(function()
+        return elib:ToEnum(n)
+    end)
+
+    if not ok then
+        warn("[SkinChanger] Unknown enum:", n)
+        return nil
+    end
+
+    return id
 end
 
 local function clonecos(name, ctype, inv, favonly)
