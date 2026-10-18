@@ -353,9 +353,9 @@ const CONFIG={
     labels:{operational:"Operational",degraded:"Degraded",outage:"Outage"},
     colors:{operational:"#4ade80",degraded:"#fbbf24",outage:"#f87171"},
     services:[
-      {name:"Mystical Free",status:"degraded",incidents:{}},
-      {name:"Mystical Paid",status:"outage",incidents:{}},
-      {name:"Mystical Script API",status:"outage",incidents:{}}],
+      {name:"Mystical Free",status:"Operational",incidents:{}},
+      {name:"Mystical Paid",status:"Degraded",incidents:{}},
+      {name:"Mystical Script API",status:"Operational",incidents:{}}],
     incidents:[
       {date:"12 days ago",state:"outage",title:"Update delivery outage",text:"Resolved. A bad release blocked updates for a short time."},
       {date:"6 days ago",state:"degraded",title:"Slow logins",text:"Resolved. Login times were higher than normal."}]},
