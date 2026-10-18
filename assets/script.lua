@@ -474,11 +474,12 @@ local Settings = {
     AimPart = "HitboxHead"
 }
 
--- FOV Circle
+-- Pink FOV Circle
 local FOVCircle = Drawing.new("Circle")
 FOVCircle.Thickness = 1.5
-FOVCircle.Color = Color3.fromRGB(0, 255, 0)
-FOVCircle.Filled = false
+FOVCircle.Color = Color3.fromRGB(255, 105, 180)
+FOVCircle.Filled = true
+FOVCircle.Transparency = 0.25
 FOVCircle.Radius = Settings.FOV
 FOVCircle.Visible = true
 
