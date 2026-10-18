@@ -921,18 +921,20 @@ end
 
 
 -- ========================================
--- MYSTICAL: ZOMBIE TELEPORT FARM
+-- MYSTICAL: SAFER ZOMBIE TELEPORT FARM
 -- Requires: AimbotFrame and LocalPlayer
 -- ========================================
 
 local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-
 local LocalPlayer = Players.LocalPlayer
 
 local zombieFarmEnabled = false
 local targetingTaskRunning = false
 local currentTarget = nil
+
+-- Survival settings
+local SAFE_DISTANCE = 14
+local UPDATE_INTERVAL = 0.6
 
 local targetNames = {
     "Zombie",
@@ -962,11 +964,11 @@ Button.Text = ""
 Button.Parent = Container
 
 local Label = Instance.new("TextLabel")
-Label.Size = UDim2.new(1, -35, 0, 30)
+Label.Size = UDim2.new(1, -35, 0, 25)
 Label.Position = UDim2.new(0, 35, 0, 0)
 Label.BackgroundTransparency = 1
-Label.Text = "Zombie Teleport Farm"
-Label.TextColor3 = Color3.fromRGB(200, 200, 200)
+Label.Text = "Safer Zombie Farm"
+Label.TextColor3 = Color3.fromRGB(220, 220, 220)
 Label.TextSize = 13
 Label.Font = Enum.Font.SourceSans
 Label.TextXAlignment = Enum.TextXAlignment.Left
@@ -998,16 +1000,12 @@ local function getRoot(character)
 end
 
 -- ========================================
--- FIND ZOMBIES
+-- ZOMBIE HELPERS
 -- ========================================
 
 local function getEntities()
     local tower = workspace:FindFirstChild("Gargoyle Tower")
-    if not tower then
-        return nil
-    end
-
-    return tower:FindFirstChild("Entities")
+    return tower and tower:FindFirstChild("Entities")
 end
 
 local function isAlive(zombie)
@@ -1031,7 +1029,6 @@ local function findNextZombie()
         return nil
     end
 
-    -- Follow the order specified above.
     for _, name in ipairs(targetNames) do
         for _, zombie in ipairs(entities:GetChildren()) do
             if zombie.Name == name and isAlive(zombie) then
@@ -1044,7 +1041,7 @@ local function findNextZombie()
 end
 
 -- ========================================
--- TELEPORT TO TARGET
+-- SAFER POSITIONING
 -- ========================================
 
 local function teleportToZombie(zombie)
@@ -1054,22 +1051,39 @@ local function teleportToZombie(zombie)
 
     local character = getCharacter()
     local root = getRoot(character)
-
-    if not character or not root then
-        return false
-    end
-
     local targetRoot = zombie:FindFirstChild("HumanoidRootPart")
-    if not targetRoot then
+
+    if not root or not targetRoot then
         return false
     end
 
-    -- Position slightly above and beside the zombie.
+    -- Stay farther from the zombie instead of
+    -- teleporting directly into its hit range.
+    local direction = root.Position - targetRoot.Position
+
+    if direction.Magnitude < 0.1 then
+        direction = -targetRoot.CFrame.LookVector
+    else
+        direction = direction.Unit
+    end
+
     local destination =
-        targetRoot.CFrame * CFrame.new(0, 0, 4)
+        targetRoot.Position + direction * SAFE_DISTANCE
+
+    -- Preserve a level position.
+    destination = Vector3.new(
+        destination.X,
+        targetRoot.Position.Y + 2,
+        destination.Z
+    )
 
     local ok, err = pcall(function()
-        character:PivotTo(destination)
+        character:PivotTo(
+            CFrame.lookAt(
+                destination,
+                targetRoot.Position
+            )
+        )
     end)
 
     if not ok then
@@ -1093,21 +1107,18 @@ local function startFarm()
 
     task.spawn(function()
         while zombieFarmEnabled do
-            -- Clear dead or removed targets immediately.
             if not isAlive(currentTarget) then
                 currentTarget = nil
             end
 
-            -- Pick another zombie when needed.
             if not currentTarget then
                 currentTarget = findNextZombie()
 
                 if currentTarget then
                     print(
-                        "[Mystical] Target selected:",
+                        "[Mystical] Target:",
                         currentTarget.Name
                     )
-
                     Status.Text =
                         "Target: " .. currentTarget.Name
                 else
@@ -1115,20 +1126,11 @@ local function startFarm()
                 end
             end
 
-            -- Keep teleporting to the current living target.
             if currentTarget and isAlive(currentTarget) then
-                local success = teleportToZombie(currentTarget)
-
-                if success then
-                    -- Recheck health and continue tracking.
-                    task.wait(0.35)
-                else
-                    task.wait(0.5)
-                end
-            else
-                currentTarget = nil
-                task.wait(0.25)
+                teleportToZombie(currentTarget)
             end
+
+            task.wait(UPDATE_INTERVAL)
         end
 
         currentTarget = nil
@@ -1149,21 +1151,21 @@ local function setZombieFarm(enabled)
         or Color3.fromRGB(48, 48, 48)
 
     if enabled then
-        Status.Text = "Searching for zombies..."
+        Status.Text = "Starting safer farm..."
         startFarm()
     else
         currentTarget = nil
         Status.Text = "Status: OFF"
     end
 
-    print("[Mystical] Zombie Teleport Farm:", enabled)
+    print("[Mystical] Safer farm:", enabled)
 end
 
 Button.MouseButton1Click:Connect(function()
     setZombieFarm(not zombieFarmEnabled)
 end)
 
-print("[Mystical] Zombie Teleport Farm loaded")
+print("[Mystical] Safer Zombie Farm loaded")
 
 
 
