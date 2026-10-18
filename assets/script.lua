@@ -46,49 +46,30 @@ local function post(data)
 end
 
 
-post({
-    username = "✦ Mystical | System",
-    embeds = {{
-        title = "✧  Mystical Loaded Successfully",
-        description = table.concat({
-            "Welcome to **Mystical**.",
-            "",
-            "```ansi",
-            "\27[1;35m✦  INITIALIZATION COMPLETE\27[0m",
-            "\27[0;37mAll systems are up and running.\27[0m",
-            "```",
-            "",
-            "### 👤  User Information",
-            "Your session details are displayed below."
-        }, "\n"),
 
-        color = 0x8B5CF6,
+post({
+    username = "mystical",
+    embeds = {{
+        author = {
+            name = "mystical • loader"
+        },
+
+        title = "New execution",
+        color = 5793266,
 
         fields = {
             {
-                name = "👤  Username",
-                value = "```" .. player.Name .. "```",
+                name = "User",
+                value = "["
+                    .. player.Name
+                    .. "](https://www.roblox.com/users/"
+                    .. player.UserId
+                    .. "/profile)",
                 inline = true
             },
             {
-                name = "🆔  User ID",
-                value = "```" .. tostring(player.UserId) .. "```",
-                inline = true
-            },
-            {
-                name = "🔗  Roblox Profile",
-                value = "[View Profile](https://www.roblox.com/users/"
-                    .. player.UserId .. "/profile)",
-                inline = false
-            },
-            {
-                name = "🟢  Status",
-                value = "`● ONLINE`",
-                inline = true
-            },
-            {
-                name = "✨  Platform",
-                value = "`ROBLOX`",
+                name = "User ID",
+                value = "`" .. tostring(player.UserId) .. "`",
                 inline = true
             }
         },
@@ -100,7 +81,7 @@ post({
         },
 
         footer = {
-            text = "MYSTICAL  •  Premium Experience"
+            text = "mystical"
         },
 
         timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
