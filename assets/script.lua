@@ -920,7 +920,6 @@ end
 
 
 
-```lua
 -- ========================================
 -- MYSTICAL: ZOMBIE SKY FARM
 -- Requires: AimbotFrame and LocalPlayer
@@ -1153,7 +1152,6 @@ Button.MouseButton1Click:Connect(function()
 end)
 
 print("[Mystical] Zombie Sky Farm loaded")
-```
 
 
 
