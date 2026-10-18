@@ -7,7 +7,6 @@ print("hello")
 
 
 
-```lua
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 
@@ -84,4 +83,3 @@ pcall(function()
         Duration = 4
     })
 end)
-```
