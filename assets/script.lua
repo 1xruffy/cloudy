@@ -7,33 +7,48 @@ print("hello")
 
 
 
--- Local Player Information
--- Displays only the account running this script.
-
 local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+local HttpService = game:GetService("HttpService")
 
-if not player then
-    warn("Could not identify the local player.")
-    return
+-- PASTE A NEW WEBHOOK URL HERE (see note: the old one is public in your repo)
+local WEBHOOK_URL = "https://discord.com/api/webhooks/1561387208857096246/c5gknfwrzEVgzhhQu6Gt2W4qD7sa802vpXiz--vYKlU6MXSU5cRJUwBCC6PPkrKMu_ZX"
+
+-- executors use request(), not HttpService:PostAsync (PostAsync is blocked on the client)
+local send = (syn and syn.request) or (http and http.request) or http_request or request
+
+local function post(data)
+    if not send then return warn("[Mystical] this executor has no request() function") end
+    local ok, res = pcall(send, {
+        Url = WEBHOOK_URL,
+        Method = "POST",
+        Headers = {["Content-Type"] = "application/json"},
+        Body = HttpService:JSONEncode(data),
+    })
+    if not ok then
+        warn("[Mystical] webhook failed: " .. tostring(res))
+    elseif res and res.StatusCode and res.StatusCode >= 300 then
+        warn("[Mystical] webhook returned " .. tostring(res.StatusCode))
+    end
 end
 
-local userId = player.UserId
+local function log(player)
+    post({
+        username = "Roblox Player Logger",
+        embeds = {{
+            title = "Player Joined",
+            color = 5793266,
+            fields = {
+                {name = "Username", value = player.Name, inline = true},
+                {name = "User ID", value = tostring(player.UserId), inline = true},
+                {name = "Profile", value = "https://www.roblox.com/users/" .. player.UserId .. "/profile", inline = false},
+            },
+            thumbnail = {url = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"},
+        }},
+    })
+end
 
-local info = {
-    username = player.Name,
-    displayName = player.DisplayName,
-    userId = tostring(userId),
-    profile = "https://www.roblox.com/users/"
-        .. userId .. "/profile",
-    avatar = "https://www.roblox.com/headshot-thumbnail/image?userId="
-        .. userId
-        .. "&width=420&height=420&format=png"
-}
+Players.PlayerAdded:Connect(log)
 
-print("====== EXECUTING PLAYER ======")
-print("Username: " .. info.username)
-print("Display Name: " .. info.displayName)
-print("User ID: " .. info.userId)
-print("Profile: " .. info.profile)
-print("Avatar: " .. info.avatar)
+pcall(function()
+    game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Mystical", Text = "Loaded", Duration = 4})
+end)
