@@ -25734,7 +25734,7 @@ genv().cloudyInit = function()
 		["Apply now"] = true, ["Follow the weapon in hand"] = true, ["Reset this weapon"] = true, ["Reset all weapons"] = true, ["Refresh the customize screen"] = false,
 		["Save now"] = true, ["Reset to defaults"] = true, ["Unload cloudy"] = true, ["Copy config"] = true, ["Paste config"] = true,
 		["Check for update"] = true, ["Reload the latest version"] = true, ["Reset layout"] = true,
-		["Arrange HUD"] = true, ["Open the console (F9)"] = true, ["Copy logs"] = true, ["Clean look"] = true, ["Turn everything off"] = true, ["Play the intro"] = true,
+		["Arrange HUD"] = true, ["Open the console (F9)"] = true, ["Copy logs"] = true, ["Clean look"] = true, ["Turn everything off"] = true, ["Play the intro"] = false,
 	}
 	-- switches that do nothing while another one is off (the combat code gates them on it): their row
 	-- says so instead of looking broken
