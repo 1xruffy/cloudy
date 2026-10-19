@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>cloudy.gg</title>
-<meta name="theme-color" content="#68aaa6">
+<meta name="theme-color" content="#000000">
 <meta name="description" content="Cloudy: the #1 free Rivals cheat. Free forever.">
 <meta property="og:title" content="Cloudy">
 <meta property="og:description" content="The #1 Free Rivals cheat. Free forever. Premium available.">
@@ -13,6 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
 <style>
 :root{--ac:#a6efe6;--acr:166,239,230;--gold:#fcd34d}
+body.pm{--ac:#fcd34d;--acr:252,211,77}
 *{box-sizing:border-box;margin:0;padding:0}
 html{font-size:106.25%}
 html,body{height:100%;background:#000;color:#fff;font-family:Spectral,Georgia,serif;-webkit-font-smoothing:antialiased;overflow:hidden}
@@ -28,6 +29,7 @@ h1{font-size:clamp(2.8rem,8vw,6rem)}h2{font-size:clamp(2.2rem,6vw,4.2rem)}
 .sub{margin-top:20px;max-width:40ch;color:rgba(255,255,255,.72);font-size:.96rem;line-height:1.55}
 .gl{position:relative;background:rgba(0,0,0,.36);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.13);border-radius:14px;transition:border-color .3s,transform .3s}
 .gl:hover{border-color:rgba(255,255,255,.3)}
+body.pm .gl,body.pm nav.sc{background:rgba(0,0,0,.75)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.35);color:#fff;font:500 .88rem Spectral,serif;text-decoration:none;cursor:pointer;transition:background .2s,transform .15s,box-shadow .3s}
 .btn:hover:not(:disabled){background:rgba(255,255,255,.14)}.btn:active:not(:disabled){transform:scale(.97)}
 .btn.w{background:#fff;color:#000;border-color:#fff}.btn.w:hover:not(:disabled){background:#e8e8e8;box-shadow:0 0 34px rgba(255,255,255,.4)}
@@ -37,15 +39,15 @@ h1{font-size:clamp(2.8rem,8vw,6rem)}h2{font-size:clamp(2.2rem,6vw,4.2rem)}
 nav{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;transition:background .4s}
 nav.sc{background:rgba(0,0,0,.34);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08)}
 nav b{font:300 1.55rem Spectral,serif;display:flex;align-items:center;gap:10px}nav b img{height:26px}
+body.pm nav b::after{content:"PREMIUM";font:700 .58rem ui-monospace,monospace;letter-spacing:.16em;color:#1a1000;background:var(--gold);padding:3px 7px;border-radius:99px}
 #nl{display:flex;gap:2px;flex-wrap:wrap;justify-content:flex-end}
 nav a{padding:7px 12px;border-radius:9px;color:rgba(255,255,255,.8);font-size:.85rem;text-decoration:none;cursor:pointer}
 nav a:hover{background:rgba(255,255,255,.12);color:#fff}
-nav a.prem{color:var(--gold);font-weight:600}
-nav a.prem::before{content:"✦ "}
+nav a.prem{color:var(--gold);font-weight:600}nav a.prem::before{content:"✦ "}
 .dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:5;display:grid;gap:12px}
 .dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35);transition:.3s;cursor:pointer}.dots i.on{background:#fff;transform:scale(1.5)}
 .pill{display:inline-flex;align-items:center;gap:9px;margin-bottom:24px;padding:7px 15px;font-size:.82rem;cursor:pointer;color:#fff}
-.pill i,.dot{width:8px;height:8px;border-radius:50%;background:var(--c,#4ade80);box-shadow:0 0 10px var(--c,#4ade80);flex:none}
+.pill i,.dot{width:8px;height:8px;border-radius:50%;background:var(--c,#4ade80);box-shadow:0 0 10px var(--c,#4ade80);flex:none;display:inline-block}
 .hint{position:absolute;bottom:24px;font-size:.78rem;color:rgba(255,255,255,.55);animation:bob 2.4s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(6px)}}
 .stats{display:flex;gap:clamp(22px,6vw,64px);margin-top:26px;flex-wrap:wrap;justify-content:center}
@@ -58,8 +60,7 @@ nav a.prem::before{content:"✦ "}
 .steps b{display:block;font:300 1.3rem Spectral,serif;color:#fff;margin-bottom:3px}
 .code{display:flex;align-items:center;gap:14px;margin-top:26px;padding:14px 14px 14px 22px;max-width:94vw}
 .code code{font:.82rem ui-monospace,Consolas,monospace;overflow-x:auto;white-space:nowrap}
-.code.lock code{color:#fcd34d;font-family:Spectral,serif;font-size:.9rem;user-select:none}
-.code.dn code{color:#f87171}
+.code.lock code{color:#fcd34d;font-family:Spectral,serif;font-size:.9rem;user-select:none}.code.dn code{color:#f87171}
 .note{margin-top:18px;font-size:.76rem;color:rgba(255,255,255,.58);max-width:54ch}
 .faq{width:min(720px,100%);margin-top:26px;text-align:left;display:grid;gap:8px}
 .faq details{padding:0 18px}.faq summary{padding:15px 0;cursor:pointer;font:300 1.25rem Spectral,serif;list-style:none;display:flex;justify-content:space-between}
@@ -67,11 +68,11 @@ nav a.prem::before{content:"✦ "}
 .faq p{padding:0 0 16px;font-size:.86rem;line-height:1.6;color:rgba(255,255,255,.7)}
 .foot{margin-top:34px;font-size:.78rem;color:rgba(255,255,255,.55);display:grid;gap:10px;justify-items:center}
 #fl{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}.foot a{color:rgba(255,255,255,.8);text-decoration:none;cursor:pointer}.foot a:hover{color:#fff}
-#ov{position:fixed;inset:0;z-index:50;display:none;place-items:center;background:rgba(0,0,0,.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:18px}
+/* panels */
+#ov{position:fixed;inset:0;z-index:50;display:none;place-items:center;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:18px}
 #ov.on{display:grid;animation:fin .3s ease}@keyframes fin{from{opacity:0}}
-#pn{width:min(560px,100%);max-height:92vh;display:flex;flex-direction:column;background:rgba(6,6,6,.7);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.14);border-radius:18px;overflow:hidden;animation:pop .3s cubic-bezier(.2,.9,.2,1)}
+#pn{width:min(560px,100%);max-height:92vh;display:flex;flex-direction:column;background:rgba(6,6,6,.78);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.14);border-radius:18px;overflow:hidden;animation:pop .3s cubic-bezier(.2,.9,.2,1)}
 #pn.wide{width:min(980px,100%);height:min(740px,92vh)}
-#pn.prm{width:min(760px,100%)}
 @keyframes pop{from{opacity:0;transform:translateY(24px) scale(.95)}}
 #ph{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 24px 14px}
 #pt{font:300 2rem Spectral,serif}
@@ -86,12 +87,12 @@ input:focus{outline:none;border-color:rgba(255,255,255,.6)}
 .dg{display:grid;grid-template-columns:210px 1fr;gap:22px;height:100%}
 .dg aside{overflow:auto;display:flex;flex-direction:column;gap:2px}
 .dg aside button{display:flex;justify-content:space-between;text-align:left;padding:8px 11px;border-radius:9px;border:0;background:none;color:rgba(255,255,255,.75);font-size:.88rem;cursor:pointer}
-.dg aside button:hover{background:rgba(255,255,255,.1)}.dg aside button.on{background:rgba(255,255,255,.16);color:#fff}
-.dg aside small{opacity:.45}
+.dg aside button:hover{background:rgba(255,255,255,.1)}.dg aside button.on{background:rgba(255,255,255,.16);color:#fff}.dg aside small{opacity:.45}
 .dg main{overflow:auto;min-width:0}
 .fn{display:flex;justify-content:space-between;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.1)}
 .fn h4{font-size:1.3rem}.fn p{font-size:.84rem;margin:3px 0 8px}
 .fn code{display:block;padding:9px 12px;border-radius:9px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.1);font:.8rem ui-monospace,Consolas,monospace;overflow-x:auto;white-space:nowrap}
+/* status */
 .sb{display:flex;align-items:center;gap:14px;padding:18px 20px;border-radius:14px;border:1px solid color-mix(in srgb,var(--c) 55%,transparent);background:linear-gradient(100deg,color-mix(in srgb,var(--c) 20%,transparent),rgba(0,0,0,.25) 75%)}
 .sb b{font:300 1.7rem Spectral,serif;display:block;line-height:1.1}.sb small{font-size:.78rem;color:rgba(255,255,255,.65)}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:99px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.3);font-size:.8rem}
@@ -107,52 +108,71 @@ input:focus{outline:none;border-color:rgba(255,255,255,.6)}
 .cl::before{content:"";position:absolute;left:-5px;top:26px;width:9px;height:9px;border-radius:50%;background:var(--ac);box-shadow:0 0 12px var(--ac)}
 .cl h4{font-size:1.5rem}.cl h4 small{font:.78rem Spectral;color:rgba(255,255,255,.55);margin-left:8px}
 .cl ul{margin:8px 0 0 18px;font-size:.86rem;line-height:1.7;color:rgba(255,255,255,.75)}
+/* redeem / hwid */
 .ico{width:64px;height:64px;margin:4px auto 14px;border-radius:50%;display:grid;place-items:center;font-size:1.8rem;background:radial-gradient(circle,rgba(var(--acr),.25),transparent 70%);border:1px solid rgba(var(--acr),.35)}
+.ico.spin{animation:pulse 1.2s ease-in-out infinite}@keyframes pulse{50%{transform:scale(1.12);box-shadow:0 0 30px rgba(var(--acr),.5)}}
 .kf{display:flex;align-items:center;gap:8px;margin:14px 0 6px;padding:6px 6px 6px 14px;border-radius:14px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.16)}
-.kf:focus-within{border-color:rgba(var(--acr),.8);box-shadow:0 0 0 4px rgba(var(--acr),.14)}
-.kf.ok{border-color:rgba(74,222,128,.7)}
+.kf:focus-within{border-color:rgba(var(--acr),.8);box-shadow:0 0 0 4px rgba(var(--acr),.14)}.kf.ok{border-color:rgba(74,222,128,.7)}
 .kf input{flex:1;margin:0;border:0;background:none;font:500 1rem ui-monospace,Consolas,monospace;letter-spacing:.1em;padding:11px 4px;min-width:0}
 .kt{min-height:1.3em;font-size:.8rem;color:#4ade80;text-align:center;margin-bottom:4px}
-.pass{margin-top:10px;padding:18px;border-radius:16px;background:linear-gradient(160deg,rgba(var(--acr),.16),rgba(0,0,0,.35) 60%);border:1px solid rgba(var(--acr),.4)}
+.pass{position:relative;overflow:hidden;margin-top:10px;padding:18px;border-radius:16px;background:linear-gradient(160deg,rgba(var(--acr),.16),rgba(0,0,0,.5) 60%);border:1px solid rgba(var(--acr),.4)}
 .badge{padding:4px 11px;border-radius:99px;font-size:.72rem;font-weight:600;background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.4)}
-.badge.am{background:rgba(252,211,77,.14);color:#fcd34d;border-color:rgba(252,211,77,.4)}
 .mbar{height:6px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden;margin:12px 0}
 .mbar i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--ac),#fff);transition:width 1.4s cubic-bezier(.2,.9,.2,1)}
 .row2{display:flex;gap:8px;margin-top:12px}.row2 .btn{flex:1}
-/* ===== premium ===== */
-.pbanner{position:relative;overflow:hidden;padding:20px;border-radius:16px;margin-bottom:18px;background:linear-gradient(130deg,rgba(252,211,77,.2),rgba(0,0,0,.35) 65%);border:1px solid rgba(252,211,77,.4)}
+.mh{display:flex;justify-content:space-between;font-size:.78rem;color:rgba(255,255,255,.65);margin-top:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.g3 div{padding:10px 12px;border-radius:11px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);min-width:0}
+.g3 small{display:block;font-size:.64rem;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
+.g3 b{font:500 .82rem ui-monospace,Consolas,monospace;word-break:break-all}
+.field label{display:block;font:500 .66rem ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:12px}.field input{margin-top:6px}
+.stl{list-style:none;display:grid;gap:10px;margin:18px auto 0;max-width:320px}
+.stl li{display:flex;align-items:center;gap:10px;font-size:.88rem;color:rgba(255,255,255,.4);transition:color .3s}
+.stl li i{width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25);display:grid;place-items:center;font-style:normal;font-size:.7rem;flex:none}
+.stl li.run{color:#fff}.stl li.run i{border-color:var(--ac);border-top-color:transparent;animation:rot .8s linear infinite}
+.stl li.done{color:rgba(255,255,255,.85)}.stl li.done i{background:var(--ac);border-color:var(--ac);color:#000}.stl li.done i::before{content:"✓"}
+@keyframes rot{to{transform:rotate(360deg)}}
+.prog{height:4px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden;margin:18px auto 0;max-width:320px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ac),#fff);transition:width .5s}
+.rise{animation:up .6s cubic-bezier(.2,.9,.2,1) both;animation-delay:calc(var(--k,0)*70ms)}@keyframes up{from{opacity:0;transform:translateY(12px)}}
+.cf{position:fixed;z-index:99997;border-radius:2px;pointer-events:none}
+/* premium (all black) */
+#pn.prm{width:min(800px,100%);background:#000;border:1px solid rgba(252,211,77,.3);box-shadow:0 40px 120px rgba(0,0,0,.9),0 0 90px rgba(252,211,77,.08);backdrop-filter:none}
+#pn.prm #ph{border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:18px}
+#pn.prm #pt{background:linear-gradient(120deg,#fff,#fcd34d);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pbanner{position:relative;overflow:hidden;padding:26px;border-radius:16px;margin-bottom:18px;background:radial-gradient(120% 140% at 0 0,rgba(252,211,77,.22),#000 60%);border:1px solid rgba(252,211,77,.35)}
 .pbanner::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.14),transparent);transform:skewX(-20deg);animation:sweep 5s ease-in-out infinite}
 @keyframes sweep{60%,100%{left:130%}}
-.pbanner h3{font-size:1.9rem;color:var(--gold)}.pbanner p{margin-top:6px}
+.pbanner h3{font-size:2.3rem}.pbanner h3 span{color:var(--gold)}.pbanner p{margin-top:8px}
+.eyebrow{display:block;font:500 .68rem ui-monospace,Consolas,monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
 .lbl{font:500 .7rem ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);margin:20px 0 10px}
 .plans{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.plan{position:relative;text-align:left;padding:20px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.35);cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s}
-.plan:hover{transform:translateY(-4px)}
-.plan.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 0 40px rgba(252,211,77,.18);background:linear-gradient(160deg,rgba(252,211,77,.12),rgba(0,0,0,.4))}
-.plan small{font-size:.78rem;color:rgba(255,255,255,.6)}
-.plan b{display:block;font:300 1.5rem Spectral,serif;margin:2px 0}
-.plan .pr{font:300 2.6rem Spectral,serif;line-height:1.1}.plan .pr span{font-size:.9rem;color:rgba(255,255,255,.55)}
-.plan .tag{position:absolute;top:-10px;right:14px;padding:3px 10px;border-radius:99px;background:var(--gold);color:#1a1000;font:700 .64rem Spectral;letter-spacing:.08em}
-.perks{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin-top:4px}
-.perks li{font-size:.84rem;color:rgba(255,255,255,.78);display:flex;gap:8px}.perks li::before{content:"✓";color:var(--gold)}
+.plan{position:relative;text-align:left;padding:24px 22px;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:#050505;cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s}
+.plan:hover{transform:translateY(-4px);border-color:rgba(252,211,77,.5)}
+.plan.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 0 40px rgba(252,211,77,.18);background:linear-gradient(165deg,rgba(252,211,77,.14),#000 70%)}
+.plan::after{content:"";position:absolute;top:18px;right:18px;width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25)}
+.plan.on::after{background:var(--gold);border-color:var(--gold);box-shadow:inset 0 0 0 4px #000}
+.plan small{font-size:.78rem;color:rgba(255,255,255,.6)}.plan b{display:block;font:300 1.5rem Spectral,serif;margin:2px 0}
+.plan .pr{font:300 3.1rem Spectral,serif;line-height:1.1;margin-top:8px}
+.plan .tag{position:absolute;top:-10px;left:20px;padding:3px 10px;border-radius:99px;background:var(--gold);color:#1a1000;font:700 .64rem Spectral;letter-spacing:.08em}
+.perks{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:9px 18px;margin-top:14px;padding:16px 18px;background:#050505;border:1px solid rgba(255,255,255,.08);border-radius:14px}
+.perks li{font-size:.84rem;color:rgba(255,255,255,.8);display:flex;gap:8px}.perks li::before{content:"✓";color:var(--gold)}
 .meths{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.meth{padding:12px 6px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.35);cursor:pointer;text-align:center;font-size:.82rem;transition:.25s}
-.meth:hover{background:rgba(255,255,255,.1)}
-.meth.on{border-color:var(--gold);background:rgba(252,211,77,.12)}
+.meth{padding:12px 6px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:#050505;cursor:pointer;text-align:center;font-size:.82rem;transition:.25s}
+.meth:hover{background:rgba(255,255,255,.08)}.meth.on{border-color:var(--gold);background:rgba(252,211,77,.1)}
 .meth i{display:block;font-style:normal;font-size:1.3rem;margin-bottom:3px}
-.pay{margin-top:14px;padding:18px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.4);animation:up .45s cubic-bezier(.2,.9,.2,1)}
-@keyframes up{from{opacity:0;transform:translateY(12px)}}
+.pay{margin-top:14px;padding:18px;border-radius:16px;border:1px solid rgba(252,211,77,.18);background:#050505;animation:up .45s cubic-bezier(.2,.9,.2,1)}
 .tot{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:12px}
-.tot b{font:300 1.9rem Spectral,serif}.tot small{color:rgba(255,255,255,.6);font-size:.8rem}
-.addr{display:flex;align-items:center;gap:10px;padding:10px 10px 10px 14px;border-radius:11px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.12)}
+.tot b{font:300 1.9rem Spectral,serif;cursor:pointer}.tot small{color:rgba(255,255,255,.6);font-size:.8rem}
+.addr{display:flex;align-items:center;gap:10px;padding:10px 10px 10px 14px;border-radius:11px;background:#000;border:1px solid rgba(255,255,255,.12)}
 .addr code{flex:1;font:.78rem ui-monospace,Consolas,monospace;word-break:break-all;line-height:1.45;color:var(--ac)}
 .ps{list-style:none;margin-top:14px;display:grid;gap:8px;counter-reset:p}
 .ps li{counter-increment:p;font-size:.84rem;color:rgba(255,255,255,.75);line-height:1.5;display:flex;gap:10px}
 .ps li::before{content:counter(p);flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:.7rem;background:rgba(252,211,77,.18);color:var(--gold);border:1px solid rgba(252,211,77,.4)}
 .warn{margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3);font-size:.78rem;color:#fcd34d;line-height:1.45}
+.trust{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:18px;font-size:.74rem;color:rgba(255,255,255,.5)}.trust span::before{content:"◆ ";color:var(--gold)}
 #toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,30px);z-index:99998;background:#000;border:1px solid rgba(255,255,255,.2);padding:9px 18px;border-radius:99px;font-size:.86rem;opacity:0;transition:.3s;pointer-events:none}
 #toast.on{opacity:1;transform:translate(-50%,0)}
-/* loader: 2 seconds */
 #ld{position:fixed;inset:0;z-index:9000;background:#000;display:grid;place-items:center;text-align:center;transition:opacity .5s}
 #ld.out{opacity:0;pointer-events:none}
 #ld b{display:block;font:300 clamp(2.6rem,9vw,5rem)/1 Spectral,serif;letter-spacing:-.02em}
@@ -164,47 +184,13 @@ input:focus{outline:none;border-color:rgba(255,255,255,.6)}
 @media(max-width:760px){nav{padding:12px}nav b span{display:none}nav a{padding:6px 8px;font-size:.78rem}nav a.hm{display:none}.dots{display:none}.fg{grid-template-columns:1fr}.s{padding-top:110px}
  .dg{grid-template-columns:1fr;grid-template-rows:auto 1fr}.dg aside{flex-direction:row;overflow-x:auto}.dg aside button{white-space:nowrap}
  .plans,.perks{grid-template-columns:1fr}.meths{grid-template-columns:1fr 1fr}}
-/* ===== redeem / hwid v2 ===== */
-.rise{animation:up .6s cubic-bezier(.2,.9,.2,1) both;animation-delay:calc(var(--k,0)*70ms)}
-.vault{position:relative;width:180px;height:225px;margin:6px auto 0}
-.vault .lk{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.vault .sh{transform-box:fill-box;transform-origin:0 100%}
-.vault .ky{position:absolute;left:-10px;top:129px;transform-origin:100% 50%;opacity:0;filter:drop-shadow(0 0 8px rgba(var(--acr),.6))}
-.ring{position:absolute;left:50%;top:50%;width:120px;height:120px;margin:-60px;border-radius:50%;border:2px solid var(--ac);opacity:0;pointer-events:none}
-.vault .ring{left:90px;top:144px}
-.vs{text-align:center;min-height:1.5em;font:500 .8rem ui-monospace,Consolas,monospace;letter-spacing:.12em;color:var(--ac);margin-top:6px}
-.prog{height:4px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden;margin:14px auto 0;max-width:320px}
-.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ac),#fff);box-shadow:0 0 12px var(--ac)}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
-.g3 div{padding:10px 12px;border-radius:11px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);min-width:0}
-.g3 small{display:block;font-size:.64rem;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
-.g3 b{font:500 .82rem ui-monospace,Consolas,monospace;word-break:break-all}
-.pass{position:relative;overflow:hidden}
-.pass::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.1),transparent);transform:skewX(-20deg);animation:sweep 5s ease-in-out infinite}
-.mh{display:flex;justify-content:space-between;font-size:.78rem;color:rgba(255,255,255,.65);margin-top:14px}
-.hw{position:relative;width:160px;height:160px;margin:10px auto 0}
-.hw svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.hw .ok{opacity:0}.hw .oc{stroke-dasharray:352;stroke-dashoffset:352}.hw .ot{stroke-dasharray:100;stroke-dashoffset:100}
-.hx{text-align:center;font:500 1rem ui-monospace,Consolas,monospace;letter-spacing:.14em;margin-top:14px;color:var(--ac);min-height:1.4em}
-.stl{list-style:none;display:grid;gap:8px;margin:16px auto 0;max-width:320px}
-.stl li{display:flex;align-items:center;gap:10px;font-size:.86rem;color:rgba(255,255,255,.4);transition:color .3s}
-.stl li i{width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25);display:grid;place-items:center;font-style:normal;font-size:.7rem;flex:none;transition:.3s}
-.stl li.run{color:#fff}.stl li.run i{border-color:var(--ac);border-top-color:transparent;animation:rot .8s linear infinite}
-.stl li.done{color:rgba(255,255,255,.8)}.stl li.done i{background:var(--ac);border-color:var(--ac);color:#000;animation:none}.stl li.done i::before{content:"✓"}
-@keyframes rot{to{transform:rotate(360deg)}}
-.field{position:relative}.field label{display:block;font:500 .66rem ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:12px}
-.field input{margin-top:6px}
-.cf{position:fixed;z-index:99997;border-radius:2px;pointer-events:none}
 </style>
 </head>
 <body>
 <div id="ld"><div><b id="lb"></b><i id="lf"></i></div></div>
 <canvas id="bg"></canvas>
 <div id="toast"></div>
-<nav>
-  <b><img src="assets/store.png" alt="" onerror="this.remove()"><span class="nm"></span></b>
-  <div id="nl"></div>
-</nav>
+<nav><b><img src="assets/store.png" alt="" onerror="this.remove()"><span class="nm"></span></b><div id="nl"></div></nav>
 <div class="dots" id="dots"></div>
 <main id="snap">
   <section class="s hero">
@@ -213,56 +199,42 @@ input:focus{outline:none;border-color:rgba(255,255,255,.6)}
     <div class="cta rv"><button class="btn w" data-go="2">Get the script</button><button class="btn g" data-m="premium">✦ Go Premium</button></div>
     <span class="hint">Scroll</span>
   </section>
-  <section class="s">
-    <h2 id="h2f" class="rv"></h2><div class="stats rv" id="stats"></div><div class="fg rv" id="fg"></div>
-  </section>
-  <section class="s">
-    <h2 id="h2" class="rv"></h2><p class="sub rv" id="sub2"></p><div class="steps rv" id="steps"></div>
-    <div id="lock" class="rv"></div><p class="note" id="n2"></p>
-  </section>
-  <section class="s">
-    <h2 id="h4" class="rv"></h2><div class="faq rv" id="faq"></div>
-    <div class="foot"><div id="fl"></div><span id="copy"></span></div>
-  </section>
+  <section class="s"><h2 id="h2f" class="rv"></h2><div class="stats rv" id="stats"></div><div class="fg rv" id="fg"></div></section>
+  <section class="s"><h2 id="h2" class="rv"></h2><p class="sub rv" id="sub2"></p><div class="steps rv" id="steps"></div><div id="lock" class="rv"></div><p class="note" id="n2"></p></section>
+  <section class="s"><h2 id="h4" class="rv"></h2><div class="faq rv" id="faq"></div><div class="foot"><div id="fl"></div><span id="copy"></span></div></section>
 </main>
 <div id="ov"><div id="pn"><div id="ph"><h3 id="pt"></h3><button id="x" aria-label="Close">✕</button></div><div id="pb"></div></div></div>
 <script>
 /* ===================== EDIT THIS SECTION ===================== */
 const CONFIG={
-  loadstring:"working",   /* working | updating | down */
+  loadstring:"working", /* working | updating | down */
   storeName:"cloudy.gg",
   tagline:"The #1 Free Rivals cheat.",
   discordLink:"https://discord.gg/cloudygg",
   tosLink:"",
   status:"working",
   statusFile:"assets/status.json",
-
   tabs:[
-    {id:"features", label:"Features",  type:"section", section:1, mobile:false},
-    {id:"premium",  label:"Premium",   type:"panel", cls:"prem", footer:true},
-    {id:"docs",     label:"Docs",      type:"panel", footer:true},
-    {id:"status",   label:"Status",    type:"panel", footer:true},
-    {id:"hwid",     label:"Reset HWID",type:"panel", footer:true},
-    {id:"redeem",   label:"Redeem",    type:"panel", footer:true},
-    {id:"changelog",label:"Changelog", type:"panel", footer:true, mobile:false},
-    {id:"discord",  label:"Discord",   type:"link", href:"@discord", footer:true},
-    {id:"terms",    label:"Terms",     type:"link", href:"@tos", nav:false, footer:true}
-  ],
-
-  /* ---- PREMIUM ---- */
+    {id:"features",label:"Features",type:"section",section:1,mobile:false},
+    {id:"premium",label:"Premium",type:"panel",cls:"prem",footer:true},
+    {id:"docs",label:"Docs",type:"panel",footer:true},
+    {id:"status",label:"Status",type:"panel",footer:true},
+    {id:"hwid",label:"Reset HWID",type:"panel",footer:true},
+    {id:"redeem",label:"Redeem",type:"panel",footer:true},
+    {id:"changelog",label:"Changelog",type:"panel",footer:true,mobile:false},
+    {id:"discord",label:"Discord",type:"link",href:"@discord",footer:true},
+    {id:"terms",label:"Terms",type:"link",href:"@tos",nav:false,footer:true}],
   premium:{
     plans:[
-      {id:"week", name:"1 Week", usd:6.99, per:"7 days of access", tag:""},
-      {id:"life", name:"Lifetime", usd:15, per:"one payment, forever", tag:"BEST VALUE"}],
-    perks:["Priority updates","Premium Discord role","Private support channel","Early access to features","Extra configs","HWID resets"],
-    robuxPerUsd:125,   /* change to your real Robux rate */
+      {id:"week",name:"1 Week",gbp:2.5,per:"7 days of access",tag:""},
+      {id:"life",name:"Lifetime",gbp:6,per:"one payment, forever",tag:"BEST VALUE"}],
+    perks:["Priority updates","Premium Discord role","Private support channel","Early access to features","Extra configs","HWID resets","All-black premium interface","Cloudy Paid script"],
+    robuxPerGbp:165, /* change to your real Robux rate */
     methods:[
       {id:"robux",name:"Robux",icon:"R$"},
       {id:"btc",name:"Bitcoin",icon:"₿",coin:"bitcoin",sym:"BTC",net:"Bitcoin network",addr:"bc1q0tmczvvnjn6svkwzjfqsp7cjdxlynccyjh22sw",dp:6},
       {id:"eth",name:"Ethereum",icon:"Ξ",coin:"ethereum",sym:"ETH",net:"Ethereum (ERC-20) network",addr:"0x01a5F2242fC226F663dd8a673fe69Cf9Cc95E225",dp:5},
-      {id:"ltc",name:"Litecoin",icon:"Ł",coin:"litecoin",sym:"LTC",net:"Litecoin network",addr:"ltc1qzjnlnwjvkyltemxxqvd7d6js20054jh2w0vmjs",dp:4}]
-  },
-
+      {id:"ltc",name:"Litecoin",icon:"Ł",coin:"litecoin",sym:"LTC",net:"Litecoin network",addr:"ltc1qzjnlnwjvkyltemxxqvd7d6js20054jh2w0vmjs",dp:4}]},
   hero:{headline:"Free forever.\nCompletely undetected.\nYou heard that right.",text:"The #1 Free & Paid Rivals Cheat."},
   features:{headline:"Built to win.",
     stats:[{n:"10k+",l:"Users"},{n:"99.9%",l:"Uptime"},{n:"24/7",l:"Support"}],
@@ -284,30 +256,28 @@ const CONFIG={
     {q:"How do I pay for Premium?",a:"Open the Premium tab, pick a plan, then pay with Robux, Bitcoin, Ethereum or Litecoin. Open a ticket on Discord with your proof of payment and you will receive your key."},
     {q:"How do I run it?",a:"Copy the script from the Get the script section, paste it into your executor in a Rivals game and run it."},
     {q:"What if the script stops working?",a:"Check the Status tab first. If something is marked down or degraded we are already on it. Otherwise open a ticket on Discord."}]},
-
   palettes:[["#12333f","#68aaa6"],["#0f2f3d","#5a9bb0"],["#3a2455","#9d80be"],["#2a1a45","#7a5fa8"]],
-
+  blackPalettes:[["#000000","#16130a"],["#000000","#1c1608"],["#000000","#120f06"],["#000000","#1a1405"]],
   keys:[
-    {key:"LIFETIME0", type:"Lifetime Key", days:36500},
-    {key:"CLDY-WEEK-0002", type:"Weekly Key", days:7},
-    {key:"CLDY-MONTH-0001",type:"Monthly Key", days:30}],
-
+    {key:"LIFETIME0",type:"Lifetime Key",days:36500},
+    {key:"CLDY-WEEK-0002",type:"Weekly Key",days:7},
+    {key:"CLDY-MONTH-0001",type:"Monthly Key",days:30}],
   statusPage:{
     days:60,showUptime:true,
     headlines:{operational:"All systems operational",degraded:"Everything is updating, back soon",outage:"Major outage"},
     labels:{operational:"Operational",degraded:"Updating",outage:"Outage"},
     colors:{operational:"#4ade80",degraded:"#fbbf24",outage:"#f87171"},
     services:[
-      {name:"Cloudy Free",status:"Operational",incidents:{}},
-      {name:"Cloudy Paid",status:"Operational",incidents:{}},
-      {name:"Cloudy Script API",status:"Operational",incidents:{}}],
+      {name:"Cloudy Free",status:"operational",incidents:{}},
+      {name:"Cloudy Paid",status:"operational",incidents:{}},
+      {name:"Cloudy Script API",status:"operational",incidents:{}}],
     incidents:[
       {date:"12 days ago",state:"outage",title:"Update delivery outage",text:"Resolved. A bad release blocked updates for a short time."},
       {date:"6 days ago",state:"degraded",title:"Slow logins",text:"Resolved. Login times were higher than normal."}]},
-
   changelog:[
-    {v:"1.5.0",date:"19/10/2026 13:52",items:["Added Cloudy Paid"]},
-    {v:"1.4.0",date:"October 2026",items:["New Premium tab: pay with Robux, BTC, ETH or LTC","Loader shortened to 2 seconds","Intro animation removed"]},
+    {v:"1.6.0",date:"19/10/2026",items:["Premium tab redesigned in full black","Lifetime is now £6, all prices in GBP","Whole site turns black once you redeem a key","Fixed 'undefined' on the Status page"]},
+    {v:"1.5.0",date:"19/10/2026",items:["Added Cloudy Paid"]},
+    {v:"1.4.0",date:"October 2026",items:["New Premium tab: pay with Robux, BTC, ETH or LTC","Loader shortened to 2 seconds"]},
     {v:"1.3.0",date:"October 2026",items:["Renamed to cloudy.gg","Redesigned redeem experience"]},
     {v:"1.2.0",date:"October 2026",items:["Smoother scrolling and animated tabs","Redesigned docs, status and changelog","Free script is now always available"]},
     {v:"1.1.0",date:"September 2026",items:["Config system improvements","Stability fixes for Rivals update"]}]
@@ -318,43 +288,38 @@ const RAW=`
 Closures|Inspect, create, classify, hook and restore Luau closures.
  checkcaller|checkcaller() → boolean|Returns true when the current thread was created by the executor.
  hookfunction|hookfunction(fn, hook) → function|Replaces a function with a hook and returns the original.
- restorefunction|restorefunction(fn) → ()|Removes a hook and restores the original function.
  newcclosure|newcclosure(fn) → function|Wraps a Luau function inside a C closure.
  loadstring|loadstring(source, chunkname?) → function|Compiles a string of Luau code into a callable function.
 Debug|Inspect and modify constants, upvalues, stacks and prototypes.
  debug.getconstants|debug.getconstants(fn) → table|Returns every constant used by a function.
  debug.getupvalues|debug.getupvalues(fn) → table|Returns all upvalues of a function.
- debug.getinfo|debug.getinfo(fn) → table|Returns information about a function such as source and line.
 Drawing|Create and manage client-only 2D drawing objects.
  Drawing.new|Drawing.new(type) → Drawing|Creates a Line, Text, Image, Circle, Square, Quad or Triangle object.
  cleardrawcache|cleardrawcache() → ()|Removes all active drawing objects.
-Encoding|Encode Base64 data and compress or decompress LZ4 data.
+Encoding|Encode Base64 data.
  crypt.base64encode|crypt.base64encode(data) → string|Encodes data as Base64.
  crypt.base64decode|crypt.base64decode(data) → string|Decodes Base64 data.
-Environment|Inspect executor environments, the registry and garbage-collected values.
+Environment|Inspect executor environments and garbage-collected values.
  getgenv|getgenv() → table|Returns the global executor environment.
  getrenv|getrenv() → table|Returns the Roblox global environment.
- getgc|getgc(includeTables?) → table|Returns garbage-collectable values, optionally including tables.
+ getgc|getgc(includeTables?) → table|Returns garbage-collectable values.
 Filesystem|Read, write and organize files in the executor workspace.
  readfile|readfile(path) → string|Reads the contents of a file.
  writefile|writefile(path, content) → ()|Writes content to a file, replacing it.
  isfile|isfile(path) → boolean|Checks whether a path is a file.
- makefolder|makefolder(path) → ()|Creates a folder.
-Instances|Enumerate, reference, inspect and interact with Roblox Instances.
+Instances|Enumerate, reference, inspect and interact with Instances.
  cloneref|cloneref(instance) → Instance|Returns a reference copy of an Instance.
  gethui|gethui() → Instance|Returns a protected container for custom interfaces.
  fireclickdetector|fireclickdetector(detector, distance?) → ()|Triggers a ClickDetector.
- fireproximityprompt|fireproximityprompt(prompt) → ()|Triggers a ProximityPrompt.
 Metatable|Access, replace and inspect protected metatables.
- getrawmetatable|getrawmetatable(object) → table|Returns the real metatable even if it is protected.
+ getrawmetatable|getrawmetatable(object) → table|Returns the real metatable even if protected.
  setreadonly|setreadonly(table, state) → ()|Turns the read-only state of a table on or off.
  hookmetamethod|hookmetamethod(object, method, hook) → function|Hooks a metamethod and returns the original.
-Miscellaneous|Utility functions for executor info, HTTP requests, clipboard and more.
+Miscellaneous|Executor info, HTTP requests, clipboard and more.
  identifyexecutor|identifyexecutor() → name, version|Returns the executor name and version.
  request|request(options) → table|Sends an HTTP request and returns the response.
  setclipboard|setclipboard(text) → ()|Copies text to the clipboard.
- queue_on_teleport|queue_on_teleport(code) → ()|Runs code after the next teleport.
-Scripts|Inspect running scripts, bytecode, hashes and script environments.
+Scripts|Inspect running scripts and their environments.
  getscripts|getscripts() → table|Returns every script in the game.
  getsenv|getsenv(script) → table|Returns the environment of a running script.
 Signals|Inspect, fire and replicate signal connections.
@@ -375,23 +340,30 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
 function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),2000)}
 const copy=(t,m)=>navigator.clipboard?navigator.clipboard.writeText(t).then(()=>toast(m||"Copied"),()=>toast("Copy failed")):toast("Copy failed");
 const SP=CONFIG.statusPage,SC=SP.colors,SL=SP.labels,rank={operational:0,degraded:1,outage:2};
+/* status fix: always normalise to operational/degraded/outage so nothing is ever undefined */
+const ns=s=>{s=String(s||"").toLowerCase();return s in rank?s:({working:"operational",up:"operational",updating:"degraded",down:"outage"}[s]||"operational")};
 let st="working",storeState="operational";
 const setSt=s=>{st=["working","updating","down"].includes(s)?s:"working";storeState={working:"operational",updating:"degraded",down:"outage"}[st]};
 setSt(CONFIG.status);
 let sst="up",sopen=true;const setSs=s=>{s=s==="working"?"up":s;sst=["up","updating","down"].includes(s)?s:"up";sopen=sst==="up"};
 const QP=new URLSearchParams(location.search),QS=QP.get("loadstring")||QP.get("script");setSs(QS||CONFIG.loadstring);
 const scrState=()=>({up:"operational",updating:"degraded",down:"outage"}[sst]);
-const allSvc=()=>[{name:"Website",status:storeState,incidents:{}},{name:"Loadstring",status:scrState(),incidents:{}}].concat(SP.services);
+const allSvc=()=>[{name:"Website",status:storeState,incidents:{}},{name:"Loadstring",status:scrState(),incidents:{}}].concat(SP.services.map(s=>({...s,status:ns(s.status)})));
 const overall=()=>allSvc().reduce((a,s)=>rank[s.status]>rank[a]?s.status:a,"operational");
 
-/* ---------- loader: exactly 2 seconds ---------- */
+/* ---------- premium mode (all black) ---------- */
+const DBK="cloudy_redeemed",getDB=()=>{try{return JSON.parse(ls.get(DBK)||"{}")}catch(e){return{}}};
+const isPM=()=>{const d=getDB();return CONFIG.keys.some(k=>d[norm(k.key)]&&d[norm(k.key)]+k.days*864e5>Date.now())};
+if(isPM())document.body.classList.add("pm");
+
+/* ---------- loader (2s) ---------- */
 $("#lb").textContent=CONFIG.storeName;
 setTimeout(()=>{$("#ld").classList.add("out");document.body.classList.add("in");setTimeout(()=>$("#ld").remove(),600)},2000);
 
 /* ---------- static text ---------- */
 document.title=CONFIG.storeName;
 $$(".nm").forEach(n=>n.textContent=CONFIG.storeName);
-$("#h1").innerHTML=CONFIG.hero.headline.split("\n").map(l=>esc(l)).join("<br>");$("#sub").textContent=CONFIG.hero.text;
+$("#h1").innerHTML=CONFIG.hero.headline.split("\n").map(esc).join("<br>");$("#sub").textContent=CONFIG.hero.text;
 $("#h2f").textContent=CONFIG.features.headline;
 $("#stats").innerHTML=CONFIG.features.stats.map(s=>`<div><b>${esc(s.n)}</b><span>${esc(s.l)}</span></div>`).join("");
 $("#fg").innerHTML=CONFIG.features.list.map(f=>`<div class="gl"><h3>${esc(f.t)}</h3><p>${esc(f.d)}</p></div>`).join("");
@@ -417,12 +389,14 @@ $("#fl").innerHTML=TABS.filter(t=>t.footer).map(t=>tabLink(t,1)).join("");
 $$("[data-soon]").forEach(a=>a.onclick=()=>toast("Link coming soon"));
 
 /* ---------- background + dots ---------- */
-const snap=$("#snap"),secs=$$("#snap>.s");
+const snap=$("#snap"),secs=$$("#snap>.s");let PAL;
 (function(){
   const cv=$("#bg"),cx=cv.getContext("2d"),W=200,H=112;cv.width=W;cv.height=H;
   const hex=h=>{const n=parseInt(h.replace("#",""),16);return[n>>16&255,n>>8&255,n&255]};
-  const P=CONFIG.palettes.map(p=>p.map(hex)),img=cx.createImageData(W,H),dots=$("#dots");
-  secs.forEach((s,i)=>{const d=document.createElement("i");d.onclick=()=>snap.scrollTo({top:s.offsetTop,behavior:"smooth"});dots.append(d)});
+  const mk=b=>(b?CONFIG.blackPalettes:CONFIG.palettes).map(p=>p.map(hex));
+  let P=mk(isPM());PAL=b=>{P=mk(b)};
+  const img=cx.createImageData(W,H),dots=$("#dots");
+  secs.forEach(s=>{const d=document.createElement("i");d.onclick=()=>snap.scrollTo({top:s.offsetTop,behavior:"smooth"});dots.append(d)});
   const D=[...dots.children];let pos=0;
   const target=()=>{const y=snap.scrollTop;let i=0;secs.forEach((s,k)=>{if(s.offsetTop<=y+2)i=k});
     const a=secs[i].offsetTop,n=secs[i+1];return n?i+Math.min(1,(y-a)/Math.max(1,n.offsetTop-a)):i};
@@ -445,9 +419,9 @@ const snap=$("#snap"),secs=$$("#snap>.s");
   function count(){$$("#stats b").forEach(el=>{const m=el.textContent.match(/^([\d.]+)(.*)$/);if(!m)return;const n=parseFloat(m[1]),dec=(m[1].split(".")[1]||"").length,t0=performance.now();
     (function f(t){const k=Math.min(1,(t-t0)/1500);el.textContent=(n*(1-Math.pow(1-k,3))).toFixed(dec)+m[2];if(k<1)requestAnimationFrame(f)})(t0)})}
 })();
+function goBlack(){document.body.classList.add("pm");PAL(true)}
 
 /* ---------- loadstring + status file ---------- */
-const DBK="cloudy_redeemed",getDB=()=>{try{return JSON.parse(ls.get(DBK)||"{}")}catch(e){return{}}};
 const lockMsg=()=>CONFIG.free.lockedText[sst]||"Script is unavailable right now.";
 function renderLock(){
   const box=$("#lock");
@@ -467,38 +441,36 @@ function closeP(){if(onClose){onClose();onClose=null}ov.classList.remove("on");d
 $("#x").onclick=closeP;ov.onclick=e=>{if(e.target===ov)closeP()};addEventListener("keydown",e=>{if(e.key==="Escape"&&ov.classList.contains("on"))closeP()});
 function route(){const n=location.hash.replace(/^#\/?/,"");$$("#nl a[data-m]").forEach(a=>a.classList.toggle("act",a.dataset.m===n&&!!pages[n]));if(pages[n]){if(onClose){onClose();onClose=null}pn.dataset.page=n;pages[n]()}else if(!n&&ov.classList.contains("on"))closeP()}
 addEventListener("hashchange",route);
-$$("[data-m]").forEach(a=>a.onclick=e=>{e.preventDefault();location.hash="#/"+a.dataset.m});
 
 /* ---------- PREMIUM ---------- */
 function premium(){
   const P=CONFIG.premium;let plan=P.plans[1],meth=P.methods[1],rates={};
-  const usd=n=>"$"+n.toFixed(2).replace(/\.00$/,"");
+  const gbp=n=>"£"+n.toFixed(2).replace(/\.00$/,"");
   panel("Premium",`
-    <div class="pbanner"><h3>✦ Cloudy Premium</h3><p>Support the project and unlock priority perks. The free script stays free for everyone.</p></div>
+    <div class="pbanner"><span class="eyebrow">✦ Cloudy Premium</span><h3>Go all black. <span>Go Premium.</span></h3><p>Priority updates, private support and the full black interface. The free script stays free for everyone.</p></div>
     <div class="lbl">1 · Choose a plan</div><div class="plans" id="pl"></div>
-    <ul class="perks" style="margin-top:16px">${P.perks.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>
-    <div class="lbl">2 · Pay with</div><div class="meths" id="mt"></div>
-    <div id="py"></div>`,"prm");
-  const drawPlans=()=>{$("#pl").innerHTML=P.plans.map(p=>`<button class="plan ${p.id===plan.id?"on":""}" data-id="${p.id}" type="button">${p.tag?`<span class="tag">${p.tag}</span>`:""}<small>${esc(p.per)}</small><b>${esc(p.name)}</b><div class="pr">${usd(p.usd)}</div></button>`).join("");
+    <ul class="perks">${P.perks.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>
+    <div class="lbl">2 · Pay with</div><div class="meths" id="mt"></div><div id="py"></div>
+    <div class="trust"><span>Key delivered via Discord ticket</span><span>HWID resets included</span><span>Robux or crypto</span></div>`,"prm");
+  const drawPlans=()=>{$("#pl").innerHTML=P.plans.map(p=>`<button class="plan ${p.id===plan.id?"on":""}" data-id="${p.id}" type="button">${p.tag?`<span class="tag">${esc(p.tag)}</span>`:""}<small>${esc(p.per)}</small><b>${esc(p.name)}</b><div class="pr">${gbp(p.gbp)}</div></button>`).join("");
     $$("#pl .plan").forEach(b=>b.onclick=()=>{plan=P.plans.find(p=>p.id===b.dataset.id);drawPlans();drawPay()})};
   const drawMeth=()=>{$("#mt").innerHTML=P.methods.map(m=>`<button class="meth ${m.id===meth.id?"on":""}" data-id="${m.id}" type="button"><i>${esc(m.icon)}</i>${esc(m.name)}</button>`).join("");
     $$("#mt .meth").forEach(b=>b.onclick=()=>{meth=P.methods.find(m=>m.id===b.dataset.id);drawMeth();drawPay()})};
-  const msg=()=>`Hi, I paid for Cloudy Premium (${plan.name}, ${usd(plan.usd)}) with ${meth.name}.`;
+  const msg=()=>`Hi, I paid for Cloudy Premium (${plan.name}, ${gbp(plan.gbp)}) with ${meth.name}.`;
+  const tail=`<div class="row2"><a class="btn g" href="${esc(CONFIG.discordLink)}" target="_blank" rel="noopener">Open Discord ticket</a><button class="btn" id="cm" type="button">Copy message</button></div></div>`;
   const drawPay=()=>{
     const box=$("#py");
     if(meth.id==="robux"){
-      const rb=Math.ceil(plan.usd*P.robuxPerUsd);
-      box.innerHTML=`<div class="pay"><div class="tot"><div><small>Total</small><br><b>R$ ${rb.toLocaleString()}</b></div><small>≈ ${usd(plan.usd)} · ${esc(plan.name)}</small></div>
-        <ol class="ps"><li>Open a ticket on our Discord and say you want to pay with Robux.</li><li>We send you a gamepass link for <b>R$ ${rb.toLocaleString()}</b>.</li><li>Buy it, then send a screenshot of your purchase in the ticket.</li><li>You receive your key and the Premium role.</li></ol>
-        <div class="row2"><a class="btn g" href="${esc(CONFIG.discordLink)}" target="_blank" rel="noopener">Open Discord ticket</a><button class="btn" id="cm" type="button">Copy message</button></div></div>`;
+      const rb=Math.ceil(plan.gbp*P.robuxPerGbp);
+      box.innerHTML=`<div class="pay"><div class="tot"><div><small>Total</small><br><b>R$ ${rb.toLocaleString()}</b></div><small>≈ ${gbp(plan.gbp)} · ${esc(plan.name)}</small></div>
+        <ol class="ps"><li>Open a ticket on our Discord and say you want to pay with Robux.</li><li>We send you a gamepass link for <b>R$ ${rb.toLocaleString()}</b>.</li><li>Buy it, then send a screenshot of your purchase in the ticket.</li><li>You receive your key and the Premium role.</li></ol>${tail}`;
     }else{
-      const r=rates[meth.coin],amt=r?(plan.usd/r).toFixed(meth.dp):null;
-      box.innerHTML=`<div class="pay"><div class="tot"><div><small>Send exactly</small><br><b id="am">${amt?amt+" "+meth.sym:"…"}</b></div><small>≈ ${usd(plan.usd)} · ${esc(plan.name)}</small></div>
+      const r=rates[meth.coin],amt=r?(plan.gbp/r).toFixed(meth.dp):null;
+      box.innerHTML=`<div class="pay"><div class="tot"><div><small>Send exactly</small><br><b id="am">${amt?amt+" "+meth.sym:"…"}</b></div><small>≈ ${gbp(plan.gbp)} · ${esc(plan.name)}</small></div>
         <div class="lbl" style="margin-top:0">${esc(meth.name)} address</div>
         <div class="addr"><code>${esc(meth.addr)}</code><button class="btn sm" id="ca" type="button">Copy</button></div>
         <div class="warn">Only send ${esc(meth.sym)} on the <b>${esc(meth.net)}</b>. Funds sent on another network cannot be recovered. ${amt?"Amount is an estimate from the live rate, so send a little extra to cover fees.":"Live rate unavailable, so ask in your ticket for the exact amount."}</div>
-        <ol class="ps"><li>Send the amount above to the address.</li><li>Open a ticket on Discord and paste your transaction ID (TXID).</li><li>Once confirmed you receive your key and the Premium role.</li></ol>
-        <div class="row2"><a class="btn g" href="${esc(CONFIG.discordLink)}" target="_blank" rel="noopener">Open Discord ticket</a><button class="btn" id="cm" type="button">Copy message</button></div></div>`;
+        <ol class="ps"><li>Send the amount above to the address.</li><li>Open a ticket on Discord and paste your transaction ID (TXID).</li><li>Once confirmed you receive your key and the Premium role.</li></ol>${tail}`;
       $("#ca").onclick=()=>copy(meth.addr,meth.name+" address copied");
       if(amt)$("#am").onclick=()=>copy(amt,"Amount copied");
     }
@@ -506,11 +478,10 @@ function premium(){
   };
   drawPlans();drawMeth();drawPay();
   const ids=P.methods.filter(m=>m.coin).map(m=>m.coin).join(",");
-  fetch("https://api.coingecko.com/api/v3/simple/price?ids="+ids+"&vs_currencies=usd").then(r=>r.json()).then(j=>{Object.keys(j).forEach(k=>rates[k]=j[k].usd);if(pn.dataset.page==="premium")drawPay()}).catch(()=>{});
+  fetch("https://api.coingecko.com/api/v3/simple/price?ids="+ids+"&vs_currencies=gbp").then(r=>r.json()).then(j=>{Object.keys(j).forEach(k=>rates[k]=j[k].gbp);if(pn.dataset.page==="premium")drawPay()}).catch(()=>{});
 }
 
 /* ---------- docs ---------- */
-const hl=s=>esc(s);
 function docs(){
   let cat=0;
   panel("Documentation",`<div class="dg"><aside><input type="search" id="dq" placeholder="Search functions" autocomplete="off" spellcheck="false"><div id="dc"></div></aside><main id="dm"></main></div>`,"wide");
@@ -518,24 +489,24 @@ function docs(){
     const q=$("#dq").value.trim().toLowerCase(),dc=$("#dc"),dm=$("#dm");
     dc.innerHTML=DOC.map((c,i)=>`<button class="${!q&&i===cat?"on":""}" data-i="${i}">${esc(c.t)}<small>${c.f.length}</small></button>`).join("");
     dc.querySelectorAll("button").forEach(b=>b.onclick=()=>{cat=+b.dataset.i;$("#dq").value="";draw()});
-    const list=q?DOC.flatMap(c=>c.f.filter(f=>f.n.toLowerCase().includes(q)||f.d.toLowerCase().includes(q)).map(f=>({...f,c:c.t}))):DOC[cat].f.map(f=>({...f,c:""}));
+    const list=q?DOC.flatMap(c=>c.f.filter(f=>f.n.toLowerCase().includes(q)||f.d.toLowerCase().includes(q))):DOC[cat].f;
     dm.innerHTML=(q?`<p class="mut">${list.length} result${list.length===1?"":"s"}</p>`:`<h3 style="font-size:2.2rem">${esc(DOC[cat].t)}</h3><p class="mut">${esc(DOC[cat].d)}</p>`)
-      +list.map((f,i)=>`<div class="fn"><div style="min-width:0"><h4>${esc(f.n)}</h4><p>${esc(f.d)}</p><code>${hl(f.sg)}</code></div><button class="btn sm" data-i="${i}" style="align-self:flex-start">Copy</button></div>`).join("")
+      +list.map((f,i)=>`<div class="fn"><div style="min-width:0"><h4>${esc(f.n)}</h4><p>${esc(f.d)}</p><code>${esc(f.sg)}</code></div><button class="btn sm" data-i="${i}" style="align-self:flex-start">Copy</button></div>`).join("")
       +`<p class="mut" style="margin-top:18px">Based on the official <a href="https://docs.sunc.su" target="_blank" rel="noopener" style="color:#fff">sUNC reference</a>.</p>`;
     dm.querySelectorAll(".fn button").forEach(b=>b.onclick=()=>{copy(list[+b.dataset.i].sg);b.textContent="Copied ✓";setTimeout(()=>b.textContent="Copy",1400)});
   };
   $("#dq").oninput=draw;draw();
 }
 
-/* ---------- status ---------- */
+/* ---------- status (fixed) ---------- */
 function status(){
   const days=Math.min(120,SP.days||60),svc=allSvc(),o=overall(),z=n=>String(n).padStart(2,"0");
   const stamp=()=>{const d=new Date();return z(d.getHours())+":"+z(d.getMinutes())+":"+z(d.getSeconds())};
   const rows=svc.map(s=>{let bad=0;const bars=[];
-    for(let i=0;i<days;i++){const ago=days-1-i,state=ago===0?s.status:((s.incidents||{})[ago]||"operational");bad+=state==="outage"?1:state==="degraded"?.5:0;
+    for(let i=0;i<days;i++){const ago=days-1-i,state=ago===0?s.status:ns((s.incidents||{})[ago]);bad+=state==="outage"?1:state==="degraded"?.5:0;
       bars.push(`<i style="--c:${SC[state]}" title="${ago===0?"Today":ago+"d ago"} · ${SL[state]}"></i>`)}
     return `<div class="sr" style="--c:${SC[s.status]}"><div class="sh"><span class="dot"></span>${esc(s.name)}${SP.showUptime?`<span class="up">${((days-bad)/days*100).toFixed(2)}% uptime</span>`:""}<em>${SL[s.status]}</em></div><div class="bars">${bars.join("")}</div><div class="ax"><span>${days} days ago</span><span>Today</span></div></div>`}).join("");
-  const inc=(SP.incidents||[]).map(i=>`<div class="inc" style="--c:${SC[i.state]||SC.operational}"><small>${esc(i.date)} · ${SL[i.state]||""}</small><b>${esc(i.title)}</b><p style="margin-top:2px">${esc(i.text)}</p></div>`).join("");
+  const inc=(SP.incidents||[]).map(i=>{const s=ns(i.state);return `<div class="inc" style="--c:${SC[s]}"><small>${esc(i.date)} · ${SL[s]}</small><b>${esc(i.title)}</b><p style="margin-top:2px">${esc(i.text)}</p></div>`}).join("");
   panel("System status",`<div class="sb" style="--c:${SC[o]}"><span class="dot"></span><div><b>${SP.headlines[o]}</b><small>Last checked <span id="lc">${stamp()}</span></small></div></div>
     <div class="chips"><span class="chip"><span class="dot" style="--c:${SC[storeState]}"></span>Website: ${{working:"Working",updating:"Updating",down:"Down"}[st]}</span><span class="chip"><span class="dot" style="--c:${SC[scrState()]}"></span>Script: ${{up:"Up",updating:"Updating",down:"Down"}[sst]}</span></div>
     <div class="h5">Recent incidents</div>${inc||'<p class="mut">No incidents reported.</p>'}
@@ -544,24 +515,29 @@ function status(){
   const iv=setInterval(()=>{const e=$("#lc");if(e)e.textContent=stamp()},1000);onClose=()=>clearInterval(iv);
 }
 
-/* ---------- redeem + hwid v2 ---------- */
-const A=(e,k,o)=>e.animate(k,Object.assign({fill:"forwards"},o)).finished.catch(()=>{});
+/* ---------- shared effects ---------- */
 const shake=e=>e.animate([{transform:"translateX(0)"},{transform:"translateX(-9px)"},{transform:"translateX(9px)"},{transform:"translateX(-5px)"},{transform:"translateX(0)"}],{duration:340});
-function burst(){const r=pn.getBoundingClientRect(),x0=r.left+r.width/2,y0=r.top+130,cols=["#a6efe6","#fff","#9d80be","#fcd34d","#68aaa6"];
-  for(let i=0;i<48;i++){const e=document.createElement("i");e.className="cf";e.style.cssText=`left:${x0}px;top:${y0}px;width:${4+Math.random()*5}px;height:${6+Math.random()*8}px;background:${cols[i%5]}`;document.body.append(e);
+function burst(){const r=pn.getBoundingClientRect(),x0=r.left+r.width/2,y0=r.top+130,cols=["#fcd34d","#fff","#f59e0b","#a6efe6","#9d80be"];
+  for(let i=0;i<44;i++){const e=document.createElement("i");e.className="cf";e.style.cssText=`left:${x0}px;top:${y0}px;width:${4+Math.random()*5}px;height:${6+Math.random()*8}px;background:${cols[i%5]}`;document.body.append(e);
     const a=Math.random()*6.28,s=120+Math.random()*320;e.animate([{transform:"translate(0,0) rotate(0)",opacity:1},{transform:`translate(${Math.cos(a)*s}px,${Math.sin(a)*s+180}px) rotate(${Math.random()*720}deg)`,opacity:0}],{duration:1100+Math.random()*700,easing:"cubic-bezier(.1,.7,.3,1)"}).finished.then(()=>e.remove())}}
-const out=async pb=>{await Promise.all([...pb.children].map((e,i)=>A(e,[{opacity:1,transform:"none",filter:"blur(0)"},{opacity:0,transform:"translateY(-18px) scale(.94)",filter:"blur(6px)"}],{duration:360,delay:i*45,easing:"ease-in"})))};
+/* runs a step-by-step progress screen, then calls done() to fill the result. returns false if the panel was closed */
+async function flow(title,icon,steps){
+  const pb=$("#pb");$("#pt").textContent=title;
+  pb.innerHTML=`<div class="ico spin">${icon}</div><ul class="stl">${steps.map(t=>`<li><i></i>${t}</li>`).join("")}</ul><div class="prog"><i id="pg"></i></div>`;
+  const lis=$$("#pb .stl li");
+  for(let i=0;i<lis.length;i++){lis[i].className="run";await wait(650);if(!ov.classList.contains("on")||!$("#pg"))return false;lis[i].className="done";$("#pg").style.width=((i+1)/lis.length*100)+"%"}
+  await wait(250);return ov.classList.contains("on");
+}
 const prem=k=>`loadstring(game:HttpGet("${CONFIG.free.premiumUrl}?key=${encodeURIComponent(k)}"))()`;
-const LOCK='<svg class="lk" viewBox="0 0 120 150" fill="none"><path class="sh" d="M32 70V48a28 28 0 0 1 56 0v22" stroke="#fff" stroke-width="9" stroke-linecap="round"/><rect x="16" y="68" width="88" height="68" rx="14" fill="rgba(255,255,255,.08)" stroke="#fff" stroke-width="3"/><circle cx="60" cy="96" r="9" fill="#000" stroke="#a6efe6" stroke-width="2"/><rect x="56.5" y="100" width="7" height="18" rx="3" fill="#000"/></svg><svg class="ky" viewBox="0 0 100 30" width="100" height="30" fill="none" stroke="#a6efe6" stroke-width="3"><circle cx="15" cy="15" r="11"/><rect x="26" y="12.5" width="74" height="5" rx="2" fill="#a6efe6"/><rect x="74" y="17" width="7" height="8" fill="#a6efe6"/><rect x="85" y="17" width="5" height="6" fill="#a6efe6"/></svg>';
 
+/* ---------- redeem ---------- */
 function redeem(){
   panel("Redeem key",`<div class="ico">⚿</div><p style="text-align:center">Enter your key to unlock Cloudy Premium.</p>
     <div class="kf" id="kf"><input type="text" id="rk" placeholder="CLDY-XXXX-0000" autocomplete="off" spellcheck="false" autocapitalize="characters"><button class="btn sm" id="kpb" type="button">Paste</button></div>
     <div class="kt" id="kt"></div><div class="err" id="re"></div>
     <button class="btn w" id="rg" style="width:100%">Redeem</button>
     <p style="text-align:center;margin-top:12px;font-size:.8rem">Need a key? Get one on the <a href="#/premium" style="color:#fcd34d">Premium tab</a>.</p>`);
-  let busy=false;
-  const rk=$("#rk"),kf=$("#kf"),kt=$("#kt");
+  let busy=false;const rk=$("#rk"),kf=$("#kf"),kt=$("#kt");
   const find=()=>CONFIG.keys.find(x=>norm(x.key)===norm(rk.value));
   const chk=()=>{const k=find();kf.classList.toggle("ok",!!k);kt.textContent=k?"✓ "+k.type+" · "+(k.days>=3650?"Lifetime":k.days+" days"):"";$("#re").textContent=""};
   rk.oninput=()=>{rk.value=rk.value.toUpperCase();chk()};
@@ -571,63 +547,36 @@ function redeem(){
     if(!v||!k){$("#re").textContent=v?"That key isn't valid. Check it and try again.":"Enter your key first.";shake(kf);return}
     busy=true;
     const db=getDB(),first=!db[v];if(first){db[v]=Date.now();ls.set(DBK,JSON.stringify(db))}
-    const end=db[v]+k.days*864e5,live=end>Date.now(),pb=$("#pb");
-    await out(pb);$("#pt").textContent="Verifying…";
-    pb.innerHTML=`<div class="vault"><div class="ring"></div>${LOCK}</div><div class="vs" id="vs"></div><div class="prog"><i id="pg"></i></div><div class="big" id="vt" style="margin-top:16px"></div><div id="vd"></div>`;
-    const vault=$(".vault"),ky=$(".ky"),lk=$(".lk"),sh=$(".sh"),vt=$("#vt"),ring=$(".ring"),vs=$("#vs"),pg=$("#pg"),alive=()=>ov.classList.contains("on")&&document.body.contains(vault);
-    const say=t=>{vs.textContent=t;A(vs,[{opacity:0,transform:"translateY(6px)"},{opacity:1,transform:"none"}],{duration:250})};
-    A(pg,[{width:"0%"},{width:"100%"}],{duration:2400,easing:"ease-in-out"});
-    say("CHECKING KEY");
-    await A(ky,[{transform:"translate(-230px,-60px) rotate(-30deg)",opacity:0},{transform:"translate(-40px,-8px) rotate(-6deg)",opacity:1,offset:.7},{transform:"none",opacity:1}],{duration:900,easing:"cubic-bezier(.2,.8,.2,1)"});
-    if(!alive())return;say("INSERTING");
-    A(lk,[{transform:"none"},{transform:"translateX(4px)"},{transform:"translateX(-3px)"},{transform:"none"}],{duration:260});
-    await A(ky,[{transform:"none"},{transform:"scaleX(.58)"}],{duration:300,easing:"ease-in"});
-    if(!alive())return;say("VALIDATING LICENSE");
-    await A(ky,[{transform:"rotate(0) scaleX(.58)"},{transform:"rotate(90deg) scaleX(.58)"}],{duration:700,easing:"cubic-bezier(.5,0,.2,1)"});
-    if(!alive())return;
-    if(!live){
-      say("EXPIRED");{const r=$(".lk rect");if(r)r.style.stroke="#f87171"}
-      await A(lk,[{transform:"none"},{transform:"translateX(-8px)"},{transform:"translateX(8px)"},{transform:"translateX(-5px)"},{transform:"none"}],{duration:420});
-      pg.style.background="#f87171";vt.textContent="Key expired";$("#pt").textContent="Key expired";A(vt,[{opacity:0,transform:"translateY(14px)"},{opacity:1,transform:"none"}],{duration:500});
-      await wait(300);if(!alive())return;
-      $("#vd").innerHTML='<p class="rise" style="text-align:center;margin-top:10px">This key has expired. Get a new one on the Premium tab.</p><button class="btn rise" style="--k:2;width:100%;margin-top:14px" id="rm">Redeem another key</button>';$("#rm").onclick=redeem;return}
-    say("ACCESS GRANTED");
-    A(sh,[{transform:"none"},{transform:"translateY(-18px)"},{transform:"translateY(-14px) rotate(-32deg)"}],{duration:650,easing:"cubic-bezier(.3,1.4,.5,1)"});
-    A(lk,[{filter:"drop-shadow(0 0 0 rgba(var(--acr),0))"},{filter:"drop-shadow(0 0 28px rgba(var(--acr),.9))"}],{duration:700});
-    A(ring,[{transform:"scale(.2)",opacity:.9},{transform:"scale(3.4)",opacity:0}],{duration:1100,easing:"cubic-bezier(.1,.7,.3,1)"});
-    A(pn,[{transform:"scale(1)"},{transform:"scale(1.025)",offset:.2},{transform:"scale(1)"}],{duration:500});
-    await wait(450);if(!alive())return;burst();setTimeout(burst,350);
-    const t=first?"Key redeemed":"Already redeemed";$("#pt").textContent=t;vt.textContent=t;
-    A(vt,[{opacity:0,transform:"translateY(14px) scale(.9)",filter:"blur(8px)"},{opacity:1,transform:"none",filter:"blur(0)"}],{duration:800,easing:"cubic-bezier(.2,.9,.2,1)"});
-    await wait(900);if(!alive())return;
-    vault.style.transition="margin .8s cubic-bezier(.2,.9,.2,1)";vault.style.margin="-62px auto -62px";vt.style.fontSize="1.6rem";
-    A(vault,[{transform:"scale(1)"},{transform:"scale(.5)"}],{duration:800,easing:"cubic-bezier(.2,.9,.2,1)"});
-    $("#vs").remove();$(".prog").remove();
+    const end=db[v]+k.days*864e5,live=end>Date.now();
+    if(!await flow("Verifying…","⚿",["Checking key","Validating license","Unlocking Premium"])){busy=false;return}
+    const pb=$("#pb");
+    if(!live){$("#pt").textContent="Key expired";pb.innerHTML=`<div class="ico">✕</div><div class="big">Key expired</div><p class="rise" style="text-align:center;margin-top:10px">This key has expired. Get a new one on the Premium tab.</p><button class="btn w rise" style="--k:2;width:100%;margin-top:14px" id="rm">Redeem another key</button>`;$("#rm").onclick=redeem;return}
+    goBlack();burst();setTimeout(burst,350);
+    const t=first?"Key redeemed":"Already redeemed";$("#pt").textContent=t;
     const left=end-Date.now(),life=k.days>=3650,pct=life?1:Math.max(0,Math.min(1,left/(k.days*864e5))),dl=Math.floor(left/864e5),hr=Math.floor(left%864e5/36e5);
-    const mk=k.key.length>6?k.key.slice(0,3)+"•".repeat(Math.max(3,k.key.length-6))+k.key.slice(-3):k.key;
-    $("#vd").innerHTML=`<div class="pass rise" style="padding:18px;margin-top:10px;border-radius:16px;background:linear-gradient(160deg,rgba(var(--acr),.16),rgba(0,0,0,.35) 60%);border:1px solid rgba(var(--acr),.4)">
+    const mask=k.key.length>6?k.key.slice(0,3)+"•".repeat(Math.max(3,k.key.length-6))+k.key.slice(-3):k.key;
+    pb.innerHTML=`<div class="ico">✦</div><div class="big" style="margin-bottom:4px">${t}</div><div class="pass rise">
       <div style="display:flex;align-items:center;gap:10px;justify-content:space-between"><b style="font:300 1.5rem Spectral,serif">✦ ${esc(k.type)}</b><span class="badge">Premium active</span></div>
       <div class="mh"><span>Time left</span><b>${life?"Lifetime ∞":dl+"d "+hr+"h"}</b></div><div class="mbar"><i id="mb"></i></div>
       <div class="g3"><div><small>Key</small><b id="a1" style="cursor:pointer"></b></div><div><small>Expires</small><b>${life?"Never":new Date(end).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}</b></div><div><small>Status</small><b style="color:#4ade80">Active</b></div></div>
       <p style="font-size:.8rem">Copy your premium loadstring and run it in your executor in a Rivals game.</p>
       <div class="code gl" style="margin:10px 0 0;padding:12px 12px 12px 16px"><code id="kl"></code><button class="btn sm" id="kc">Copy</button></div>
       <div class="row2"><button class="btn w" id="kd" type="button">Done</button><button class="btn" id="rm" type="button">Redeem another</button></div></div>`;
-    let sh2=false;$("#a1").textContent=mk;$("#a1").onclick=()=>{sh2=!sh2;$("#a1").textContent=sh2?k.key:mk};
+    let sh=false;$("#a1").textContent=mask;$("#a1").onclick=()=>{sh=!sh;$("#a1").textContent=sh?k.key:mask};
     $("#kl").textContent=prem(k.key);$("#kc").onclick=()=>copy(prem(k.key),"Premium script copied");
     $("#kd").onclick=closeP;$("#rm").onclick=redeem;setTimeout(()=>{const m=$("#mb");if(m)m.style.width=pct*100+"%"},250);
   };
   $("#rg").onclick=go;rk.onkeydown=e=>{if(e.key==="Enter")go()};rk.focus();
 }
 
+/* ---------- reset hwid ---------- */
 function hwid(){
   panel("Reset HWID",`<div class="ico">⌬</div><p style="text-align:center">Switching PCs? Unbind your hardware ID so the script can bind to your new device.</p>
     <div class="field"><label>License key</label><input type="text" id="hk" placeholder="Your key" autocomplete="off" spellcheck="false"></div>
     <div class="field"><label>Email</label><input type="text" id="he" placeholder="you@example.com" autocomplete="off" spellcheck="false" inputmode="email"></div>
     <div class="field"><label>Confirm email</label><input type="text" id="hc" placeholder="you@example.com" autocomplete="off" spellcheck="false" inputmode="email"></div>
     <div class="err" id="hr"></div><button class="btn w" id="hg" style="width:100%">Reset HWID</button>`);
-  let busy=false;
-  const rnd=n=>Array.from({length:n},()=>"0123456789ABCDEF"[Math.random()*16|0]).join(""),fmt=()=>[rnd(4),rnd(4),rnd(4),rnd(4)].join("-");
-  const fail=m=>{$("#hr").textContent=m;shake($("#pb"))};
+  let busy=false;const fail=m=>{$("#hr").textContent=m;shake($("#pb"))};
   const go=async()=>{
     if(busy)return;
     const kv=norm($("#hk").value),k=CONFIG.keys.find(x=>norm(x.key)===kv),e1=$("#he").value.trim().toLowerCase(),e2=$("#hc").value.trim().toLowerCase();
@@ -638,46 +587,18 @@ function hwid(){
     if(e1!==e2)return fail("The emails don't match.");
     busy=true;
     try{const r=JSON.parse(ls.get("cloudy_hwid")||"{}");r[kv]={t:Date.now(),email:e1};ls.set("cloudy_hwid",JSON.stringify(r))}catch(e){}
-    const pb=$("#pb");await out(pb);$("#pt").textContent="Resetting HWID";
-    pb.innerHTML=`<div class="hw"><div class="ring"></div>
-      <svg class="chip" viewBox="0 0 160 160" fill="none"><path d="M50 22v16M80 22v16M110 22v16M50 122v16M80 122v16M110 122v16M22 50h16M22 80h16M22 110h16M122 50h16M122 80h16M122 110h16" stroke="#fff" stroke-width="3" stroke-linecap="round"/><rect x="38" y="38" width="84" height="84" rx="14" fill="rgba(255,255,255,.07)" stroke="#a6efe6" stroke-width="3"/><rect x="58" y="58" width="44" height="44" rx="8" stroke="rgba(255,255,255,.5)" stroke-width="2"/><rect class="scan" x="40" y="38" width="80" height="4" rx="2" fill="#a6efe6"/></svg>
-      <svg class="ok" viewBox="0 0 160 160" fill="none"><circle class="oc" cx="80" cy="80" r="56" stroke="#a6efe6" stroke-width="4" stroke-linecap="round" transform="rotate(-90 80 80)"/><path class="ot" d="M52 82l20 20 38-42" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="hx" id="hx"></div>
-      <ul class="stl" id="sl">${["Verifying key","Checking email","Unbinding device","Clearing record"].map(t=>`<li><i></i>${t}</li>`).join("")}</ul>
-      <div class="prog"><i id="pg"></i></div><div class="big" id="ht" style="margin-top:14px"></div><div id="hd"></div>`;
-    const hw=$(".hw"),chip=$(".chip"),ok=$(".ok"),ring=$(".ring"),scan=$(".scan"),hx=$("#hx"),ht=$("#ht"),lis=$$("#sl li"),alive=()=>ov.classList.contains("on")&&document.body.contains(hw);
-    A(hw,[{opacity:0,transform:"scale(.6)"},{opacity:1,transform:"none"}],{duration:600,easing:"cubic-bezier(.2,.9,.2,1)"});
-    A($("#pg"),[{width:"0%"},{width:"100%"}],{duration:3600,easing:"linear"});
-    const iv=setInterval(()=>{hx.textContent="HWID  "+fmt()},70);
-    const sc=scan.animate([{transform:"translateY(0)"},{transform:"translateY(78px)"}],{duration:650,iterations:Infinity,direction:"alternate",easing:"ease-in-out"});
-    for(let i=0;i<lis.length;i++){
-      lis[i].className="run";await wait(i===2?1100:800);if(!alive()){clearInterval(iv);return}
-      lis[i].className="done";
-      if(i===2)A(chip,[{transform:"none"},{transform:"translateX(-5px)"},{transform:"translateX(5px)"},{transform:"translateX(-3px)"},{transform:"none"}],{duration:380,iterations:2})}
-    clearInterval(iv);sc.cancel();hx.textContent="HWID  0000-0000-0000-0000";
-    A(ring,[{transform:"scale(.2)",opacity:.9},{transform:"scale(3.6)",opacity:0}],{duration:1100,easing:"cubic-bezier(.1,.7,.3,1)"});
-    A(chip,[{transform:"none",opacity:1},{transform:"rotate(180deg) scale(1.15)",filter:"drop-shadow(0 0 26px var(--ac))",opacity:1,offset:.6},{transform:"rotate(360deg) scale(0)",opacity:0}],{duration:900,easing:"cubic-bezier(.6,0,.3,1)"});
-    A(pn,[{transform:"scale(1)"},{transform:"scale(1.025)",offset:.2},{transform:"scale(1)"}],{duration:500});
-    await wait(750);if(!alive())return;
-    $("#sl").remove();$(".prog").remove();ok.style.opacity=1;
-    A(ok,[{transform:"scale(.4)",opacity:0},{transform:"none",opacity:1}],{duration:500,easing:"cubic-bezier(.3,1.5,.5,1)"});
-    A($(".oc"),[{strokeDashoffset:352},{strokeDashoffset:0}],{duration:700,easing:"cubic-bezier(.5,0,.2,1)"});
-    A($(".ot"),[{strokeDashoffset:100},{strokeDashoffset:0}],{duration:500,delay:550,easing:"ease-out"});
-    burst();setTimeout(burst,350);A(hx,[{opacity:1},{opacity:0}],{duration:400});
-    $("#pt").textContent="HWID reset!";ht.textContent="HWID reset!";
-    A(ht,[{opacity:0,transform:"translateY(14px) scale(.9)",filter:"blur(8px)"},{opacity:1,transform:"none",filter:"blur(0)"}],{duration:800,easing:"cubic-bezier(.2,.9,.2,1)"});
-    await wait(900);if(!alive())return;
+    if(!await flow("Resetting HWID","⌬",["Verifying key","Checking email","Unbinding device","Clearing record"])){busy=false;return}
+    burst();$("#pt").textContent="HWID reset!";
     const row=(l,v,i)=>`<div class="kv rise" style="--k:${i}"><span class="mut">${l}</span><b>${esc(v)}</b></div>`;
-    $("#hd").innerHTML=`<div style="margin-top:14px">`+row("Key",k.key,0)+row("Email",e1.replace(/^(.).*(@.*)$/,"$1•••$2"),1)+row("Status","Unbound",2)+`</div><p class="rise" style="--k:3;margin-top:16px;text-align:center">Run the script on your new PC and it will bind to that device.</p><button class="btn w rise" style="--k:4;width:100%;margin-top:14px" id="hdn">Done</button>`;
+    $("#pb").innerHTML=`<div class="ico">✓</div><div class="big">HWID reset!</div><div style="margin-top:14px">`+row("Key",k.key,0)+row("Email",e1.replace(/^(.).*(@.*)$/,"$1•••$2"),1)+row("Status","Unbound",2)+`</div><p class="rise" style="--k:3;margin-top:16px;text-align:center">Run the script on your new PC and it will bind to that device.</p><button class="btn w rise" style="--k:4;width:100%;margin-top:14px" id="hdn">Done</button>`;
     $("#hdn").onclick=closeP;
   };
   $("#hg").onclick=go;[$("#hk"),$("#he"),$("#hc")].forEach(i=>i.onkeydown=e=>{if(e.key==="Enter")go()});$("#hk").focus();
 }
 
 /* ---------- changelog ---------- */
-function changelog(){
-  panel("Changelog",CONFIG.changelog.map(c=>`<div class="cl"><h4>${esc(c.v)}<small>${esc(c.date)}</small></h4><ul>${c.items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul></div>`).join(""));
-}
+function changelog(){panel("Changelog",CONFIG.changelog.map(c=>`<div class="cl"><h4>${esc(c.v)}<small>${esc(c.date)}</small></h4><ul>${c.items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul></div>`).join(""))}
+
 $$("[data-m]").forEach(a=>a.onclick=e=>{e.preventDefault();location.hash="#/"+a.dataset.m});
 route();
 </script>
