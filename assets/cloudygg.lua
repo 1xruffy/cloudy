@@ -18,11 +18,12 @@ local dctrl = require(ctrls:WaitForChild("PlayerDataController", 10))
 local coss = clib.Cosmetics
 
 local cdata = dctrl.CurrentData
+
 if not cdata then
-	task.spawn(function()
-		repeat task.wait() until dctrl.CurrentData
+	repeat
+		task.wait()
 		cdata = dctrl.CurrentData
-	end)
+	until cdata
 end
 
 local equip, favs = {}, {}
@@ -132,6 +133,7 @@ local function rebuildinv()
 	end
 end
 
+loadcfg()
 rebuildinv()
 
 local oget = dctrl.Get
