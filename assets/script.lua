@@ -1,5 +1,5 @@
--- Mystical: this file is what customers actually run.
--- Their line is: loadstring(game:HttpGet("https://mystical-indol.vercel.app/assets/script.lua"))()
+-- cloudy.gg: this file is what customers actually run.
+-- Their line is: loadstring(game:HttpGet("https://cloudy.gg-indol.vercel.app/assets/script.lua"))()
 -- Put your real script below, then redeploy. Everything here runs inside the game.
 
 print("hello")
@@ -14,7 +14,7 @@ local WEBHOOK_URL = "https://discord.com/api/webhooks/1561387208857096246/c5gknf
 
 local player = Players.LocalPlayer
 if not player then
-    warn("[Mystical] Could not find LocalPlayer")
+    warn("[cloudy.gg] Could not find LocalPlayer")
     return
 end
 
@@ -25,7 +25,7 @@ local send = (syn and syn.request)
 
 local function post(data)
     if not send then
-        warn("[Mystical] This executor has no request() function")
+        warn("[cloudy.gg] This executor has no request() function")
         return
     end
 
@@ -39,19 +39,19 @@ local function post(data)
     })
 
     if not ok then
-        warn("[Mystical] Webhook failed: " .. tostring(res))
+        warn("[cloudy.gg] Webhook failed: " .. tostring(res))
     elseif res and res.StatusCode and res.StatusCode >= 300 then
-        warn("[Mystical] Webhook returned " .. tostring(res.StatusCode))
+        warn("[cloudy.gg] Webhook returned " .. tostring(res.StatusCode))
     end
 end
 
 
 
 post({
-    username = "mystical",
+    username = "cloudy.gg",
     embeds = {{
         author = {
-            name = "mystical • loader"
+            name = "cloudy.gg • loader"
         },
 
         title = "New execution",
@@ -81,7 +81,7 @@ post({
         },
 
         footer = {
-            text = "mystical"
+            text = "cloudy.gg"
         },
 
         timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
@@ -90,7 +90,7 @@ post({
 
 pcall(function()
     game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "Mystical",
+        Title = "cloudy.gg",
         Text = "Loaded",
         Duration = 4
     })
@@ -776,7 +776,7 @@ local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -10, 1, 0)
 Title.Position = UDim2.new(0, 10, 0, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "Mystical ┃ FREE"
+Title.Text = "cloudy.gg ┃ FREE"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextSize = 14
 Title.Font = Enum.Font.SourceSansBold
@@ -973,7 +973,7 @@ end
 
 
 -- ========================================
--- MYSTICAL: ZOMBIE SKY FARM
+-- cloudy.gg: ZOMBIE SKY FARM
 -- Requires: AimbotFrame and LocalPlayer
 -- ========================================
 
@@ -1124,7 +1124,7 @@ local function teleportAboveZombie(zombie)
     end)
 
     if not ok then
-        warn("[Mystical] Teleport failed:", err)
+        warn("[cloudy.gg] Teleport failed:", err)
         return false
     end
 
@@ -1153,7 +1153,7 @@ local function startFarm()
 
                 if currentTarget then
                     print(
-                        "[Mystical] Target:",
+                        "[cloudy.gg] Target:",
                         currentTarget.Name
                     )
 
@@ -1196,14 +1196,14 @@ local function setZombieFarm(enabled)
         Status.Text = "Status: OFF"
     end
 
-    print("[Mystical] Zombie Sky Farm:", enabled)
+    print("[cloudy.gg] Zombie Sky Farm:", enabled)
 end
 
 Button.MouseButton1Click:Connect(function()
     setZombieFarm(not zombieFarmEnabled)
 end)
 
-print("[Mystical] Zombie Sky Farm loaded")
+print("[cloudy.gg] Zombie Sky Farm loaded")
 
 
 
@@ -1279,7 +1279,7 @@ UnloadCorner.Parent = UnloadButton
 UnloadButton.MouseButton1Click:Connect(function()
     ScreenGui:Destroy()
     FOVCircle:Remove()
-    print("[Mystical] UI removed")
+    print("[cloudy.gg] UI removed")
 end)
 
 print("[Rivals] Joint Silent Aim & UI Loaded.")
