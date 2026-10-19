@@ -229,12 +229,12 @@ input:focus{outline:none;border-color:rgba(255,255,255,.6)}
 <script>
 /* ===================== EDIT THIS SECTION ===================== */
 const CONFIG={
-  loadstring:"updating",   /* working | updating | down */
+  loadstring:"working",   /* working | updating | down */
   storeName:"cloudy.gg",
   tagline:"The #1 Free Rivals cheat.",
   discordLink:"https://discord.gg/mysti",
   tosLink:"",
-  status:"updating",
+  status:"working",
   statusFile:"assets/status.json",
 
   tabs:[
@@ -298,15 +298,15 @@ const CONFIG={
     labels:{operational:"Operational",degraded:"Updating",outage:"Outage"},
     colors:{operational:"#4ade80",degraded:"#fbbf24",outage:"#f87171"},
     services:[
-      {name:"Cloudy Free",status:"degraded",incidents:{}},
-      {name:"Cloudy Paid",status:"degraded",incidents:{}},
-      {name:"Cloudy Script API",status:"degraded",incidents:{}}],
+      {name:"Cloudy Free",status:"Operational",incidents:{}},
+      {name:"Cloudy Paid",status:"Operational",incidents:{}},
+      {name:"Cloudy Script API",status:"Operational",incidents:{}}],
     incidents:[
       {date:"12 days ago",state:"outage",title:"Update delivery outage",text:"Resolved. A bad release blocked updates for a short time."},
       {date:"6 days ago",state:"degraded",title:"Slow logins",text:"Resolved. Login times were higher than normal."}]},
 
   changelog:[
-    {v:"1.5.0",date:"October 2026",items:["Premium script now served from a protected endpoint","Brand new Redeem and Reset HWID animations"]},
+    {v:"1.5.0",date:"19/10/2026 13:52",items:["Added Cloudy Paid"]},
     {v:"1.4.0",date:"October 2026",items:["New Premium tab: pay with Robux, BTC, ETH or LTC","Loader shortened to 2 seconds","Intro animation removed"]},
     {v:"1.3.0",date:"October 2026",items:["Renamed to cloudy.gg","Redesigned redeem experience"]},
     {v:"1.2.0",date:"October 2026",items:["Smoother scrolling and animated tabs","Redesigned docs, status and changelog","Free script is now always available"]},
