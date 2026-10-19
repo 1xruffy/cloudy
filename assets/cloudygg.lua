@@ -21,6 +21,12 @@ pcall(function() (getgenv and getgenv() or _G).cloudy.ggEdition = "normal" end)
       §12 menu                §13 hud         §14 loop + lifecycle
 ]]
 
+print("Script started")
+
+print("hookmetamethod:", type(hookmetamethod))
+print("getnamecallmethod:", type(getnamecallmethod))
+print("writefile:", type(writefile))
+
 -------------------------------------------------------------------------------
 -- §0 header + guards
 -------------------------------------------------------------------------------
