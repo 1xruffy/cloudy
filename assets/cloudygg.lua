@@ -1652,7 +1652,7 @@ local DEFAULTS = {
 	hudPos = {}, -- panel key → { x, y } viewport fractions (Arrange HUD)
 	uiMode = "Simple", -- Simple | Advanced — a fresh install starts simple (the essential rows); Advanced shows every knob
 	previewHp = 72, -- the ESP preview's test health
-	deviceSpoof = "Real", -- Real | Mobile | Controller | VR: the device the server hears (Hooks.installDevice)
+	deviceSpoof = "Controller", -- Real | Mobile | Controller | VR: the device the server hears (Hooks.installDevice)
 	-- skins
 	unlockCosmetics = false,
 	unlockFinisher = false,
