@@ -1,14 +1,367 @@
+
+-- ENJOY THIS SKIN CHANGER :D
+
+local plrs = game:GetService("Players")
+local reps = game:GetService("ReplicatedStorage")
+local http = game:GetService("HttpService")
+
+local lp = plrs.LocalPlayer
+local lps = lp.PlayerScripts
+local ctrls = lps.Controllers
+local rmods = reps.Modules
+
+local elib = require(rmods:WaitForChild("EnumLibrary", 10))
+if elib then elib:WaitForEnumBuilder() end
+local clib = require(rmods:WaitForChild("CosmeticLibrary", 10))
+local ilib = require(rmods:WaitForChild("ItemLibrary", 10))
+local dctrl = require(ctrls:WaitForChild("PlayerDataController", 10))
+local coss = clib.Cosmetics
+
+local cdata = dctrl.CurrentData
+if not cdata then
+	task.spawn(function()
+		repeat task.wait() until dctrl.CurrentData
+		cdata = dctrl.CurrentData
+	end)
+end
+
+local equip, favs = {}, {}
+local cwep, vprof, lwep
+local lpname = lp.Name
+local fcache = {}
+
+local function banned(n)
+	if type(n) ~= "string" then return true end
+	return n:find("MISSING_") or n:find("Bubblegum") or n:find("Ragdoll") or n:find("Fall Apart") or n:find("Every Finisher Ever")
+end
+
+local function toenum(n)
+	if not elib then return nil end
+	local ok, id = pcall(elib.ToEnum, elib, n)
+	return ok and id or nil
+end
+
+local function clonecos(name, ctype, inv, favonly)
+	if banned(name) then return nil end
+	local base = coss[name]
+	if not base then return nil end
+	local d = table.clone(base)
+	d.Name = name
+	d.Type = d.Type or ctype
+	d.Seed = d.Seed or math.random(1, 1000000)
+	local eid = toenum(name)
+	if eid then d.Enum = eid d.ObjectID = d.ObjectID or eid end
+	if inv ~= nil then d.Inverted = inv end
+	if favonly ~= nil then d.OnlyUseFavorites = favonly end
+	return d
+end
+
+local savef = "SkinChanger/config.json"
+
+local function savecfg()
+	if not writefile then return end
+	pcall(function()
+		local cfg = { equipped = {}, favorites = favs }
+		for wep, cos in equip do
+			local slot = {}
+			cfg.equipped[wep] = slot
+			for ct, cd in cos do
+				if cd and cd.Name and not banned(cd.Name) then
+					slot[ct] = { name = cd.Name, seed = cd.Seed, inverted = cd.Inverted }
+				end
+			end
+		end
+		makefolder("SkinChanger")
+		writefile(savef, http:JSONEncode(cfg))
+	end)
+end
+
+local function loadcfg()
+	if not readfile or not isfile or not isfile(savef) then return end
+	pcall(function()
+		local cfg = http:JSONDecode(readfile(savef))
+		if cfg.equipped then
+			for wep, cos in cfg.equipped do
+				equip[wep] = {}
+				for ct, cd in cos do
+					if not banned(cd.name) then
+						local cl = clonecos(cd.name, ct, cd.inverted)
+						if cl then
+							cl.Seed = cd.seed
+							equip[wep][ct] = cl
+						end
+					end
+				end
+			end
+		end
+		favs = cfg.favorites or {}
+	end)
+end
+
+local finv = {}
+local function rebuildinv()
+	table.clear(finv)
+	for name in coss do
+		if not banned(name) then finv[name] = true end
+	end
+	for _, cos in equip do
+		for _, cd in cos do
+			if cd and cd.Name and not banned(cd.Name) then finv[cd.Name] = true end
+		end
+	end
+end
+
+rebuildinv()
+
+local oget = dctrl.Get
+dctrl.Get = function(self, key)
+	local data = oget(self, key)
+	if key == "CosmeticInventory" then
+		local proxy = {}
+		if data then for k, v in data do if not banned(k) then proxy[k] = v end end end
+		for name in finv do proxy[name] = true end
+		return proxy
+	end
+	if key == "FavoritedCosmetics" then
+		local res = data and table.clone(data) or {}
+		for wep, fv in favs do
+			local slot = res[wep] or {}
+			res[wep] = slot
+			for name, isfav in fv do
+				if not banned(name) then slot[name] = isfav end
+			end
+		end
+		return res
+	end
+	return data
+end
+
+local ogetwep = dctrl.GetWeaponData
+dctrl.GetWeaponData = function(self, wname)
+	local data = ogetwep(self, wname)
+	if not data then return nil end
+	local merged = table.clone(data)
+	merged.Name = wname
+	local weq = equip[wname]
+	if weq then for ct, cd in weq do merged[ct] = cd end end
+	return merged
+end
+
+local function saferep(key)
+	pcall(function()
+		if not cdata and dctrl.CurrentData then cdata = dctrl.CurrentData end
+		if cdata then cdata:Replicate(key) end
+	end)
+end
+
+local fctrl
+pcall(function() fctrl = require(ctrls:WaitForChild("FighterController", 10)) end)
+
+local function getewep()
+	if not fctrl then return nil end
+	local fighter = fctrl:GetFighter(lp)
+	if not fighter or not fighter.Items then return nil end
+	for _, item in fighter.Items do
+		if item.IsEquipped then return item.Name end
+	end
+	return nil
+end
+
+if hookmetamethod then
+	local rems = reps:FindFirstChild("Remotes")
+	local drems = rems and rems:FindFirstChild("Data")
+	local eqrem = drems and drems:FindFirstChild("EquipCosmetic")
+	local favrem = drems and drems:FindFirstChild("FavoriteCosmetic")
+	local rrems = rems and rems:FindFirstChild("Replication")
+	local frems = rrems and rrems:FindFirstChild("Fighter")
+	local uirem = frems and frems:FindFirstChild("UseItem")
+
+	if eqrem then
+		local oncall
+		oncall = hookmetamethod(game, "__namecall", function(self, ...)
+			if getnamecallmethod() ~= "FireServer" then return oncall(self, ...) end
+			local args = { ... }
+
+			if uirem and self == uirem and fctrl then
+				pcall(function()
+					local fighter = fctrl:GetFighter(lp)
+					if fighter and fighter.Items then
+						local oid = args[1]
+						for _, item in fighter.Items do
+							if item:Get("ObjectID") == oid then
+								lwep = item.Name
+								break
+							end
+						end
+					end
+				end)
+			end
+
+			if self == eqrem then
+				local wname, ctype, cname, opts = args[1], args[2], args[3], args[4] or {}
+				if not cname or cname == "None" or cname == "" then
+					equip[wname] = equip[wname] or {}
+					equip[wname][ctype] = nil
+					if not next(equip[wname]) then equip[wname] = nil end
+					rebuildinv()
+					task.defer(function()
+						saferep("WeaponInventory")
+						task.wait(0.2)
+						savecfg()
+					end)
+					return oncall(self, ...)
+				end
+				if banned(cname) then return oncall(self, ...) end
+				local rdata = oget(dctrl, "CosmeticInventory")
+				if rdata and type(rdata[cname]) ~= "boolean" and rdata[cname] ~= nil then
+					return oncall(self, ...)
+				end
+				equip[wname] = equip[wname] or {}
+				local cloned = clonecos(cname, ctype, opts.IsInverted, opts.OnlyUseFavorites)
+				if cloned then equip[wname][ctype] = cloned end
+				if ctype == "Finisher" then fcache[wname] = cname end
+				rebuildinv()
+				task.defer(function()
+					saferep("WeaponInventory")
+					task.wait(0.2)
+					savecfg()
+				end)
+				return
+			end
+
+			if self == favrem then
+				local fwep, fname, fstate = args[1], args[2], args[3]
+				if not fname or fname == "None" or fname == "" then return oncall(self, ...) end
+				if banned(fname) then return oncall(self, ...) end
+				favs[fwep] = favs[fwep] or {}
+				favs[fwep][fname] = fstate or nil
+				savecfg()
+				task.spawn(saferep, "FavoritedCosmetics")
+				return
+			end
+
+			return oncall(self, ...)
+		end)
+	end
+end
+
+local citem
+pcall(function() citem = require(lps.Modules.ClientReplicatedClasses.ClientFighter.ClientItem) end)
+
+if citem and citem._CreateViewModel then
+	local ocvm = citem._CreateViewModel
+	citem._CreateViewModel = function(self, vmref)
+		local wname = self.Name
+		local wplr = self.ClientFighter and self.ClientFighter.Player
+		cwep = (wplr == lp) and wname or nil
+		if wplr == lp and equip[wname] and equip[wname].Skin and vmref then
+			local skin = equip[wname].Skin
+			local dk = self:ToEnum("Data")
+			if vmref[dk] then
+				vmref[dk][self:ToEnum("Skin")] = skin
+				vmref[dk][self:ToEnum("Name")] = skin.Name
+			elseif vmref.Data then
+				vmref.Data.Skin = skin
+				vmref.Data.Name = skin.Name
+			end
+		end
+		local res = ocvm(self, vmref)
+		cwep = nil
+		return res
+	end
+end
+
+local vmmod = lps.Modules.ClientReplicatedClasses.ClientFighter.ClientItem:FindFirstChild("ClientViewModel")
+if vmmod then
+	local cvm = require(vmmod)
+	if cvm.GetWrap then
+		local ogw = cvm.GetWrap
+		cvm.GetWrap = function(self)
+			local ci = self.ClientItem
+			local wname = ci and ci.Name
+			local wplr = ci and ci.ClientFighter and ci.ClientFighter.Player
+			local weq = wname and wplr == lp and equip[wname]
+			return (weq and weq.Wrap) or ogw(self)
+		end
+	end
+	local onew = cvm.new
+	cvm.new = function(rdata, cliitm)
+		local wplr = cliitm.ClientFighter and cliitm.ClientFighter.Player
+		local wname = cwep or cliitm.Name
+		if wplr == lp and equip[wname] then
+			local rcls = require(reps.Modules.ReplicatedClass)
+			local dk = rcls:ToEnum("Data")
+			rdata[dk] = rdata[dk] or {}
+			local cos = equip[wname]
+			local slot = rdata[dk]
+			if cos.Skin then slot[rcls:ToEnum("Skin")] = cos.Skin end
+			if cos.Wrap then slot[rcls:ToEnum("Wrap")] = cos.Wrap end
+			if cos.Charm then slot[rcls:ToEnum("Charm")] = cos.Charm end
+		end
+		local res = onew(rdata, cliitm)
+		if wplr == lp and equip[wname] and equip[wname].Wrap and res._UpdateWrap then
+			res:_UpdateWrap()
+			task.delay(0.1, function() if not res._destroyed then res:_UpdateWrap() end end)
+		end
+		return res
+	end
+end
+
+local ogvi = ilib.GetViewModelImageFromWeaponData
+ilib.GetViewModelImageFromWeaponData = function(self, wdata, hires)
+	if not wdata then return ogvi(self, wdata, hires) end
+	local wname = wdata.Name
+	local weq = equip[wname]
+	if weq and weq.Skin and (wdata.Skin == weq.Skin or vprof == lp) then
+		local sinfo = self.ViewModels[weq.Skin.Name]
+		if sinfo then return sinfo[hires and "ImageHighResolution" or "Image"] or sinfo.Image end
+	end
+	return ogvi(self, wdata, hires)
+end
+
+pcall(function()
+	local vpmod = require(lps.Modules.Pages.ViewProfile)
+	if vpmod and vpmod.Fetch then
+		local ofetch = vpmod.Fetch
+		vpmod.Fetch = function(self, tplr)
+			vprof = tplr
+			return ofetch(self, tplr)
+		end
+	end
+end)
+
+local cent
+pcall(function() cent = require(lps.Modules.ClientReplicatedClasses.ClientEntity) end)
+
+if cent and cent._PlayFinisher then
+	local ofin = cent._PlayFinisher
+	cent._PlayFinisher = function(self, fname, ...)
+		local ewep = getewep()
+		local tfin = ewep and (fcache[ewep] or (equip[ewep] and equip[ewep].Finisher and equip[ewep].Finisher.Name))
+		return ofin(self, tfin or fname, ...)
+	end
+end
+
+loadcfg()
+rebuildinv()
+
+for wname, wdata in equip do
+	if wdata.Finisher and wdata.Finisher.Name then
+		fcache[wname] = wdata.Finisher.Name
+	end
+end
+
 -- cloudy.gg v1.4.1 (build 7.4.1) · licence id=51 · wm-51-1fb73d8ee0ed022c
-pcall(function() (getgenv and getgenv() or _G).cloudy.ggEdition = "normal" end)
+pcall(function() (getgenv and getgenv() or _G).cloudyEdition = "normal" end)
 --[[
-    cloudy.gg v6 · RIVALS (Volt executor)
+    cloudy v6 · RIVALS (Volt executor)
 
     RSHIFT       toggle menu (Ctrl+O always works too)
     F9            debug terminal
     Hold aim key  aimbot (default RMB, change on the Aimbot page)
 
-    Unload:   getgenv().cloudy.ggUnload()
-    Data:     <Volt workspace>/cloudy.gg/  (configs/<name>.json, state.json, cloudy.gg.log, shots.json)
+    Unload:   getgenv().cloudyUnload()
+    Data:     <Volt workspace>/cloudy/  (configs/<name>.json, state.json, cloudy.log, shots.json)
     Inject:   node voltmcp.mjs inject
 
     One body owner (Body, §7) decides every teleport, hold and return, and every destination passes
@@ -20,6 +373,7 @@ pcall(function() (getgenv and getgenv() or _G).cloudy.ggEdition = "normal" end)
       §7 combat (+noclip, origin, body)  §8 hooks  §9 visuals  §10 skins  §11 ui kit
       §12 menu                §13 hud         §14 loop + lifecycle
 ]]
+
 
 -------------------------------------------------------------------------------
 -- §0 header + guards
@@ -81,7 +435,7 @@ local function waveGlobal(name: string): any
 end
 
 -- every ScreenGui this script owns; the boot sweep and the unloader use the same list
-local OUR_GUI_NAMES = { cloudy.gg = true, cloudy.ggHUD = true, cloudy.ggESP = true, cloudy.ggIntro = true, cloudy.ggOpener = true }
+local OUR_GUI_NAMES = { cloudy = true, cloudyHUD = true, cloudyESP = true, cloudyIntro = true, cloudyOpener = true }
 
 local getgenvFn = waveGlobal("getgenv")
 local function genv(): any
@@ -99,15 +453,15 @@ do
 	-- Every new execution replaces the running instance (old one is unloaded below). The only thing
 	-- deduplicated is the hop double-fire: AutoExecute and queueonteleport both start the same script
 	-- within a couple of seconds of a server hop — neither is a manual open.
-	local auto = g.VoltMCP_AutoExec == true or g.cloudy.ggTeleportLoad == true
+	local auto = g.VoltMCP_AutoExec == true or g.cloudyTeleportLoad == true
 	-- a copy the site served carries the edition marker (set just above this file): it is the loader's
 	-- intended load and is never skipped as a hop double-fire — skipping it is how a Max licence that an
 	-- autoexec copy beat to the new server stayed Normal
-	local served = g.cloudy.ggEdition ~= nil
+	local served = g.cloudyEdition ~= nil
 	-- a bare copy started automatically (autoexec, the hop reload) for a user whose last load was Max hands
 	-- over to the site loader in hop mode (saved key, Max), so Max comes back as Max after a teleport or a
 	-- rejoin instead of a bare Normal copy taking its place. A manual inject is never redirected.
-	if auto and not served and type(g.cloudy.ggLicense) ~= "table" and not g.cloudy.ggMaxHandoff then
+	if auto and not served and type(g.cloudyLicense) ~= "table" and not g.cloudyMaxHandoff then
 		local isfileF, readfileF = waveGlobal("isfile"), waveGlobal("readfile")
 		local function read(p: string): string
 			local ok, v = pcall(function()
@@ -115,11 +469,11 @@ do
 			end)
 			return if ok and type(v) == "string" then (v:gsub("%s+", "")) else ""
 		end
-		if type(isfileF) == "function" and type(readfileF) == "function" and read("cloudy.gg/edition.txt"):lower() == "max" and #read("cloudy.gg/key.txt") >= 8 and read("cloudy.gg/unloaded") == "" then
-			g.cloudy.ggMaxHandoff = true
-			g.cloudy.ggHopLoad = true
-			g.cloudy.ggPreferredEdition = "max"
-			g.cloudy.ggTeleportLoad = nil
+		if type(isfileF) == "function" and type(readfileF) == "function" and read("cloudy/edition.txt"):lower() == "max" and #read("cloudy/key.txt") >= 8 and read("cloudy/unloaded") == "" then
+			g.cloudyMaxHandoff = true
+			g.cloudyHopLoad = true
+			g.cloudyPreferredEdition = "max"
+			g.cloudyTeleportLoad = nil
 			task.spawn(function()
 				local ok, src = pcall(function()
 					return game:HttpGet("https://cloudy.gg.xyz/api/loader?t=" .. tostring(os.time()))
@@ -129,7 +483,7 @@ do
 					pcall(fn)
 				end
 				task.delay(60, function()
-					g.cloudy.ggMaxHandoff = nil
+					g.cloudyMaxHandoff = nil
 				end)
 			end)
 			return
@@ -137,25 +491,25 @@ do
 	end
 	-- init can legitimately take a minute (module waits, data wait): a second automatic start
 	-- inside that window is the hop double-fire, not a new load
-	if g.cloudy.ggLoadingSince and os.clock() - g.cloudy.ggLoadingSince < 120 and auto and not g.cloudy.ggManualInject and not served then
-		warn("[cloudy.gg] another instance is loading right now — skipping this one")
+	if g.cloudyLoadingSince and os.clock() - g.cloudyLoadingSince < 120 and auto and not g.cloudyManualInject and not served then
+		warn("[cloudy] another instance is loading right now — skipping this one")
 		return
 	end
-	if g.cloudy.ggLoadedAt and os.clock() - g.cloudy.ggLoadedAt < 3 and auto and not g.cloudy.ggManualInject and not served then
-		warn(("[cloudy.gg] loaded %.1fs ago by the hop loader — skipping duplicate load"):format(os.clock() - g.cloudy.ggLoadedAt))
+	if g.cloudyLoadedAt and os.clock() - g.cloudyLoadedAt < 3 and auto and not g.cloudyManualInject and not served then
+		warn(("[cloudy] loaded %.1fs ago by the hop loader — skipping duplicate load"):format(os.clock() - g.cloudyLoadedAt))
 		return
 	end
-	g.cloudy.ggManualInject = nil
-	g.cloudy.ggTeleportLoad = nil
-	g.cloudy.ggLoadingSince = os.clock()
+	g.cloudyManualInject = nil
+	g.cloudyTeleportLoad = nil
+	g.cloudyLoadingSince = os.clock()
 	-- close the old one: its own unloader first, then anything it may have left behind
-	for _, key in ipairs({ "cloudy.ggUnload", "RivalsUnload" }) do
+	for _, key in ipairs({ "cloudyUnload", "RivalsUnload" }) do
 		if type(g[key]) == "function" then
 			pcall(g[key])
 		end
 	end
-	if type(g.VoltMCP_Unloaders) == "table" and type(g.VoltMCP_Unloaders.cloudy.gg) == "function" then
-		pcall(g.VoltMCP_Unloaders.cloudy.gg)
+	if type(g.VoltMCP_Unloaders) == "table" and type(g.VoltMCP_Unloaders.cloudy) == "function" then
+		pcall(g.VoltMCP_Unloaders.cloudy)
 	end
 	pcall(function()
 		local pg = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
@@ -180,18 +534,18 @@ do
 			end
 		end)
 		pcall(function()
-			game:GetService("ContextActionService"):UnbindAction("cloudy.ggMenu")
+			game:GetService("ContextActionService"):UnbindAction("cloudyMenu")
 		end)
-		local blur = game:GetService("Lighting"):FindFirstChild("cloudy.ggBlur")
+		local blur = game:GetService("Lighting"):FindFirstChild("cloudyBlur")
 		if blur then
 			blur:Destroy()
 		end
 		local rs = game:GetService("RunService")
-		for _, nm in ipairs({ "cloudy.gg_camPin", "cloudy.gg_thirdPerson", "cloudy.gg_bodyYaw", "cloudy.gg_aaBody" }) do
+		for _, nm in ipairs({ "cloudy_camPin", "cloudy_thirdPerson", "cloudy_bodyYaw", "cloudy_aaBody" }) do
 			pcall(rs.UnbindFromRenderStep, rs, nm)
 		end
 		local ws = game:GetService("Workspace")
-		for _, nm in ipairs({ "cloudy.ggSelfTest", "cloudy.ggT14Dummy", "cloudy.ggTestTargets", "cloudy.ggTestHitboxes" }) do
+		for _, nm in ipairs({ "cloudySelfTest", "cloudyT14Dummy", "cloudyTestTargets", "cloudyTestHitboxes" }) do
 			local leftover = ws:FindFirstChild(nm)
 			if leftover then
 				leftover:Destroy()
@@ -443,18 +797,18 @@ function EXEC.report(): { string }
 	return out
 end
 
--- everything cloudy.gg keeps on disk lives under one workspace folder
+-- everything cloudy keeps on disk lives under one workspace folder
 local DATA = {
-	dir = "cloudy.gg",
-	-- key = "cloudy.gg/key.txt", reserved for KeySlot (nothing reads or writes it yet)
-	configs = "cloudy.gg/configs",
-	state = "cloudy.gg/state.json",
-	log = "cloudy.gg/cloudy.gg.log",
-	shots = "cloudy.gg/shots.json",
-	decompiled = "cloudy.gg/decompiled",
-	intro = "cloudy.gg/intro.stamp",
-	unloaded = "cloudy.gg/unloaded",
-	cache = "cloudy.gg/cache.lua",
+	dir = "cloudy",
+	-- key = "cloudy/key.txt", reserved for KeySlot (nothing reads or writes it yet)
+	configs = "cloudy/configs",
+	state = "cloudy/state.json",
+	log = "cloudy/cloudy.log",
+	shots = "cloudy/shots.json",
+	decompiled = "cloudy/decompiled",
+	intro = "cloudy/intro.stamp",
+	unloaded = "cloudy/unloaded",
+	cache = "cloudy/cache.lua",
 }
 -- makefolder for every level of a path; safe to call on every write
 function EXEC.mkdirs(path: string)
@@ -487,12 +841,12 @@ local function traceback(err: any): string
 	return if ok and type(tb) == "string" then tb else tostring(err)
 end
 
--- structured log ring buffer shared with the F9 terminal and the MCP (getgenv().cloudy.ggLogs)
+-- structured log ring buffer shared with the F9 terminal and the MCP (getgenv().cloudyLogs)
 local LOG_MAX = 4000 -- one whole duel (shots, body hand-overs, skip reasons) fits in the ring
 local logBuffer: { any } = (function()
 	local env = genv()
-	env.cloudy.ggLogs = env.cloudy.ggLogs or {}
-	return env.cloudy.ggLogs
+	env.cloudyLogs = env.cloudyLogs or {}
+	return env.cloudyLogs
 end)()
 local logListeners: { (any) -> () } = {}
 local LOG_FILE = DATA.log
@@ -568,13 +922,13 @@ local function log(level: string, ...: any)
 	local entry = { t = os.clock(), level = level, text = text }
 	table.insert(logBuffer, entry)
 	trimRing(logBuffer, LOG_MAX)
-	local msg = ("[cloudy.gg][%s] %s"):format(level, text)
+	local msg = ("[cloudy][%s] %s"):format(level, text)
 	if level == "ERROR" or level == "WARN" then
 		warn(msg)
 	elseif level ~= "DEBUG" then
 		print(msg)
 	else
-		local st0 = genv().cloudy.ggState
+		local st0 = genv().cloudyState
 		if st0 and st0.cfg and st0.cfg.debugConsole then
 			print(msg)
 		end
@@ -582,7 +936,7 @@ local function log(level: string, ...: any)
 	for _, fn in ipairs(logListeners) do
 		pcall(fn, entry)
 	end
-	local st = genv().cloudy.ggState
+	local st = genv().cloudyState
 	local toFile = not (st and st.cfg and st.cfg.logToFile == false)
 	if toFile and type(EXEC.writefile) == "function" then
 		-- batched: file I/O never runs on the frame that produced the line (rapid fire logs a lot)
@@ -597,14 +951,14 @@ end
 
 -- toast when the HUD exists, Roblox notification otherwise
 local function notify(text: string, duration: number?, kind: string?)
-	local st = genv().cloudy.ggState
+	local st = genv().cloudyState
 	if st and type(st.toast) == "function" then
 		if pcall(st.toast, text, duration or 3, kind or "info") then
 			return
 		end
 	end
 	pcall(function()
-		game:GetService("StarterGui"):SetCore("SendNotification", { Title = "cloudy.gg", Text = text, Duration = duration or 4 })
+		game:GetService("StarterGui"):SetCore("SendNotification", { Title = "cloudy", Text = text, Duration = duration or 4 })
 	end)
 end
 
@@ -622,7 +976,7 @@ local function runStep(name: string, fn: () -> ())
 	local ok, err = xpcall(fn, traceback)
 	if not ok then
 		reportError(name, err)
-		error("[cloudy.gg] " .. name, 0)
+		error("[cloudy] " .. name, 0)
 	end
 	log("INFO", name, "ok")
 end
@@ -664,20 +1018,20 @@ end
 
 -- auto-reinject after a server hop: the new Lua state is empty and readfile is sandboxed, so
 -- the payload fetches fresh source from the VoltMCP daemon with readfile fallbacks.
--- Started by the cloudy.gg loader (genv().cloudy.ggLicense set) there is no daemon on the user's PC:
+-- Started by the cloudy.gg loader (genv().cloudyLicense set) there is no daemon on the user's PC:
 -- the add-on queues the site loader instead, so the daemon payload, offline cache fetch and update
 -- polls below are skipped (they only failed, and the localhost HttpGet could stall for a long time).
-if type(EXEC.queueonteleport) == "function" and not genv().cloudy.ggTeleportQueued and type(genv().cloudy.ggLicense) ~= "table" then
-	genv().cloudy.ggTeleportQueued = true
+if type(EXEC.queueonteleport) == "function" and not genv().cloudyTeleportQueued and type(genv().cloudyLicense) ~= "table" then
+	genv().cloudyTeleportQueued = true
 	pcall(EXEC.queueonteleport, [[
 		task.spawn(function()
 			repeat task.wait() until game:IsLoaded()
 			task.wait(4)
-			if getgenv().VoltMCP_AutoExec or getgenv().cloudy.ggUnload then return end
+			if getgenv().VoltMCP_AutoExec or getgenv().cloudyUnload then return end
 			-- the user unloaded on purpose: the marker survives the hop, genv does not
-			if isfile and isfile("cloudy.gg/unloaded") then return end
+			if isfile and isfile("cloudy/unloaded") then return end
 			local src
-			local url = "http://127.0.0.1:8866/lua/cloudy.gg"
+			local url = "http://127.0.0.1:8866/lua/cloudy"
 			local req = request or http_request or (syn and syn.request)
 			if req then
 				pcall(function() src = req({ Url = url, Method = "GET" }).Body end)
@@ -688,16 +1042,16 @@ if type(EXEC.queueonteleport) == "function" and not genv().cloudy.ggTeleportQueu
 			end
 			if type(src) ~= "string" or #src < 1000 then
 				src = nil
-				for _, p in ipairs({ "volt-mcp/cache/cloudy.gg.lua", "cloudy.gg/cache.lua" }) do
+				for _, p in ipairs({ "volt-mcp/cache/cloudy.lua", "cloudy/cache.lua" }) do
 					if isfile and isfile(p) then src = readfile(p) break end
 				end
 			end
 			if type(src) == "string" then
-				local f, err = loadstring(src, "cloudy.gg")
-				getgenv().cloudy.ggTeleportLoad = true
-				if f then f() else warn("[cloudy.gg] auto-reinject compile error: " .. tostring(err)) end
+				local f, err = loadstring(src, "cloudy")
+				getgenv().cloudyTeleportLoad = true
+				if f then f() else warn("[cloudy] auto-reinject compile error: " .. tostring(err)) end
 			else
-				warn("[cloudy.gg] auto-reinject: could not fetch source (is the VoltMCP daemon running?)")
+				warn("[cloudy] auto-reinject: could not fetch source (is the VoltMCP daemon running?)")
 			end
 		end)
 	]])
@@ -713,12 +1067,12 @@ if EXEC.writefile then
 		end
 	end)
 	task.spawn(function()
-		if type(genv().cloudy.ggLicense) == "table" then
+		if type(genv().cloudyLicense) == "table" then
 			return
 		end
 		pcall(function()
 			local src
-			local url = "http://127.0.0.1:8866/lua/cloudy.gg"
+			local url = "http://127.0.0.1:8866/lua/cloudy"
 			if type(EXEC.request) == "function" then
 				pcall(function()
 					local res = EXEC.request({ Url = url, Method = "GET" })
@@ -729,7 +1083,7 @@ if EXEC.writefile then
 				pcall(function() src = game:HttpGet(url .. "?t=" .. tostring(os.time())) end)
 			end
 			-- a truncated fetch (daemon restarting, half a file) must never replace a good offline copy
-			if type(src) == "string" and #src > 1000 and src:find("cloudy.ggInit", 1, true) and src:find("\nlocal VERSION", 1, true) then
+			if type(src) == "string" and #src > 1000 and src:find("cloudyInit", 1, true) and src:find("\nlocal VERSION", 1, true) then
 				EXEC.mkdirs(DATA.dir)
 				EXEC.writefile(DATA.cache, src)
 			end
@@ -845,9 +1199,9 @@ local DEFAULTS = {
 	leadMode = "Auto", -- Off | Auto | Manual
 	leadMs = 100, -- Manual mode
 	leadLearnedMs = -1, -- Auto: best arm so far (persisted; -1 = nothing learned yet)
-	shotsRecord = true, -- shot recorder: claim vs server result per shot (Debug → Shots, F9, cloudy.gg/shots.json)
+	shotsRecord = true, -- shot recorder: claim vs server result per shot (Debug → Shots, F9, cloudy/shots.json)
 	shotsLog = true, -- one SHOT line per shot in the F9 terminal
-	shotsExport = true, -- write cloudy.gg/shots.json every 10 shots / on round end
+	shotsExport = true, -- write cloudy/shots.json every 10 shots / on round end
 	-- unsafe mode (Volt RakNet — bannable by design)
 	unsafeMode = false,
 	unsafeAccepted = false, -- the "I accept bans" confirmation, must be true before anything below runs
@@ -1067,7 +1421,7 @@ local DEFAULTS = {
 	lowSpec = false, -- Weak PC mode: perf tier pinned at 2, no menu blur / intro, 12 bots max, situation at 10 Hz
 	introAnim = true, -- intro on the first inject (20 min stamp)
 	-- updates + game compatibility
-	autoUpdate = true, -- a newer cloudy.gg on the daemon reloads by itself while you are in the lobby (never mid-match)
+	autoUpdate = true, -- a newer cloudy on the daemon reloads by itself while you are in the lobby (never mid-match)
 	adaptToasts = true, -- toast once when a RIVALS update broke a contract this script relies on (always logged)
 	placeVersions = {}, -- per place id: the RIVALS build (game.PlaceVersion) the last load there verified against
 	-- anti-aim / hvh
@@ -1727,8 +2081,8 @@ local function readJsonFile(path: string): any
 	return nil
 end
 
--- Configs: named setting files, one JSON per config in cloudy.gg/configs. The live settings autosave to
--- cloudy.gg/state.json with the active config's name, so a reinject keeps every change; a config file
+-- Configs: named setting files, one JSON per config in cloudy/configs. The live settings autosave to
+-- cloudy/state.json with the active config's name, so a reinject keeps every change; a config file
 -- only changes when you save into it.
 local Configs = {
 	dir = DATA.configs, -- where config files live (a test points it at a temporary folder)
@@ -1952,11 +2306,11 @@ local cfg = (function()
 	Configs.legitForced = 0
 	return c
 end)()
-genv().cloudy.ggCfg = cfg
+genv().cloudyCfg = cfg
 
 -- first v6 start: v5 and older kept their data in the workspace root and WaveMCP/
 if Configs.firstRun and type(EXEC.isfile) == "function" and type(EXEC.delfile) == "function" then
-	for _, p in ipairs({ "cloudy.gg_cfg.json", "WaveMCP/cloudy.gg.log", "WaveMCP/shots.json", "WaveMCP/intro.stamp", "WaveMCP/autoload.json", "WaveMCP/cloudy.gg.lua", "WaveMCP/cloudy.gg_unloaded" }) do
+	for _, p in ipairs({ "cloudy_cfg.json", "WaveMCP/cloudy.log", "WaveMCP/shots.json", "WaveMCP/intro.stamp", "WaveMCP/autoload.json", "WaveMCP/cloudy.lua", "WaveMCP/cloudy_unloaded" }) do
 		pcall(function()
 			if EXEC.isfile(p) then
 				EXEC.delfile(p)
@@ -2041,7 +2395,7 @@ function Configs.patch(data: any)
 	if type(data) ~= "table" then
 		return
 	end
-	-- accept an export wrapper { cloudy.gg=, name=, cfg= } as well as a bare settings table
+	-- accept an export wrapper { cloudy=, name=, cfg= } as well as a bare settings table
 	local src = if type(data.cfg) == "table" then data.cfg else data
 	Configs.merge(src, cfg, true) -- known keys, right type, skips LOCAL and the ragePosition-off rule
 	sanitize(cfg)
@@ -2117,7 +2471,7 @@ function Configs.save(name: string?): (boolean, string)
 			end
 		end
 	end
-	local ok = Configs.write(nm, { cloudy.gg = VERSION, name = nm, created = prev and prev.created or os.time(), saved = os.time(), cfg = snap })
+	local ok = Configs.write(nm, { cloudy = VERSION, name = nm, created = prev and prev.created or os.time(), saved = os.time(), cfg = snap })
 	if not ok then
 		return false, "Could not write " .. Configs.path(nm)
 	end
@@ -2227,9 +2581,9 @@ function Configs.export(name: string?): boolean
 	local payload
 	if name and name ~= "" then
 		local data = Configs.read(name)
-		payload = data and { cloudy.gg = VERSION, name = name, cfg = data.cfg }
+		payload = data and { cloudy = VERSION, name = name, cfg = data.cfg }
 	else
-		payload = { cloudy.gg = VERSION, name = if Configs.active ~= "" then Configs.active else "Shared", cfg = Configs.snapshot() }
+		payload = { cloudy = VERSION, name = if Configs.active ~= "" then Configs.active else "Shared", cfg = Configs.snapshot() }
 	end
 	return payload ~= nil and pcall(EXEC.setclipboard, HttpService:JSONEncode(payload)) == true
 end
@@ -2244,14 +2598,14 @@ function Configs.import(): (boolean, string)
 	end
 	local ok2, data = pcall(HttpService.JSONDecode, HttpService, text)
 	if not ok2 or type(data) ~= "table" or type(data.cfg) ~= "table" then
-		return false, "The clipboard has no cloudy.gg config"
+		return false, "The clipboard has no cloudy config"
 	end
 	local nm = Configs.freeName(Configs.clean(data.name) or "Imported")
 	local clean = Configs.materialize(data.cfg)
 	for k in pairs(Configs.LOCAL) do
 		clean[k] = nil
 	end
-	if not Configs.write(nm, { cloudy.gg = VERSION, name = nm, created = os.time(), saved = os.time(), imported = true, cfg = clean }) then
+	if not Configs.write(nm, { cloudy = VERSION, name = nm, created = os.time(), saved = os.time(), imported = true, cfg = clean }) then
 		return false, "Could not write " .. Configs.path(nm)
 	end
 	return true, nm
@@ -2271,7 +2625,7 @@ do
 			for k, v in pairs(Configs.LEGIT) do
 				raw.cfg[k] = v
 			end
-			raw.saved, raw.cloudy.gg = os.time(), VERSION
+			raw.saved, raw.cloudy = os.time(), VERSION
 			if Configs.write("legit", raw) then
 				log("INFO", ("[legit:repaired] configs/legit.json had %d rage switch(es) on; rewritten with the legit profile"):format(drift))
 			end
@@ -2290,7 +2644,7 @@ end
 local HOOK_ABI = 3
 local S: any
 do
-	local prev = genv().cloudy.ggState
+	local prev = genv().cloudyState
 	if type(prev) == "table" and type(prev.hooks) == "table" and type(prev.hooks.installed) == "table" and (tonumber(prev.hooks.abi) or HOOK_ABI) == HOOK_ABI then
 		S = prev -- same generation: reuse so hooks installed earlier keep reading live state
 		-- one frame with the state dead: every extension loop of the copy before (the Max module, which only
@@ -2310,7 +2664,7 @@ do
 		end
 		S = {}
 	end
-	genv().cloudy.ggState = S
+	genv().cloudyState = S
 end
 S.version = VERSION
 S.publicVersion = PUBLIC_VERSION
@@ -2318,14 +2672,14 @@ S.publicVersion = PUBLIC_VERSION
 S.loadGen = (tonumber(S.loadGen) or 0) + 1
 -- the edition the site served this copy as (its marker line runs before this file). Max's own features live in
 -- the Max module (site/maxine.lua, appended only for Max licences); it plugs in through S.ext, rebuilt every load
-S.edition = if genv().cloudy.ggEdition == "max" then "max" else "normal"
+S.edition = if genv().cloudyEdition == "max" then "max" else "normal"
 -- served by the site this load (the marker line precedes every served copy, Normal or Max); a bare re-inject
--- over a licensed session has no marker but finds that session's cloudy.ggLicense still in getgenv
-S.served = genv().cloudy.ggEdition ~= nil
+-- over a licensed session has no marker but finds that session's cloudyLicense still in getgenv
+S.served = genv().cloudyEdition ~= nil
 -- the marker is consumed: left behind, any later copy without the Max module (a bare re-inject) still
 -- called itself MAX — blue, badge, "MAX" in the watermark — with no Max tab
 pcall(function()
-	genv().cloudy.ggEdition = nil
+	genv().cloudyEdition = nil
 end)
 -- the version the user reads (watermark, user card, intro, toasts): Max counts its own releases
 S.shownVersion = if S.edition == "max" then MAX_PUBLIC_VERSION else PUBLIC_VERSION
@@ -2359,7 +2713,7 @@ S.magicBlockedUntil = nil
 S.lastTeleportAt = nil
 S.oobSuppressed = 0
 pcall(function()
-	game:GetService("RunService"):UnbindFromRenderStep("cloudy.gg_camPin") -- a stale pin from the previous instance
+	game:GetService("RunService"):UnbindFromRenderStep("cloudy_camPin") -- a stale pin from the previous instance
 end)
 S.h = {} -- live hook logic, refreshed on every inject (hooks call S.h.<fn> at call time)
 S.hooks = S.hooks or { v = 0, installed = {} }
@@ -2450,11 +2804,11 @@ function KeySlot.allow(): boolean
 	return true
 end
 S.keySlot = KeySlot
-genv().cloudy.ggInit = function()
+genv().cloudyInit = function()
 	KeySlot.allow() -- asked once; the answer is not used yet
 	if game.GameId ~= RIVALS_GAME_ID then
-		log("WARN", "not RIVALS (GameId " .. tostring(game.GameId) .. ") — cloudy.gg not started")
-		notify("cloudy.gg: this isn't RIVALS, staying idle")
+		log("WARN", "not RIVALS (GameId " .. tostring(game.GameId) .. ") — cloudy not started")
+		notify("cloudy: this isn't RIVALS, staying idle")
 		return
 	end
 
@@ -2471,10 +2825,10 @@ genv().cloudy.ggInit = function()
 	-- inject generation: a newer inject bumps the shared counter, and this init aborts at its next
 	-- checkpoint instead of finishing a minute later on top of the new instance (the old double
 	-- inject left two render loops sharing one state)
-	Game.initGen = (tonumber(genv().cloudy.ggInitGen) or 0) + 1
-	genv().cloudy.ggInitGen = Game.initGen
+	Game.initGen = (tonumber(genv().cloudyInitGen) or 0) + 1
+	genv().cloudyInitGen = Game.initGen
 	function Game.superseded(): boolean
-		return genv().cloudy.ggInitGen ~= Game.initGen
+		return genv().cloudyInitGen ~= Game.initGen
 	end
 	function Game.checkpoint(where: string)
 		if Game.superseded() then
@@ -4192,7 +4546,7 @@ genv().cloudy.ggInit = function()
 	-- exists (remotes anywhere under Remotes, controllers by their fields, hitboxes by name pattern,
 	-- the game's own rotation encoder), (3) turns a broken contract into ONE disabled feature plus a
 	-- plain-words note instead of a dead script, (4) notices a new RIVALS build (game.PlaceVersion)
-	-- and re-verifies, and (5) asks the daemon for a newer cloudy.gg and reloads it in the lobby.
+	-- and re-verifies, and (5) asks the daemon for a newer cloudy and reloads it in the lobby.
 	-- Block-scoped like Bounds (200-register cap): S.adapt / Game.adapt.
 	-----------------------------------------------------------------------------
 	do
@@ -4596,7 +4950,7 @@ genv().cloudy.ggInit = function()
 		if last ~= pv then
 			if last > 0 then
 				log("WARN", ("adapt: RIVALS build changed %d → %d (place %s) — re-verifying every game contract"):format(last, pv, key))
-				notify(("RIVALS updated (build %d → %d) — cloudy.gg is re-checking the game"):format(last, pv), 6, "info")
+				notify(("RIVALS updated (build %d → %d) — cloudy is re-checking the game"):format(last, pv), 6, "info")
 				Adapt.buildChanged = true
 			end
 			S.cfg.placeVersions[key] = pv
@@ -4611,10 +4965,10 @@ genv().cloudy.ggInit = function()
 			Adapt.verify("periodic")
 		end
 	end
-	-- self-update: the daemon serves this machine's cloudy.gg.lua fresh from disk; a newer VERSION there
+	-- self-update: the daemon serves this machine's cloudy.lua fresh from disk; a newer VERSION there
 	-- reloads here — in the lobby only (a match reload would drop the lock mid-fight; the hop loader
 	-- fetches the newest source on the next server anyway). Yields: run from a task.
-	Adapt.UPDATE_URLS = { "http://127.0.0.1:8866/lua/cloudy.gg" }
+	Adapt.UPDATE_URLS = { "http://127.0.0.1:8866/lua/cloudy" }
 	function Adapt.versionNewer(a: string?, b: string?): boolean
 		if type(a) ~= "string" or type(b) ~= "string" then
 			return false
@@ -4648,7 +5002,7 @@ genv().cloudy.ggInit = function()
 					src = game:HttpGet(url .. "?t=" .. tostring(os.time()))
 				end)
 			end
-			if type(src) == "string" and #src > 1000 and src:find("cloudy.ggInit", 1, true) then
+			if type(src) == "string" and #src > 1000 and src:find("cloudyInit", 1, true) then
 				return src, src:match('\nlocal VERSION%s*=%s*"([%d%.]+)"')
 			end
 		end
@@ -4676,7 +5030,7 @@ genv().cloudy.ggInit = function()
 			Adapt.pendingSrc, Adapt.pendingVersion = src, v
 			if not Adapt.updateAnnounced or manual then
 				Adapt.updateAnnounced = true
-				notify(("cloudy.gg v%s is on the daemon (this is v%s) — %s"):format(v, VERSION, if S.cfg.autoUpdate then "it loads by itself in the lobby" else "Config → Updates → Reload the latest version"), 7, "info")
+				notify(("cloudy v%s is on the daemon (this is v%s) — %s"):format(v, VERSION, if S.cfg.autoUpdate then "it loads by itself in the lobby" else "Config → Updates → Reload the latest version"), 7, "info")
 			end
 		else
 			Adapt.pendingSrc, Adapt.pendingVersion = nil, nil
@@ -4691,14 +5045,14 @@ genv().cloudy.ggInit = function()
 		if type(src) ~= "string" then
 			return false
 		end
-		local f, err = loadstring(src, "cloudy.gg")
+		local f, err = loadstring(src, "cloudy")
 		if type(f) ~= "function" then
 			log("ERROR", "update: the fetched source does not compile: " .. tostring(err))
 			Adapt.pendingSrc = nil
 			return false
 		end
-		log("INFO", ("update: reloading cloudy.gg v%s over v%s"):format(tostring(Adapt.pendingVersion or "?"), VERSION))
-		genv().cloudy.ggManualInject = true
+		log("INFO", ("update: reloading cloudy v%s over v%s"):format(tostring(Adapt.pendingVersion or "?"), VERSION))
+		genv().cloudyManualInject = true
 		Adapt.pendingSrc = nil
 		task.spawn(f)
 		return true
@@ -4716,7 +5070,7 @@ genv().cloudy.ggInit = function()
 	end
 	-- the loop's slow lane (every ~5 s): version poll every 5 min, auto-apply in the lobby when idle
 	function Adapt.updateTick()
-		if type(genv().cloudy.ggLicense) == "table" then
+		if type(genv().cloudyLicense) == "table" then
 			return -- licensed build: updates arrive through the cloudy.gg site (add-on notice + re-run)
 		end
 		local now = os.clock()
@@ -4818,7 +5172,7 @@ genv().cloudy.ggInit = function()
 	-- Volumes are finite boxes: beside or below them nothing kills until FallenPartsDestroyHeight.
 	-- Every relocation asks Bounds before it rests anywhere; the HUD shows the budget countdown.
 	-----------------------------------------------------------------------------
-	-- block-scoped: cloudy.ggInit sits at the 200-register cap, so the table lives on S.bounds / Game.bounds
+	-- block-scoped: cloudyInit sits at the 200-register cap, so the table lives on S.bounds / Game.bounds
 	do
 	local Bounds: any = { parts = {}, safe = {}, at = 0, n = 0, WARN_DEFAULT = 1, KILL_DEFAULT = 4 }
 	S.bounds = Bounds
@@ -5433,7 +5787,7 @@ genv().cloudy.ggInit = function()
 		end
 		return not S.bounds.inGeometry(pos, 0.9) and not Safe.nearMine(pos)
 	end
-	-- a refusal worth remembering (Debug, cloudy.gg_state): why and how often, per reason — and one log
+	-- a refusal worth remembering (Debug, cloudy_state): why and how often, per reason — and one log
 	-- line per reason per second (grep [oob:refuse:)
 	Safe.noteAt = {}
 	function Safe.note(why: string?)
@@ -7182,7 +7536,7 @@ genv().cloudy.ggInit = function()
 
 	-- pin the *rendered* camera (Last+1 so nothing the game does later moves the view);
 	-- the gun and the replicated rotation keep reading CameraController, so this only affects what you see
-	local CAM_BIND = "cloudy.gg_camPin"
+	local CAM_BIND = "cloudy_camPin"
 	local camPinned = false
 	function Combat.pinCamera(on: boolean)
 		if on == camPinned then
@@ -7335,7 +7689,7 @@ genv().cloudy.ggInit = function()
 			if not (bv and bv.Parent == root) then
 				Noclip.floatStop()
 				bv = Instance.new("BodyVelocity")
-				bv.Name = "cloudy.ggFloat"
+				bv.Name = "cloudyFloat"
 				bv.MaxForce = Vector3.new(1e9, 1e9, 1e9)
 				bv.P = 1e4
 				bv.Parent = root
@@ -7377,7 +7731,7 @@ genv().cloudy.ggInit = function()
 	-- third person (CS2 style): our own over-the-shoulder camera bound right after the game's camera
 	-- step. Aim, shots and replication keep using CameraController (first-person maths) — only the
 	-- rendered view moves. Body parts are un-hidden, the viewmodel hidden, both restored on exit.
-	local TP_BIND = "cloudy.gg_thirdPerson"
+	local TP_BIND = "cloudy_thirdPerson"
 	local tpBound = false
 	local tpParams = RaycastParams.new()
 	tpParams.FilterType = Enum.RaycastFilterType.Exclude
@@ -8983,7 +9337,7 @@ genv().cloudy.ggInit = function()
 		local p = Combat.pad
 		if not (p and p.Parent) then
 			p = Instance.new("Part")
-			p.Name = "cloudy.ggVoidPad"
+			p.Name = "cloudyVoidPad"
 			p.Anchored = true
 			p.CanCollide = true
 			p.CanTouch = false
@@ -15916,7 +16270,7 @@ genv().cloudy.ggInit = function()
 	-----------------------------------------------------------------------------
 	-- §7b shots — the recorder. One record per shot we replicate: what we claimed (camera data)
 	-- and what the server answered (ShootEffect). Verdicts feed the F9 terminal, Debug → Shots,
-	-- cloudy.gg/shots.json and the backtrack estimator.
+	-- cloudy/shots.json and the backtrack estimator.
 	-----------------------------------------------------------------------------
 	local Shots: any = { list = {}, pending = {}, n = 0, max = 60, stats = { hit = 0, near = 0, wall = 0, air = 0, noReply = 0, unaimed = 0, immune = 0 } }
 	S.shots = Shots
@@ -16452,7 +16806,7 @@ genv().cloudy.ggInit = function()
 					Net.sendFail += 1
 					task.defer(log, "WARN", "net: raknet.send failed:", errS)
 					if Net.sendFail >= 3 then
-						local live = genv().cloudy.ggState
+						local live = genv().cloudyState
 						if live and live.cfg then
 							live.cfg.unsafePingBoost = false
 						end
@@ -16467,14 +16821,14 @@ genv().cloudy.ggInit = function()
 			return
 		end
 		local g = genv()
-		if type(g.cloudy.ggNetHook) == "function" then
+		if type(g.cloudyNetHook) == "function" then
 			-- two live hooks would Block() the same packet and each re-send it: refuse to stack
-			local okR = pcall(EXEC.raknet.remove_send_hook, g.cloudy.ggNetHook)
+			local okR = pcall(EXEC.raknet.remove_send_hook, g.cloudyNetHook)
 			if not okR then
 				log("WARN", "net: could not remove the previous send hook — not installing a second one")
 				return
 			end
-			g.cloudy.ggNetHook = nil
+			g.cloudyNetHook = nil
 		end
 		local fn = function(packet)
 			local ok, err = pcall(Net.onPacket, packet)
@@ -16487,7 +16841,7 @@ genv().cloudy.ggInit = function()
 		end
 		local ok, err = pcall(EXEC.raknet.add_send_hook, fn)
 		if ok then
-			g.cloudy.ggNetHook = fn
+			g.cloudyNetHook = fn
 			Net.installed = true
 			log("INFO", "net: RakNet send hook installed (unsafe mode " .. (if cfg.unsafeMode then "ON" else "off") .. ")")
 		else
@@ -16496,10 +16850,10 @@ genv().cloudy.ggInit = function()
 	end
 	function Net.uninstall()
 		local g = genv()
-		if type(g.cloudy.ggNetHook) == "function" and Net.available then
-			pcall(EXEC.raknet.remove_send_hook, g.cloudy.ggNetHook)
+		if type(g.cloudyNetHook) == "function" and Net.available then
+			pcall(EXEC.raknet.remove_send_hook, g.cloudyNetHook)
 		end
-		g.cloudy.ggNetHook = nil
+		g.cloudyNetHook = nil
 		Net.installed = false
 	end
 	-- once a second: packet rates, physics id election
@@ -17546,13 +17900,13 @@ genv().cloudy.ggInit = function()
 		end
 		return name
 	end
-	-- v6.4 what another cloudy.gg user equipped (the add-on pulls everyone's into cloudy.ggSharedSkins, keyed by
+	-- v6.4 what another cloudy.gg user equipped (the add-on pulls everyone's into cloudySharedSkins, keyed by
 	-- user id and lower-case name): the game then builds THEIR viewmodel with the skin and paints their
 	-- wrap itself — lobby, duels, every mode — instead of a clone laid over the model
 	h.sharedEquip = function(item: any): any
 		local cf2 = type(item) == "table" and item.ClientFighter
 		local plr = type(cf2) == "table" and cf2.Player
-		local shared = genv().cloudy.ggSharedSkins
+		local shared = genv().cloudySharedSkins
 		if typeof(plr) ~= "Instance" or type(shared) ~= "table" or type(item.Name) ~= "string" then
 			return nil
 		end
@@ -17710,7 +18064,7 @@ genv().cloudy.ggInit = function()
 				h.learnShotCaller()
 			end
 		end
-		-- one-time shape capture of the no-arg return (key / value types) for Debug / cloudy.gg_state
+		-- one-time shape capture of the no-arg return (key / value types) for Debug / cloudy_state
 		if isShot and S.cdDbg and not S.cdDbg.shape and st.debugConsole then
 			local shape = {}
 			for k, v in pairs(t) do
@@ -17975,7 +18329,7 @@ genv().cloudy.ggInit = function()
 		end
 		-- deferred: the bridge's print sends over a socket (a method call) and we are still inside the
 		-- namecall hook with oldNc pending
-		task.defer(print, ("[cloudy.gg][spy] %s:%s(%s)"):format(self.Name, method, table.concat(parts, ", ")))
+		task.defer(print, ("[cloudy][spy] %s:%s(%s)"):format(self.Name, method, table.concat(parts, ", ")))
 	end
 	-- cosmetics logic is filled in by §10 (h.fakeInventory, h.isCosKey, h.unlockable, h.applyLocalEquip, h.weaponData)
 
@@ -18183,7 +18537,7 @@ genv().cloudy.ggInit = function()
 				local t = rets[1]
 				local fn = S.h.cameraData
 				-- diagnostics: count every call, 0-arg calls, and local-player 0-arg calls, so an empty
-				-- recorder can be traced to which filter dropped the shot (Debug → Live / cloudy.gg_state)
+				-- recorder can be traced to which filter dropped the shot (Debug → Live / cloudy_state)
 				local d = S.cdDbg
 				if d then
 					d.calls += 1
@@ -18513,12 +18867,12 @@ genv().cloudy.ggInit = function()
 				oldCreate = hook(createVm, function(self, serial, ...)
 					if S.alive and type(self) == "table" and type(serial) == "table" then
 						local cf2 = self.ClientFighter
-						if type(cf2) == "table" and cf2.IsLocalPlayer == true and not rawget(self, "_cloudy.ggRebuild") then
+						if type(cf2) == "table" and cf2.IsLocalPlayer == true and not rawget(self, "_cloudyRebuild") then
 							-- remember the server's serial (the rebuild path passes its own copy); the clone
 							-- helper is read from the live state, never a per-inject upvalue
 							local clone = S.deepClone
 							if clone then
-								pcall(rawset, self, "_cloudy.ggVmSerial", clone(serial))
+								pcall(rawset, self, "_cloudyVmSerial", clone(serial))
 							end
 						end
 						local skin = skinFor(self)
@@ -18566,7 +18920,7 @@ genv().cloudy.ggInit = function()
 	end
 
 	-- repair dead layers: a function marked as hooked (S.hookedFns) whose detour belongs to an abandoned
-	-- state (a test nil-ed cloudy.ggState, a build before 6.6.2 skipped every foreign detour) never answers
+	-- state (a test nil-ed cloudyState, a build before 6.6.2 skipped every foreign detour) never answers
 	-- and hook() refuses to stack on it. Restore the game's function, forget the mark, install again.
 	-- Restoring one of our own live detours is harmless (the new one reads the same S.h).
 	function Hooks.rearm(fn: any)
@@ -19147,7 +19501,7 @@ genv().cloudy.ggInit = function()
 
 	function Hooks.install()
 		if not EXEC.hookfunction then
-			log(".")
+			log("WARN", "hooks: hookfunction unavailable — silent/skins disabled")
 			return
 		end
 		local function attempt(name: string, fn: () -> ())
@@ -19289,7 +19643,7 @@ genv().cloudy.ggInit = function()
 			return g
 		end
 		g = Instance.new("ScreenGui")
-		g.Name = "cloudy.ggESP"
+		g.Name = "cloudyESP"
 		g.IgnoreGuiInset = true
 		g.ResetOnSpawn = false
 		g.DisplayOrder = 500
@@ -19650,7 +20004,7 @@ genv().cloudy.ggInit = function()
 		end
 		table.clear(highlights)
 		for _, plr in ipairs(Players:GetPlayers()) do
-			local hl = plr.Character and plr.Character:FindFirstChild("cloudy.ggHL")
+			local hl = plr.Character and plr.Character:FindFirstChild("cloudyHL")
 			if hl then
 				pcall(hl.Destroy, hl)
 			end
@@ -19697,7 +20051,7 @@ genv().cloudy.ggInit = function()
 				local hl = highlights[model]
 				if not hl or hl.Parent == nil then
 					hl = Instance.new("Highlight")
-					hl.Name = "cloudy.ggHL"
+					hl.Name = "cloudyHL"
 					hl.Adornee = model
 					hl.Parent = model
 					highlights[model] = hl
@@ -21171,10 +21525,10 @@ genv().cloudy.ggInit = function()
 		local atm = Lighting:FindFirstChildOfClass("Atmosphere")
 		if cfg.worldAtmos or cfg.skyColorOn then
 			if not atm then
-				atm = Vis.fxGet("Atmosphere", "cloudy.ggAtmosphere")
+				atm = Vis.fxGet("Atmosphere", "cloudyAtmosphere")
 			end
-		elseif Vis.fxInst.cloudy.ggAtmosphere then
-			Vis.fxDrop("cloudy.ggAtmosphere")
+		elseif Vis.fxInst.cloudyAtmosphere then
+			Vis.fxDrop("cloudyAtmosphere")
 			atm = Lighting:FindFirstChildOfClass("Atmosphere")
 		end
 		if cfg.noFog and not cfg.worldAtmos then
@@ -21205,17 +21559,17 @@ genv().cloudy.ggInit = function()
 			end
 		end
 		if cfg.worldStars then
-			local sky = Lighting:FindFirstChildOfClass("Sky") or Vis.fxGet("Sky", "cloudy.ggSky")
+			local sky = Lighting:FindFirstChildOfClass("Sky") or Vis.fxGet("Sky", "cloudySky")
 			take(sky, "StarCount", 3000)
 			take(sky, "CelestialBodiesShown", true)
-		elseif Vis.fxInst.cloudy.ggSky then
-			Vis.fxDrop("cloudy.ggSky")
+		elseif Vis.fxInst.cloudySky then
+			Vis.fxDrop("cloudySky")
 		end
 	end
 	function Vis.worldRestore()
 		Vis.wRelease(true)
-		Vis.fxDrop("cloudy.ggAtmosphere")
-		Vis.fxDrop("cloudy.ggSky")
+		Vis.fxDrop("cloudyAtmosphere")
+		Vis.fxDrop("cloudySky")
 		if Vis.worldActive then
 			log("INFO", "world: lighting restored")
 		end
@@ -21266,7 +21620,7 @@ genv().cloudy.ggInit = function()
 	S.worldRestore = Vis.worldRestore
 	S.worldApply = Vis.worldApply
 
-	-- post effects: the game's blur / color correction / bloom / sun rays / DoF (never our cloudy.ggBlur).
+	-- post effects: the game's blur / color correction / bloom / sun rays / DoF (never our cloudyBlur).
 	-- Enabled state is remembered per effect and put back on toggle-off / unload.
 	local postOrig: { [Instance]: boolean } = {}
 	local POST_CLASSES = { BlurEffect = true, ColorCorrectionEffect = true, BloomEffect = true, SunRaysEffect = true, DepthOfFieldEffect = true }
@@ -21293,7 +21647,7 @@ genv().cloudy.ggInit = function()
 			return
 		end
 		for _, fx in ipairs(Lighting:GetChildren()) do
-			if POST_CLASSES[fx.ClassName] and fx.Name:sub(1, 7) ~= "cloudy.gg" then
+			if POST_CLASSES[fx.ClassName] and fx.Name:sub(1, 7) ~= "cloudy" then
 				local e = fx :: any
 				local kill = killAll or (killCc and fx:IsA("ColorCorrectionEffect"))
 				if kill then
@@ -21342,10 +21696,10 @@ genv().cloudy.ggInit = function()
 			end
 		end
 		table.clear(Vis.texOrig)
-		Vis.fxDrop("cloudy.ggMotionBlur")
-		local sky = Vis.fxInst.cloudy.ggSky
+		Vis.fxDrop("cloudyMotionBlur")
+		local sky = Vis.fxInst.cloudySky
 		if sky and cfg.skyboxPreset == "Off" then
-			Vis.fxDrop("cloudy.ggSky")
+			Vis.fxDrop("cloudySky")
 		end
 	end
 	function Vis.textureScan()
@@ -21405,7 +21759,7 @@ genv().cloudy.ggInit = function()
 		if not cfg.worldMotionBlur or cfg.lowSpec then
 			Vis.motionLast = nil
 			Vis.motionBlurSize = 0
-			Vis.fxDrop("cloudy.ggMotionBlur")
+			Vis.fxDrop("cloudyMotionBlur")
 			return
 		end
 		local cam = workspace.CurrentCamera
@@ -21425,13 +21779,13 @@ genv().cloudy.ggInit = function()
 		if Vis.motionBlurSize < 0.05 then
 			-- camera stopped: disable the effect, don't destroy it — recreating a BlurEffect on every
 			-- stop/start was needless instance churn
-			local blur = Vis.fxInst and Vis.fxInst.cloudy.ggMotionBlur
+			local blur = Vis.fxInst and Vis.fxInst.cloudyMotionBlur
 			if blur then
 				Vis.fxSet(blur, "Enabled", false)
 			end
 			return
 		end
-		local blur = Vis.fxGet("BlurEffect", "cloudy.ggMotionBlur")
+		local blur = Vis.fxGet("BlurEffect", "cloudyMotionBlur")
 		Vis.fxSet(blur, "Enabled", true)
 		Vis.fxSet(blur, "Size", Vis.motionBlurSize)
 	end
@@ -21441,14 +21795,14 @@ genv().cloudy.ggInit = function()
 			if cfg.worldStars or cfg.skyColorOn then
 				return
 			end
-			Vis.fxDrop("cloudy.ggSky")
+			Vis.fxDrop("cloudySky")
 			return
 		end
 		local ids = SKY_PRESETS[preset]
 		if not ids then
 			return
 		end
-		local sky = Vis.fxGet("Sky", "cloudy.ggSky")
+		local sky = Vis.fxGet("Sky", "cloudySky")
 		local keys = { "SkyboxBk", "SkyboxDn", "SkyboxFt", "SkyboxLf", "SkyboxRt", "SkyboxUp" }
 		for i, k in ipairs(keys) do
 			Vis.fxSet(sky, k, ids[i])
@@ -21470,7 +21824,7 @@ genv().cloudy.ggInit = function()
 	---------------------------------------------------------------------------
 	-- world effects (v5.3): our own grading / bloom / sun rays / depth of field, weather, bullet
 	-- tracers, damage numbers, kill effects and the viewmodel / self chams. All local; every instance
-	-- is named cloudy.gg* ("Remove the game's effects" leaves them alone) and goes away with its switch
+	-- is named cloudy* ("Remove the game's effects" leaves them alone) and goes away with its switch
 	-- and on unload.
 	---------------------------------------------------------------------------
 	Vis.fxInst = {}
@@ -21522,7 +21876,7 @@ genv().cloudy.ggInit = function()
 		if not cam then
 			return nil
 		end
-		local h = Vis.fxInst.cloudy.ggFx
+		local h = Vis.fxInst.cloudyFx
 		if h and h.Parent == cam then
 			return h
 		end
@@ -21530,7 +21884,7 @@ genv().cloudy.ggInit = function()
 			pcall(h.Destroy, h)
 		end
 		local p = Instance.new("Part")
-		p.Name = "cloudy.ggFx"
+		p.Name = "cloudyFx"
 		p.Anchored = true
 		p.CanCollide = false
 		p.CanQuery = false
@@ -21540,7 +21894,7 @@ genv().cloudy.ggInit = function()
 		p.Size = Vector3.new(0.2, 0.2, 0.2)
 		p.CFrame = CFrame.new()
 		p.Parent = cam
-		Vis.fxInst.cloudy.ggFx = p
+		Vis.fxInst.cloudyFx = p
 		return p
 	end
 
@@ -21548,10 +21902,10 @@ genv().cloudy.ggInit = function()
 	-- setting, a new effect grows in from its neutral values and a switched-off one fades back to them
 	-- before it goes. Returns true once the value has arrived.
 	Vis.FX_NEUTRAL = {
-		cloudy.ggGrade = { Brightness = 0, Contrast = 0, Saturation = 0, TintColor = Color3.new(1, 1, 1) },
-		cloudy.ggBloom = { Intensity = 0 },
-		cloudy.ggRays = { Intensity = 0 },
-		cloudy.ggDof = { FarIntensity = 0, NearIntensity = 0 },
+		cloudyGrade = { Brightness = 0, Contrast = 0, Saturation = 0, TintColor = Color3.new(1, 1, 1) },
+		cloudyBloom = { Intensity = 0 },
+		cloudyRays = { Intensity = 0 },
+		cloudyDof = { FarIntensity = 0, NearIntensity = 0 },
 	}
 	Vis.fxAlpha = 1
 	function Vis.fxEase(inst: any, prop: string, v: any, neutral: any?): boolean
@@ -21604,16 +21958,16 @@ genv().cloudy.ggInit = function()
 		local P = Vis.fxProps
 		local g = P.grade
 		g.Brightness, g.Contrast, g.Saturation, g.TintColor = cfg.gradeBrightness, cfg.gradeContrast, cfg.gradeSaturation, rgb(cfg.gradeTint)
-		Vis.fxRun(cfg.worldGrade == true, "ColorCorrectionEffect", "cloudy.ggGrade", g)
+		Vis.fxRun(cfg.worldGrade == true, "ColorCorrectionEffect", "cloudyGrade", g)
 		local b = P.bloom
 		b.Intensity, b.Size, b.Threshold = cfg.bloomIntensity, cfg.bloomSize, cfg.bloomThreshold
-		Vis.fxRun(cfg.worldBloom == true, "BloomEffect", "cloudy.ggBloom", b)
+		Vis.fxRun(cfg.worldBloom == true, "BloomEffect", "cloudyBloom", b)
 		local r = P.rays
 		r.Intensity, r.Spread = cfg.sunRaysIntensity, cfg.sunRaysSpread
-		Vis.fxRun(cfg.worldSunRays == true, "SunRaysEffect", "cloudy.ggRays", r)
+		Vis.fxRun(cfg.worldSunRays == true, "SunRaysEffect", "cloudyRays", r)
 		local d = P.dof
 		d.FocusDistance, d.InFocusRadius, d.FarIntensity, d.NearIntensity = cfg.dofFocus, math.clamp(cfg.dofFocus * 0.5, 5, 50), cfg.dofBlur, 0
-		Vis.fxRun(cfg.worldDof == true, "DepthOfFieldEffect", "cloudy.ggDof", d)
+		Vis.fxRun(cfg.worldDof == true, "DepthOfFieldEffect", "cloudyDof", d)
 	end
 
 	-- weather: one particle emitter on an invisible box that follows the camera. Motion comes from
@@ -21634,15 +21988,15 @@ genv().cloudy.ggInit = function()
 		if not (w and cam) then
 			if Vis.weatherKind then
 				Vis.weatherKind = nil
-				Vis.fxDrop("cloudy.ggWeather")
+				Vis.fxDrop("cloudyWeather")
 			end
 			return
 		end
-		local part = Vis.fxInst.cloudy.ggWeather
+		local part = Vis.fxInst.cloudyWeather
 		if not (part and part.Parent == cam) or Vis.weatherKind ~= kind then
-			Vis.fxDrop("cloudy.ggWeather")
+			Vis.fxDrop("cloudyWeather")
 			part = Instance.new("Part")
-			part.Name = "cloudy.ggWeather"
+			part.Name = "cloudyWeather"
 			part.Anchored = true
 			part.CanCollide = false
 			part.CanQuery = false
@@ -21651,7 +22005,7 @@ genv().cloudy.ggInit = function()
 			part.Transparency = 1
 			part.Size = w.box
 			local pe = Instance.new("ParticleEmitter")
-			pe.Name = "cloudy.ggWeatherFx"
+			pe.Name = "cloudyWeatherFx"
 			pe.Texture = Vis.dotTexture()
 			pe.Shape = Enum.ParticleEmitterShape.Box
 			pe.ShapeStyle = Enum.ParticleEmitterShapeStyle.Volume
@@ -21674,10 +22028,10 @@ genv().cloudy.ggInit = function()
 			end
 			pe.Parent = part
 			part.Parent = cam
-			Vis.fxInst.cloudy.ggWeather = part
+			Vis.fxInst.cloudyWeather = part
 			Vis.weatherKind = kind
 		end
-		local pe = part:FindFirstChild("cloudy.ggWeatherFx")
+		local pe = part:FindFirstChild("cloudyWeatherFx")
 		if pe then
 			Vis.fxSet(pe, "Rate", w.rate * cfg.weatherDensity * (if cfg.lowSpec then 0.5 else 1))
 		end
@@ -21689,14 +22043,14 @@ genv().cloudy.ggInit = function()
 	Vis.shotQueue, Vis.tracers = {}, {}
 	function Vis.tracerNew(holder: BasePart): any
 		local a0 = Instance.new("Attachment")
-		a0.Name = "cloudy.ggTracer"
+		a0.Name = "cloudyTracer"
 		a0.Parent = holder
 		local a1 = Instance.new("Attachment")
-		a1.Name = "cloudy.ggTracer"
+		a1.Name = "cloudyTracer"
 		a1.Parent = holder
 		local function beam(width: number): Beam
 			local b = Instance.new("Beam")
-			b.Name = "cloudy.ggTracer"
+			b.Name = "cloudyTracer"
 			b.Attachment0 = a0
 			b.Attachment1 = a1
 			b.FaceCamera = true
@@ -21822,10 +22176,10 @@ genv().cloudy.ggInit = function()
 			end
 			if not h and #Vis.hitNums < 12 then
 				local a = Instance.new("Attachment")
-				a.Name = "cloudy.ggHitNum"
+				a.Name = "cloudyHitNum"
 				a.Parent = holder
 				local bb = Instance.new("BillboardGui")
-				bb.Name = "cloudy.ggHitNum"
+				bb.Name = "cloudyHitNum"
 				bb.AlwaysOnTop = true
 				bb.LightInfluence = 0
 				bb.Size = UDim2.fromOffset(90, 34)
@@ -21891,10 +22245,10 @@ genv().cloudy.ggInit = function()
 		local e = Vis.bloodPool[Vis.bloodIdx]
 		if not (e and e.a.Parent == holder) then
 			local a = Instance.new("Attachment")
-			a.Name = "cloudy.ggBlood"
+			a.Name = "cloudyBlood"
 			a.Parent = holder
 			local pe = Instance.new("ParticleEmitter")
-			pe.Name = "cloudy.ggBlood"
+			pe.Name = "cloudyBlood"
 			pe.Texture = Vis.dotTexture()
 			pe.Enabled = false
 			pe.Lifetime = NumberRange.new(0.35, 0.7)
@@ -21944,7 +22298,7 @@ genv().cloudy.ggInit = function()
 				local pos = table.remove(q, 1)
 				if holder and kind == "Ring" then
 					local ring = Instance.new("Part")
-					ring.Name = "cloudy.ggKillFx"
+					ring.Name = "cloudyKillFx"
 					ring.Shape = Enum.PartType.Cylinder
 					ring.Material = Enum.Material.Neon
 					ring.Color = Vis.accent()
@@ -21962,11 +22316,11 @@ genv().cloudy.ggInit = function()
 					Vis.bloodAt(pos, 50)
 				elseif holder and kind == "Burst" then
 					local a = Instance.new("Attachment")
-					a.Name = "cloudy.ggKillFx"
+					a.Name = "cloudyKillFx"
 					a.Position = pos
 					a.Parent = holder
 					local pe = Instance.new("ParticleEmitter")
-					pe.Name = "cloudy.ggKillFx"
+					pe.Name = "cloudyKillFx"
 					pe.Texture = Vis.dotTexture()
 					pe.Enabled = false
 					pe.Lifetime = NumberRange.new(0.4, 0.8)
@@ -22171,7 +22525,7 @@ genv().cloudy.ggInit = function()
 				pcall(hl.Destroy, hl)
 			end
 			hl = Instance.new("Highlight")
-			hl.Name = "cloudy.ggSelfGlow"
+			hl.Name = "cloudySelfGlow"
 			hl.FillTransparency = 1
 			hl.DepthMode = Enum.HighlightDepthMode.Occluded
 			hl.Adornee = model
@@ -22191,7 +22545,7 @@ genv().cloudy.ggInit = function()
 		return cfg.nightMode == true and cfg.nightHands ~= false and not cfg.fullbright and not cfg.hideViewmodel and S.tpActive ~= true
 	end
 	function Vis.handsOff()
-		Vis.fxDrop("cloudy.ggHandsLight")
+		Vis.fxDrop("cloudyHandsLight")
 		for m, hl in pairs(Vis.handsGlow) do
 			pcall(hl.Destroy, hl)
 			Vis.handsGlow[m] = nil
@@ -22213,7 +22567,7 @@ genv().cloudy.ggInit = function()
 		Vis.handsLit = true
 		local g = math.clamp((tonumber(cfg.nightHandsGlow) or 60) / 100, 0, 1)
 		local accent = Vis.accent()
-		local att = Vis.fxGet("Attachment", "cloudy.ggHandsLight", holder)
+		local att = Vis.fxGet("Attachment", "cloudyHandsLight", holder)
 		local light = att:FindFirstChildOfClass("SpotLight")
 		if not light then
 			light = Instance.new("SpotLight")
@@ -22237,7 +22591,7 @@ genv().cloudy.ggInit = function()
 					local hl = Vis.handsGlow[m]
 					if not (hl and hl.Parent == m) then
 						hl = Instance.new("Highlight")
-						hl.Name = "cloudy.ggHandsGlow"
+						hl.Name = "cloudyHandsGlow"
 						hl.DepthMode = Enum.HighlightDepthMode.Occluded
 						hl.Adornee = m
 						hl.Parent = m
@@ -22599,7 +22953,7 @@ genv().cloudy.ggInit = function()
 		if type(item) ~= "table" then
 			return nil
 		end
-		local s = rawget(item, "_cloudy.ggVmSerial")
+		local s = rawget(item, "_cloudyVmSerial")
 		if type(s) == "table" then
 			return s
 		end
@@ -22609,7 +22963,7 @@ genv().cloudy.ggInit = function()
 		local key = Skins.dataKey()
 		if type(data) == "table" and key then
 			s = { [key] = deepClone(data) }
-			rawset(item, "_cloudy.ggVmSerial", s)
+			rawset(item, "_cloudyVmSerial", s)
 			return s
 		end
 		return nil
@@ -22706,9 +23060,9 @@ genv().cloudy.ggInit = function()
 		local wasAiming = select(2, pcall(function()
 			return item:Get("IsAiming") == true
 		end)) == true
-		rawset(item, "_cloudy.ggRebuild", true)
+		rawset(item, "_cloudyRebuild", true)
 		local ok, vm = Game.asGame(item._CreateViewModel, item, deepClone(serial))
-		rawset(item, "_cloudy.ggRebuild", nil)
+		rawset(item, "_cloudyRebuild", nil)
 		if not ok or type(vm) ~= "table" then
 			return false, "constructor failed: " .. tostring(vm):sub(1, 80)
 		end
@@ -23235,7 +23589,7 @@ genv().cloudy.ggInit = function()
 	end
 
 	-- fonts / icon font ----------------------------------------------------------------------------
-	UI.ASSET_DIR = "cloudy.gg/fonts"
+	UI.ASSET_DIR = "cloudy/fonts"
 	UI.BARLOW = "https://raw.githubusercontent.com/google/fonts/main/ofl/barlow/"
 	UI.FONT_FACES = {
 		{ file = "Barlow-Regular.ttf", weight = 400, name = "Regular" },
@@ -23268,7 +23622,7 @@ genv().cloudy.ggInit = function()
 			return false
 		end
 		pcall(function()
-			for _, dir in ipairs({ "cloudy.gg", UI.ASSET_DIR }) do
+			for _, dir in ipairs({ "cloudy", UI.ASSET_DIR }) do
 				if not (EXEC.isfolder and EXEC.isfolder(dir)) and EXEC.makefolder then
 					EXEC.makefolder(dir)
 				end
@@ -23293,8 +23647,8 @@ genv().cloudy.ggInit = function()
 					error("missing " .. f.file)
 				end
 			end
-			EXEC.writefile(UI.assetPath("cloudy.ggBarlow.json"), HttpService:JSONEncode({ name = "cloudy.ggBarlow", faces = faces }))
-			local fam = EXEC.getcustomasset(UI.assetPath("cloudy.ggBarlow.json"))
+			EXEC.writefile(UI.assetPath("cloudyBarlow.json"), HttpService:JSONEncode({ name = "cloudyBarlow", faces = faces }))
+			local fam = EXEC.getcustomasset(UI.assetPath("cloudyBarlow.json"))
 			local heavy = if extra then Enum.FontWeight.ExtraBold else Enum.FontWeight.Bold
 			UI.F.body = Font.new(fam, Enum.FontWeight.Bold)
 			UI.F.medium = Font.new(fam, Enum.FontWeight.Bold)
@@ -23303,8 +23657,8 @@ genv().cloudy.ggInit = function()
 			UI.F.black = Font.new(fam, heavy)
 			UI.fontFamily = fam
 			if UI.haveAsset(UI.ICON_FONT.file) then
-				EXEC.writefile(UI.assetPath("cloudy.ggIcons.json"), HttpService:JSONEncode({ name = "cloudy.ggIcons", faces = { { name = "Regular", weight = 400, style = "normal", assetId = EXEC.getcustomasset(UI.assetPath(UI.ICON_FONT.file)) } } }))
-				UI.F.icon = Font.new(EXEC.getcustomasset(UI.assetPath("cloudy.ggIcons.json")))
+				EXEC.writefile(UI.assetPath("cloudyIcons.json"), HttpService:JSONEncode({ name = "cloudyIcons", faces = { { name = "Regular", weight = 400, style = "normal", assetId = EXEC.getcustomasset(UI.assetPath(UI.ICON_FONT.file)) } } }))
+				UI.F.icon = Font.new(EXEC.getcustomasset(UI.assetPath("cloudyIcons.json")))
 			end
 		end)
 		if not ok then
@@ -23663,7 +24017,7 @@ genv().cloudy.ggInit = function()
 			if not (EXEC.isfile and EXEC.isfile(path)) then
 				local png = UI.pngEncode(N, pixel)
 				pcall(function()
-					for _, dir in ipairs({ "cloudy.gg", UI.ASSET_DIR }) do
+					for _, dir in ipairs({ "cloudy", UI.ASSET_DIR }) do
 						if not (EXEC.isfolder and EXEC.isfolder(dir)) and EXEC.makefolder then
 							EXEC.makefolder(dir)
 						end
@@ -25378,7 +25732,7 @@ genv().cloudy.ggInit = function()
 		["Unlock everything"] = true, ["Lock everything"] = true,
 		["Measure this gun's limit"] = true,
 		["Apply now"] = true, ["Follow the weapon in hand"] = true, ["Reset this weapon"] = true, ["Reset all weapons"] = true, ["Refresh the customize screen"] = false,
-		["Save now"] = true, ["Reset to defaults"] = true, ["Unload cloudy.gg"] = true, ["Copy config"] = true, ["Paste config"] = true,
+		["Save now"] = true, ["Reset to defaults"] = true, ["Unload cloudy"] = true, ["Copy config"] = true, ["Paste config"] = true,
 		["Check for update"] = true, ["Reload the latest version"] = true, ["Reset layout"] = true,
 		["Arrange HUD"] = true, ["Open the console (F9)"] = true, ["Copy logs"] = true, ["Clean look"] = true, ["Turn everything off"] = true, ["Play the intro"] = true,
 	}
@@ -27606,9 +27960,9 @@ genv().cloudy.ggInit = function()
 	}
 	-- the Debug page is in the sidebar only for a licence an admin turned it on for (admin panel → licence →
 	-- Debug menu, sent as debugMenu), or a dev inject with no licence session. The page itself is still built
-	-- (tests and cloudy.gg_state read it).
+	-- (tests and cloudy_state read it).
 	function Menu.debugAllowed(): boolean
-		local lic = genv().cloudy.ggLicense
+		local lic = genv().cloudyLicense
 		return type(lic) ~= "table" or lic.debugMenu == true
 	end
 	-- whole-pixel sizes for the current Menu size (UIScale stays exactly 1: a fractional scale put
@@ -27650,7 +28004,7 @@ genv().cloudy.ggInit = function()
 	Menu.SIDE_PANEL = { Aimbot = "hitbox", Silent = "hitbox", Rage = "hitbox", Visuals = "preview" }
 
 	function Menu.blur(open: boolean)
-		local blur = Lighting:FindFirstChild("cloudy.ggBlur") :: BlurEffect?
+		local blur = Lighting:FindFirstChild("cloudyBlur") :: BlurEffect?
 		if not cfg.menuBlur or cfg.lowSpec then
 			if blur then
 				blur.Enabled = false
@@ -27659,7 +28013,7 @@ genv().cloudy.ggInit = function()
 		end
 		if not blur then
 			blur = Instance.new("BlurEffect")
-			blur.Name = "cloudy.ggBlur"
+			blur.Name = "cloudyBlur"
 			blur.Size = 0
 			blur.Parent = Lighting
 		end
@@ -30327,7 +30681,7 @@ genv().cloudy.ggInit = function()
 				end
 				local gs = S.gameState or {}
 				return table.concat({
-					("cloudy.gg v%s · place %s · ping %d ms · frame %.1f ms"):format(VERSION, tostring(game.PlaceId), S.pingMs or 0, S.frameMs or 0),
+					("cloudy v%s · place %s · ping %d ms · frame %.1f ms"):format(VERSION, tostring(game.PlaceId), S.pingMs or 0, S.frameMs or 0),
 					("weapon %s · ammo %s · hp %s · enemies %d · lock %s · trigger %s (%s)"):format(tostring(gs.weapon), tostring(gs.ammo), tostring(gs.hp), #Game.enemies(), tostring(S.silentTargetModel and S.silentTargetModel.Name), tostring(S.fireLevel and S.fireLevel()), Input.fireMethodUsed),
 					("shots %d · hit %d · blocked %d · air %d · confirmed %d · dropped %d · straightened %d · spread avg %s°"):format(ss.redirected, ss.hitTarget, ss.hitOther, ss.miss, ss.confirmed, ss.dropped, S.straightened or 0, if S.spreadAvg then ("%.2f"):format(S.spreadAvg) else "—"),
 					("settle %d ms · teleported %s · magic %s · autokill %s"):format(math.floor(Combat.settleSec() * 1000), tostring(S.teleported), tostring(Combat.magic.active), tostring(S.autokill.state)),
@@ -30345,7 +30699,7 @@ genv().cloudy.ggInit = function()
 				local gsum = G(sh.L, "Shot recorder")
 				gsum:toggle("Record shots", "shotsRecord", { desc = "One record per replicated shot: what we claimed (camera data) vs what the server hit (ShootEffect)" })
 				gsum:toggle("SHOT lines in the F9 terminal", "shotsLog")
-				gsum:toggle("Export cloudy.gg/shots.json", "shotsExport", { desc = "Every 10 shots and on unload — readable through the MCP (read_file cloudy.gg/shots.json)" })
+				gsum:toggle("Export cloudy/shots.json", "shotsExport", { desc = "Every 10 shots and on unload — readable through the MCP (read_file cloudy/shots.json)" })
 				local sumRows: { [string]: TextLabel } = {}
 				for _, key in ipairs({ "Total", "Hit", "Near", "Wall", "Air", "No reply", "Unaimed", "Backtrack" }) do
 					sumRows[key] = gsum:stat(key)
@@ -30362,7 +30716,7 @@ genv().cloudy.ggInit = function()
 				gsum:button("Export shots now", function()
 					S.shots.export()
 					notify("shots.json written", 2, "ok")
-				end, C.accent, { desc = "Writes cloudy.gg/shots.json in the Volt workspace." })
+				end, C.accent, { desc = "Writes cloudy/shots.json in the Volt workspace." })
 				gsum:note("HIT the server hit the lock · NEAR its ray ended under 4 st from the claim · WALL blocked · AIR nothing · NO-REPLY no answer in 1.5 s · UNAIMED a scoped gun fired unscoped · SWING melee (the server never answers)")
 				local glist = G(sh.R, "Last shots")
 				local lines = glist:logBlock("Last shots", 14)
@@ -30448,7 +30802,7 @@ genv().cloudy.ggInit = function()
 					table.insert(hooks, (if v then "" else "!") .. k)
 				end
 				table.sort(hooks)
-				rows.Build.Text = ("v%s · loaded %.0fs ago · place %s"):format(VERSION, os.clock() - (genv().cloudy.ggLoadedAt or os.clock()), tostring(game.PlaceId))
+				rows.Build.Text = ("v%s · loaded %.0fs ago · place %s"):format(VERSION, os.clock() - (genv().cloudyLoadedAt or os.clock()), tostring(game.PlaceId))
 				local st = S.selfTestResult
 				rows["Self-test"].Text = if st then ("%d/%d%s · %.0fs ago"):format(st.pass, st.total, if #st.failed > 0 then " FAILED: " .. table.concat(st.failed, ", ") else " ok", os.clock() - st.at) else "pending (runs 4 s after load)"
 				rows["Self-test"].TextColor3 = if st and #st.failed > 0 then C.danger else C.text
@@ -30643,7 +30997,7 @@ genv().cloudy.ggInit = function()
 			gq:button("Reset shot stats", Dbg.resetStats)
 			gq:toggle("Remote spy (log FireServer while shooting)", "remoteSpy")
 			gq:toggle("DEBUG lines to the executor console", "debugConsole", { desc = "By default DEBUG only reaches the F9 terminal and the log file" })
-			gq:toggle("Write log file (cloudy.gg/cloudy.gg.log)", "logToFile")
+			gq:toggle("Write log file (cloudy/cloudy.log)", "logToFile")
 			gq:button("Open F9 terminal", function()
 				if S.setTerminal then
 					S.setTerminal(true)
@@ -30695,8 +31049,8 @@ genv().cloudy.ggInit = function()
 			gi:button("Config (cfg)", function()
 				Dbg.dump("cfg", cfg, { methods = false })
 			end)
-			gi:button("cloudy.ggState keys", function()
-				Dbg.dump("cloudy.ggState", S, { skipFunctions = true, methods = false })
+			gi:button("cloudyState keys", function()
+				Dbg.dump("cloudyState", S, { skipFunctions = true, methods = false })
 			end)
 			local gp2 = G(ins.R, "Game facts (verified)")
 			gp2:note("Shots: MechanicsController → GetCameraData → GetCameraCFrame → GetMouseLocation → workspace:Raycast(origin, dir≈1000, Include{map, <enemy>.HitboxHead/HitboxBody, <enemy model>}).", { height = 44 })
@@ -30723,7 +31077,7 @@ genv().cloudy.ggInit = function()
 				if entry then
 					task.spawn(Dbg.decompile, entry)
 				end
-			end, C.accent, { desc = "The source goes to the clipboard and cloudy.gg/decompiled/." })
+			end, C.accent, { desc = "The source goes to the clipboard and cloudy/decompiled/." })
 			gd:note("Volt: decompile() returns real source (ClientFighter is VM-obfuscated, everything else reads clean). Wave cannot read this bytecode, so the pseudo listing (constants, upvalue kinds, nested closures) is appended either way. '·' marks modules the game has not loaded yet (never required first).", { height = 58 })
 			local gq2 = G(dc.R, "Quick decompiles")
 			for _, nm in ipairs({ "MechanicsController", "CameraController", "FighterController", "PlayerDataController", "M/Gun", "M/Fighter", "RS/ItemLibrary", "RS/CosmeticLibrary" }) do
@@ -30786,7 +31140,7 @@ genv().cloudy.ggInit = function()
 			glk:slider("Tab list glass", "railGlass", 0, 40, 2, { unit = "%", fmt = int, desc = "How much of the game shows through the tab list's acrylic. 0 = solid. Obsidian and toxic are always solid.", onChange = function()
 				Menu.applyGlass()
 			end })
-			glk:toggle("Intro animation", "introAnim", { desc = "Plays once when cloudy.gg loads." })
+			glk:toggle("Intro animation", "introAnim", { desc = "Plays once when cloudy loads." })
 			glk:button("Play the intro", function()
 				Menu.set(false)
 				task.delay(0.2, function()
@@ -30904,7 +31258,7 @@ genv().cloudy.ggInit = function()
 		end
 
 		-- Config -----------------------------------------------------------------
-		-- one file per config (cloudy.gg/configs/<name>.json); the list is what is on disk
+		-- one file per config (cloudy/configs/<name>.json); the list is what is on disk
 		do
 			local t = Menu.addTab("Config", { "Config" })
 			local c = t.Config
@@ -30920,7 +31274,7 @@ genv().cloudy.ggInit = function()
 			local function metaOf(nm: string?): any
 				if nm ~= meta.name or meta.stale then
 					local data = nm and Configs.read(nm)
-					meta = { name = nm, saved = data and tonumber(data.saved), version = data and data.cloudy.gg, missing = nm ~= nil and data == nil }
+					meta = { name = nm, saved = data and tonumber(data.saved), version = data and data.cloudy, missing = nm ~= nil and data == nil }
 				end
 				return meta
 			end
@@ -31132,10 +31486,10 @@ genv().cloudy.ggInit = function()
 						done(true, "", "Nothing loads on start now")
 					else
 						Configs.setStartup(nm)
-						done(true, "", nm .. " loads every time cloudy.gg starts")
+						done(true, "", nm .. " loads every time cloudy starts")
 					end
 				end },
-			}, { desc = "The picked config loads each time cloudy.gg starts, instead of the settings from last time." })
+			}, { desc = "The picked config loads each time cloudy starts, instead of the settings from last time." })
 			gs:info("Loads on start", function()
 				return if Configs.startup ~= "" then Configs.startup else "Last settings"
 			end)
@@ -31151,15 +31505,15 @@ genv().cloudy.ggInit = function()
 					end)
 				end },
 			})
-			gc:button("Unload cloudy.gg", function()
-				local unload = genv().cloudy.ggUnload
+			gc:button("Unload cloudy", function()
+				local unload = genv().cloudyUnload
 				if unload then
 					unload()
 				end
 			end, C.danger)
 			local gu = G(c.R, "Updates")
 			gu:toggle("Update automatically", "autoUpdate", { desc = "Installs a newer version by itself while you're in the lobby, never during a match." })
-			gu:toggle("Game update warnings", "adaptToasts", { desc = "A message when a RIVALS update breaks something cloudy.gg relies on." })
+			gu:toggle("Game update warnings", "adaptToasts", { desc = "A message when a RIVALS update breaks something cloudy relies on." })
 			gu:button("Check for update", function()
 				task.spawn(function()
 					Game.adapt.checkUpdate(true)
@@ -31197,7 +31551,7 @@ genv().cloudy.ggInit = function()
 			end)
 			local compat = EXEC.report()
 			if #compat == 0 then
-				gab:note("Everything cloudy.gg uses is available on this executor.", { color = C.ok })
+				gab:note("Everything cloudy uses is available on this executor.", { color = C.ok })
 			else
 				for _, line in ipairs(compat) do
 					gab:note(line, { color = C.warn })
@@ -31324,7 +31678,7 @@ genv().cloudy.ggInit = function()
 		Menu.syncMarks = {}
 		UI.syncTab = {} -- sync index → the page that registered it (nil = global)
 		local gui = Instance.new("ScreenGui")
-		gui.Name = "cloudy.gg"
+		gui.Name = "cloudy"
 		gui.ResetOnSpawn = false
 		gui.IgnoreGuiInset = true
 		gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -31351,8 +31705,8 @@ genv().cloudy.ggInit = function()
 		UI.cursor = nil
 		if not UI.mouseBound then
 			UI.mouseBound = true
-			pcall(RunService.UnbindFromRenderStep, RunService, "cloudy.gg_menuMouse")
-			pcall(RunService.BindToRenderStep, RunService, "cloudy.gg_menuMouse", Enum.RenderPriority.Last.Value, function()
+			pcall(RunService.UnbindFromRenderStep, RunService, "cloudy_menuMouse")
+			pcall(RunService.BindToRenderStep, RunService, "cloudy_menuMouse", Enum.RenderPriority.Last.Value, function()
 				pcall(UI.mouseTick)
 			end)
 		end
@@ -32884,7 +33238,7 @@ genv().cloudy.ggInit = function()
 
 	function HUD.build()
 		local gui = Instance.new("ScreenGui")
-		gui.Name = "cloudy.ggHUD"
+		gui.Name = "cloudyHUD"
 		gui.ResetOnSpawn = false
 		gui.IgnoreGuiInset = true
 		gui.DisplayOrder = 999
@@ -33825,7 +34179,7 @@ genv().cloudy.ggInit = function()
 			aimPoint = S.silentAimPoint, aimModel = S.silentAimModel,
 		}
 		local model = Instance.new("Model")
-		model.Name = "cloudy.ggSelfTest"
+		model.Name = "cloudySelfTest"
 		local dummy = Instance.new("Part")
 		dummy.Name = "HitboxHead"
 		dummy.Size = Vector3.new(2, 2, 2)
@@ -33875,7 +34229,7 @@ genv().cloudy.ggInit = function()
 			table.insert(results, { name = name, ok = pass, note = if ok then tostring(b or "") else "error: " .. tostring(a):sub(1, 80) })
 		end
 		T("state", function()
-			return genv().cloudy.ggState == S and S.alive == true and type(S.cfg) == "table", "S on getgenv, alive"
+			return genv().cloudyState == S and S.alive == true and type(S.cfg) == "table", "S on getgenv, alive"
 		end)
 		T("hooks", function()
 			local need = { "camera", "fighter", "namecall", "cosmetics", "thirdPerson" }
@@ -34139,7 +34493,7 @@ genv().cloudy.ggInit = function()
 			return type(p) == "number" and p >= 0 and p < 5000, if p > 0 then ("%d ms"):format(p) else "no reading yet"
 		end)
 		T("edition", function()
-			local lic = genv().cloudy.ggLicense
+			local lic = genv().cloudyLicense
 			if type(lic) ~= "table" or not S.served then
 				return true, S.edition .. " (not served by the site: dev inject)"
 			end
@@ -34212,13 +34566,13 @@ genv().cloudy.ggInit = function()
 		lastIntegrity = now
 		-- anti-piracy self-unload check removed (no licence / stale heartbeat no longer unloads the script)
 		local issues = {}
-		if genv().cloudy.ggState ~= S then
-			table.insert(issues, "cloudy.ggState replaced")
-			genv().cloudy.ggState = S
+		if genv().cloudyState ~= S then
+			table.insert(issues, "cloudyState replaced")
+			genv().cloudyState = S
 		end
-		if genv().cloudy.ggCfg ~= cfg then
-			table.insert(issues, "cloudy.ggCfg replaced")
-			genv().cloudy.ggCfg = cfg
+		if genv().cloudyCfg ~= cfg then
+			table.insert(issues, "cloudyCfg replaced")
+			genv().cloudyCfg = cfg
 		end
 		for _, k in ipairs({ "redirect", "camCF", "rot", "mouse", "recordShot", "isOurShotRay", "silentWanted", "fakeInventory", "unlockable" }) do
 			if type(h[k]) ~= "function" then
@@ -34366,10 +34720,10 @@ genv().cloudy.ggInit = function()
 	-- intro: the wordmark rises in over a soft glow, then everything fades. First inject only (20 min stamp).
 	function Self.intro(force: boolean?)
 		if not force then
-			if not cfg.introAnim or cfg.lowSpec or genv().cloudy.ggIntroShown then
+			if not cfg.introAnim or cfg.lowSpec or genv().cloudyIntroShown then
 				return
 			end
-			genv().cloudy.ggIntroShown = true
+			genv().cloudyIntroShown = true
 			local stampFile = DATA.intro
 			local last = 0
 			pcall(function()
@@ -34385,14 +34739,14 @@ genv().cloudy.ggInit = function()
 				EXEC.writefile(stampFile, tostring(os.time()))
 			end)
 		else
-			local old = Game.guiParent():FindFirstChild("cloudy.ggIntro")
+			local old = Game.guiParent():FindFirstChild("cloudyIntro")
 			if old then
 				old:Destroy()
 			end
 		end
 		task.spawn(function()
 			local gui = Instance.new("ScreenGui")
-			gui.Name = "cloudy.ggIntro"
+			gui.Name = "cloudyIntro"
 			gui.IgnoreGuiInset = true
 			gui.DisplayOrder = 2000
 			gui.ResetOnSpawn = false
@@ -34711,7 +35065,7 @@ genv().cloudy.ggInit = function()
 		if mk and mk ~= Enum.KeyCode.RightShift and mk ~= Enum.KeyCode.O then
 			table.insert(keys, mk)
 		end
-		CAS:BindActionAtPriority("cloudy.ggMenu", function(_, state, input)
+		CAS:BindActionAtPriority("cloudyMenu", function(_, state, input)
 			if state ~= Enum.UserInputState.Begin or not input then
 				return Enum.ContextActionResult.Pass
 			end
@@ -34840,7 +35194,7 @@ genv().cloudy.ggInit = function()
 	-- for 5 s (trigger released, autokill stopped) instead of taking the whole frame down with it.
 	local stepState: { [string]: any } = {}
 	S.stepState = stepState
-	-- per-step timing (rolling EMA in ms) so the Debug tab / cloudy.gg_state can show what actually
+	-- per-step timing (rolling EMA in ms) so the Debug tab / cloudy_state can show what actually
 	-- costs frame time instead of guessing. Two os.clock() calls per step — negligible.
 	local stepMs: { [string]: number } = {}
 	S.stepMs = stepMs
@@ -34968,7 +35322,7 @@ genv().cloudy.ggInit = function()
 				n = fovWant
 			end
 			S.fovShown = n
-			Game.asGame(CameraController.SetExternalFOVOffset, CameraController, "cloudy.gg", n)
+			Game.asGame(CameraController.SetExternalFOVOffset, CameraController, "cloudy", n)
 		end
 		-- third person stays on with the menu open; only the lobby gate turns it off
 		local tpWant = cfg.thirdPerson == true and not S.featuresPaused
@@ -35273,7 +35627,7 @@ genv().cloudy.ggInit = function()
 		step("integrity", Self.integrity)
 	end))
 
-	genv().cloudy.ggUnload = function()
+	genv().cloudyUnload = function()
 		S.alive = false
 		pcall(Game.util.stop)
 		pcall(Combat.clearLock)
@@ -35322,7 +35676,7 @@ genv().cloudy.ggInit = function()
 			end
 		end)
 		pcall(function()
-			game:GetService("ContextActionService"):UnbindAction("cloudy.ggMenu")
+			game:GetService("ContextActionService"):UnbindAction("cloudyMenu")
 		end)
 		table.clear(logListeners)
 		pcall(function()
@@ -35349,14 +35703,14 @@ genv().cloudy.ggInit = function()
 		pcall(function()
 			CameraController:Freeze(false)
 			CameraController:SetThirdPersonOverride(nil)
-			CameraController:SetExternalFOVOffset("cloudy.gg", 0)
+			CameraController:SetExternalFOVOffset("cloudy", 0)
 			S.fovShown = 0
 		end)
 		-- the mouse goes back to the game by itself: S.menuOpen is false now (the camera hook stops
 		-- answering for the menu) and the camera writes its own cursor state on the next render step.
 		-- Forcing LockCenter here used to lock the mouse in the lobby and on the game's own pages.
 		S.menuOpen = false
-		pcall(RunService.UnbindFromRenderStep, RunService, "cloudy.gg_menuMouse")
+		pcall(RunService.UnbindFromRenderStep, RunService, "cloudy_menuMouse")
 		pcall(function()
 			if S.introGui then
 				S.introGui:Destroy()
@@ -35381,19 +35735,19 @@ genv().cloudy.ggInit = function()
 			end
 		end)
 		pcall(function()
-			local blur = Lighting:FindFirstChild("cloudy.ggBlur")
+			local blur = Lighting:FindFirstChild("cloudyBlur")
 			if blur then
 				blur:Destroy()
 			end
 		end)
 		local g = genv()
 		if type(g.VoltMCP_Unloaders) == "table" then
-			g.VoltMCP_Unloaders.cloudy.gg = nil
+			g.VoltMCP_Unloaders.cloudy = nil
 		end
-		g.cloudy.ggUnload = nil
+		g.cloudyUnload = nil
 		log("INFO", "unloaded")
 	end
-	genv().VoltMCP_Unloaders.cloudy.gg = genv().cloudy.ggUnload
+	genv().VoltMCP_Unloaders.cloudy = genv().cloudyUnload
 
 	log("INFO", ("ready — v%s on %s | enemies: %d | Drawing: %s | hooks: %s"):format(VERSION, EXECUTOR_NAME, #Game.enemies(), tostring(EXEC.Drawing ~= nil), tostring(EXEC.hookfunction ~= nil)))
 	-- executor compatibility: say what this executor cannot do, once, in plain words
@@ -35474,23 +35828,23 @@ genv().cloudy.ggInit = function()
 	if Configs.active ~= "" then
 		log("INFO", ("config: %s%s"):format(Configs.active, if Configs.startup == Configs.active then " (loads on start)" else ""))
 	end
-	genv().cloudy.ggLoadedAt = os.clock()
-	genv().cloudy.ggLoadingSince = nil
+	genv().cloudyLoadedAt = os.clock()
+	genv().cloudyLoadingSince = nil
 end
 
-local initOk, initErr = pcall(genv().cloudy.ggInit)
-genv().cloudy.ggLoadingSince = nil
+local initOk, initErr = pcall(genv().cloudyInit)
+genv().cloudyLoadingSince = nil
 if not initOk and string.find(tostring(initErr), "superseded by a newer inject", 1, true) then
 	-- a later inject took over while this one was still waiting on game modules: nothing failed
-	warn("[cloudy.gg] " .. tostring(initErr))
+	warn("[cloudy] " .. tostring(initErr))
 	initOk = true
 end
 if not initOk then
 	-- rethrowing makes the executor report "injection failed" and leaves the user with nothing on screen
-	warn("[cloudy.gg] " .. tostring(initErr))
+	warn("[cloudy] " .. tostring(initErr))
 	pcall(function()
 		game:GetService("StarterGui"):SetCore("SendNotification", {
-			Title = "cloudy.gg",
+			Title = "cloudy",
 			Text = "failed to start: " .. string.sub(tostring(initErr), 1, 90),
 			Duration = 10,
 		})
@@ -35499,7 +35853,7 @@ if not initOk then
 		local lp = game:GetService("Players").LocalPlayer
 		local parent = (lp and (lp:FindFirstChild("PlayerGui") or lp:FindFirstChildOfClass("PlayerGui"))) or game:GetService("CoreGui")
 		local gui = Instance.new("ScreenGui")
-		gui.Name = "cloudy.ggOpener"
+		gui.Name = "cloudyOpener"
 		gui.ResetOnSpawn = false
 		gui.IgnoreGuiInset = true
 		gui.DisplayOrder = 1500
@@ -35513,7 +35867,7 @@ if not initOk then
 		b.TextColor3 = Color3.fromRGB(255, 220, 220)
 		b.TextSize = 14
 		b.TextWrapped = true
-		b.Text = "cloudy.gg failed to start\n" .. string.sub(tostring(initErr), 1, 140)
+		b.Text = "cloudy failed to start\n" .. string.sub(tostring(initErr), 1, 140)
 		b.Parent = gui
 		local okF, font = pcall(function()
 			return Enum.Font.BuilderSansBold
@@ -35537,18 +35891,18 @@ do
 		return _G
 	end
 	local G = genv()
-	local lic = G.cloudy.ggLicense or rawget(_G, "cloudy.ggLicense")
+	local lic = G.cloudyLicense or rawget(_G, "cloudyLicense")
 	if type(lic) ~= "table" then
 		return
 	end
 	-- the base unloads a served copy once this is 300 s stale; a value left by an earlier session in this Lua
 	-- state would already read as stale, so stamp it now (and on every live /api/session answer below)
-	G.cloudy.ggHeartbeat = os.clock()
-	local BASE = type(lic.base) == "string" and lic.base or "https://cloudygg.vercel.app"
+	G.cloudyHeartbeat = os.clock()
+	local BASE = type(lic.base) == "string" and lic.base or "https://cloudy.gg.xyz"
 	local reqFn = request or http_request or (syn and syn.request)
 
-	-- executors differ in which table getgenv() hands appended code, so look everywhere cloudy.gg may put
-	-- its globals (a single-table lookup falsely reported "cloudy.ggState missing" for working loads)
+	-- executors differ in which table getgenv() hands appended code, so look everywhere cloudy may put
+	-- its globals (a single-table lookup falsely reported "cloudyState missing" for working loads)
 	local function findGlobal(name)
 		local envs = { G, _G }
 		if type(shared) == "table" then
@@ -35567,10 +35921,10 @@ do
 	local function sweepLoader()
 		for _, root in ipairs({ (LP and LP:FindFirstChildOfClass("PlayerGui")) :: any, game:GetService("CoreGui") :: any, (type(gethui) == "function" and gethui()) or nil }) do
 			if root then
-				local g = root:FindFirstChild("cloudy.ggLoader")
+				local g = root:FindFirstChild("cloudyLoader")
 				while g do
 					pcall(g.Destroy, g)
-					g = root:FindFirstChild("cloudy.ggLoader")
+					g = root:FindFirstChild("cloudyLoader")
 				end
 			end
 		end
@@ -35580,7 +35934,7 @@ do
 	task.delay(10, sweepLoader)
 
 	-- gstate, not S: this block must not shadow the script's own state table
-	local gstate = findGlobal("cloudy.ggState")
+	local gstate = findGlobal("cloudyState")
 	if type(gstate) == "table" and type(gstate.keySlot) == "table" then
 		gstate.keySlot.enabled = true
 		gstate.keySlot.key = tostring(lic.key or "")
@@ -35589,7 +35943,7 @@ do
 
 	local parent = (LP and LP:FindFirstChildOfClass("PlayerGui")) or game:GetService("CoreGui")
 	local gui = Instance.new("ScreenGui")
-	gui.Name = "cloudy.ggLicence"
+	gui.Name = "cloudyLicence"
 	gui.ResetOnSpawn = false
 	gui.DisplayOrder = 60
 	gui.Parent = parent
@@ -35628,7 +35982,7 @@ do
 		end
 		subLine = nil
 		for _, root in ipairs({ parent, (type(gethui) == "function" and gethui()) or nil, game:GetService("CoreGui") }) do
-			local menu = root and root:FindFirstChild("cloudy.gg")
+			local menu = root and root:FindFirstChild("cloudy")
 			local card = menu and menu:FindFirstChild("UserCard", true)
 			local line = card and card:FindFirstChild("SubLine", true)
 			if line and line:IsA("TextLabel") then
@@ -35644,7 +35998,7 @@ do
 			return
 		end
 		local text, warn = subscriptionText()
-		local st = findGlobal("cloudy.ggState")
+		local st = findGlobal("cloudyState")
 		-- the version the copy shows (Max has its own number)
 		local ver = type(st) == "table" and (st.shownVersion or st.publicVersion or st.version) or lic.version
 		line.Text = if ver then text .. " · v" .. tostring(ver) else text
@@ -35679,7 +36033,7 @@ do
 
 	local function notify(text, duration)
 		pcall(function()
-			StarterGui:SetCore("SendNotification", { Title = "cloudy.gg", Text = tostring(text):sub(1, 200), Duration = duration or 6 })
+			StarterGui:SetCore("SendNotification", { Title = "cloudy", Text = tostring(text):sub(1, 200), Duration = duration or 6 })
 		end)
 	end
 
@@ -35688,7 +36042,7 @@ do
 			executor = tostring(lic.executor or ""),
 			place = tostring(game.PlaceId),
 			server = tostring(game.JobId),
-			version = tostring(gstate and gstate.version or (findGlobal("cloudy.ggState") or {}).version or ""),
+			version = tostring(gstate and gstate.version or (findGlobal("cloudyState") or {}).version or ""),
 		}
 	end
 
@@ -35701,33 +36055,33 @@ do
 	-- edition (a Max licence came back as Normal when a bare autoexec won the race) and takes the shared
 	-- load lock so an autoexec copy and this payload never both load.
 	local queueTp = queueonteleport or queue_on_teleport or (syn and syn.queue_on_teleport)
-	if type(queueTp) == "function" and not G.cloudy.ggSiteHopQueued then
-		G.cloudy.ggSiteHopQueued = true
-		local st0 = findGlobal("cloudy.ggState")
+	if type(queueTp) == "function" and not G.cloudySiteHopQueued then
+		G.cloudySiteHopQueued = true
+		local st0 = findGlobal("cloudyState")
 		local edition = if type(st0) == "table" and st0.edition == "max" then "max" elseif lic.edition == "max" then "max" else "normal"
 		local payload = ([[
 			task.spawn(function()
 				local env = (getgenv and getgenv()) or _G
 				pcall(function() repeat task.wait(0.1) until game:IsLoaded() end)
-				if isfile and isfile("cloudy.gg/unloaded") then return end
-				local st = env.cloudy.ggState
+				if isfile and isfile("cloudy/unloaded") then return end
+				local st = env.cloudyState
 				if type(st) == "table" and st.alive == true and (st.edition == "%s" or "%s" ~= "max") then return end
-				if env.cloudy.ggLoadLock and os.clock() - env.cloudy.ggLoadLock < 45 then return end
+				if env.cloudyLoadLock and os.clock() - env.cloudyLoadLock < 45 then return end
 				-- the loader's network work (fetch, sign-in, script from cache or download) runs NOW, while the new
 				-- place spawns; it only compiles the script once this gate opens (character + controllers + a settle),
 				-- so weak executors still never compile 1.3 MB mid-spawn. A loader without the gate ignores it.
 				local readyAt = nil
-				env.cloudy.ggHopGate = function()
+				env.cloudyHopGate = function()
 					return readyAt ~= nil and os.clock() >= readyAt
 				end
-				env.cloudy.ggPreferredEdition = "%s"
+				env.cloudyPreferredEdition = "%s"
 				task.spawn(function()
 					local ok, src = pcall(function() return game:HttpGet("%s/api/loader?t=" .. tostring(os.time())) end)
 					if ok and type(src) == "string" and #src > 100 then
 						local fn = loadstring(src)
 						if fn then
 							-- hop mode: the loader signs in with the saved key behind a small toast, no card
-							env.cloudy.ggHopLoad = true
+							env.cloudyHopLoad = true
 							pcall(fn)
 						end
 					end
@@ -35747,7 +36101,7 @@ do
 		pcall(queueTp, payload)
 	end
 
-	local cloud = G.cloudy.ggCloud
+	local cloud = G.cloudyCloud
 	if type(cloud) == "table" then
 		if cloud.maintenance == true then
 			tell("cloud", "Started while maintenance mode is on", "warn", baseMeta())
@@ -35759,12 +36113,12 @@ do
 
 	tell("load", "Add-on started", "ok", baseMeta())
 
-	-- forward cloudy.gg's own WARN / ERROR log lines to the site so problems users hit are visible without a
+	-- forward cloudy's own WARN / ERROR log lines to the site so problems users hit are visible without a
 	-- screenshot. Deduped per line and capped, so a spammy warning can never flood the server.
 	task.spawn(function()
 		local st
 		for _ = 1, 20 do
-			st = findGlobal("cloudy.ggState")
+			st = findGlobal("cloudyState")
 			if type(st) == "table" and type(st.addLogListener) == "function" then
 				break
 			end
@@ -35800,8 +36154,8 @@ do
 		end)
 	end)
 
-	-- clean shutdown: when the user unloads cloudy.gg, stop our loops and clear our GUI too (the cheat's
-	-- own unloader does not know about cloudy.ggLicence). Wrapping keeps any existing unloader.
+	-- clean shutdown: when the user unloads cloudy, stop our loops and clear our GUI too (the cheat's
+	-- own unloader does not know about cloudyLicence). Wrapping keeps any existing unloader.
 	local stopped = false
 	local reloading = false -- a forced update unloads through the same path; not a user unload
 	local fpsConn -- the diagnostics FPS counter (RenderStepped), connected further down
@@ -35818,9 +36172,9 @@ do
 		end)
 	end
 	do
-		local prevUnload = G.cloudy.ggUnload
+		local prevUnload = G.cloudyUnload
 		if type(prevUnload) == "function" then
-			G.cloudy.ggUnload = function(...)
+			G.cloudyUnload = function(...)
 				if not reloading then
 					tell("unload", "User unloaded the cheat", "info", baseMeta())
 				end
@@ -35828,7 +36182,7 @@ do
 				return prevUnload(...)
 			end
 			if type(G.VoltMCP_Unloaders) == "table" then
-				G.VoltMCP_Unloaders.cloudy.gg = G.cloudy.ggUnload
+				G.VoltMCP_Unloaders.cloudy = G.cloudyUnload
 			end
 		end
 	end
@@ -35855,7 +36209,7 @@ do
 		end
 		reloadTried, forceTried = true, true
 		task.spawn(function()
-			notify("Updating cloudy.gg to v" .. tostring(label or "latest") .. "…", 6)
+			notify("Updating cloudy to v" .. tostring(label or "latest") .. "…", 6)
 			local src
 			local ok = pcall(function()
 				src = game:HttpGet(BASE .. "/api/loader?t=" .. tostring(os.time()))
@@ -35872,20 +36226,20 @@ do
 				return
 			end
 			reloading = true
-			tell("update", "Force update: reloading build " .. tostring((findGlobal("cloudy.ggState") or {}).version or "?") .. " → " .. tostring(label), "info", baseMeta())
-			local unload = findGlobal("cloudy.ggUnload")
+			tell("update", "Force update: reloading build " .. tostring((findGlobal("cloudyState") or {}).version or "?") .. " → " .. tostring(label), "info", baseMeta())
+			local unload = findGlobal("cloudyUnload")
 			if type(unload) == "function" then
 				pcall(unload)
 			end
 			stopAddon()
 			task.wait(0.4)
-			G.cloudy.ggHopLoad = true -- reconnect quietly (toast, saved key / keyless), no card
+			G.cloudyHopLoad = true -- reconnect quietly (toast, saved key / keyless), no card
 			pcall(fn)
 		end)
 	end
 
 	-- admin remote control: a reload re-runs the site loader in place (optionally into the other edition, which
-	-- the loader reads from cloudy.ggPreferredEdition), an unload stops everything, a message is a toast
+	-- the loader reads from cloudyPreferredEdition), an unload stops everything, a message is a toast
 	local function reloadNow(why, edition, kind, meta)
 		if reloadTried then
 			tell("command", "Admin command not executed: " .. kind .. " (a reload is already under way)", "warn", meta)
@@ -35906,15 +36260,15 @@ do
 				return
 			end
 			reloading = true
-			local unload = findGlobal("cloudy.ggUnload")
+			local unload = findGlobal("cloudyUnload")
 			if type(unload) == "function" then
 				pcall(unload)
 			end
 			stopAddon()
 			task.wait(0.4)
-			G.cloudy.ggHopLoad = true
+			G.cloudyHopLoad = true
 			if edition then
-				G.cloudy.ggPreferredEdition = edition
+				G.cloudyPreferredEdition = edition
 			end
 			local okRun, runErr = pcall(fn)
 			if okRun then
@@ -35985,7 +36339,7 @@ do
 			return
 		end
 		disabledKey = key
-		local st = findGlobal("cloudy.ggState")
+		local st = findGlobal("cloudyState")
 		for k in pairs(disabledNow) do
 			local t = not set[k] and toggleRow(st, k)
 			if t then
@@ -36006,7 +36360,7 @@ do
 	task.spawn(function()
 		while alive() do
 			if next(disabledNow) then
-				local st = findGlobal("cloudy.ggState")
+				local st = findGlobal("cloudyState")
 				local cfg = type(st) == "table" and st.cfg
 				if type(cfg) == "table" then
 					for k in pairs(disabledNow) do
@@ -36037,7 +36391,7 @@ do
 
 	-- lifecycle + session check every ~30 s: refreshes last seen, pushes announcement changes, warns once
 	-- when a newer build exists, and unloads on revoke. No answer (offline) means keep running here; every live
-	-- (not revoked) answer stamps cloudy.ggHeartbeat, and the base unloads a served copy once that is 300 s stale.
+	-- (not revoked) answer stamps cloudyHeartbeat, and the base unloads a served copy once that is 300 s stale.
 	task.spawn(function()
 		local lastAnnounce = type(cloud) == "table" and cloud.announcement or nil
 		local versionNoticeShown = false
@@ -36046,7 +36400,7 @@ do
 		local offlineNotified = false
 		local sharedConfigLoaded = false
 		local revokeSeen = 0
-		-- background re-authentication: the site loader in reauth mode only renews cloudy.ggLicense.session (same
+		-- background re-authentication: the site loader in reauth mode only renews cloudyLicense.session (same
 		-- table this add-on reads) and stamps the heartbeat — no card, no download, no restart
 		local reauthAt = -1e9
 		local function reauth()
@@ -36062,15 +36416,15 @@ do
 				if not fn then
 					return
 				end
-				G.cloudy.ggReauth = true
+				G.cloudyReauth = true
 				local okRun = pcall(fn)
 				if not okRun then
-					G.cloudy.ggReauth = nil
+					G.cloudyReauth = nil
 				end
 			end)
 		end
 		for _ = 1, 20 do
-			if type(findGlobal("cloudy.ggState")) == "table" then
+			if type(findGlobal("cloudyState")) == "table" then
 				stateSeen = true
 				break
 			end
@@ -36084,11 +36438,11 @@ do
 				wm = "wm-51-1fb73d8ee0ed022c",
 				executor = tostring(lic.executor or ""),
 				placeId = tostring(game.PlaceId),
-				version = tostring((findGlobal("cloudy.ggState") or {}).version or ""),
+				version = tostring((findGlobal("cloudyState") or {}).version or ""),
 			}))
 			if type(verdict) == "table" then
 				sessionFails = 0
-				G.cloudy.ggOfflineSince = nil -- the server answered: the base's strict 300 s watch applies again
+				G.cloudyOfflineSince = nil -- the server answered: the base's strict 300 s watch applies again
 				if verdict.revoked == true then
 					-- a revoke is confirmed by a second check 5 s later before anything unloads: one odd answer (a
 					-- restart mid-request, a pruned token racing a hop) used to end a running session for nothing
@@ -36112,7 +36466,7 @@ do
 					task.wait(10)
 					continue
 				end
-				G.cloudy.ggHeartbeat = os.clock()
+				G.cloudyHeartbeat = os.clock()
 				if type(verdict.announcement) == "string" and verdict.announcement ~= "" and verdict.announcement ~= lastAnnounce then
 					lastAnnounce = verdict.announcement
 					notify(verdict.announcement, 8)
@@ -36147,7 +36501,7 @@ do
 							if type(payload) ~= "table" then
 								return
 							end
-							local st = findGlobal("cloudy.ggState")
+							local st = findGlobal("cloudyState")
 							local configs = type(st) == "table" and st.configs or findGlobal("Configs")
 							-- a shared cloud config is usually a partial: patch() merges only the keys it carries
 							-- and leaves everything else alone. apply() (older base) rebuilds from defaults and would
@@ -36160,7 +36514,7 @@ do
 						end)
 					end
 				end
-				local st = findGlobal("cloudy.ggState") or {}
+				local st = findGlobal("cloudyState") or {}
 				local latestBuild = verdict.latestBuild
 				local runningBuild = tostring(st.version or "")
 				local label = tostring(verdict.latestVersion or latestBuild or "")
@@ -36170,13 +36524,13 @@ do
 				end
 				if not versionNoticeShown and outdated then
 					versionNoticeShown = true
-					notify("cloudy.gg v" .. label .. " is out — rejoin or re-run the script to update.", 10)
+					notify("cloudy v" .. label .. " is out — rejoin or re-run the script to update.", 10)
 				end
 			else
 				sessionFails += 1
 				-- no answer at all (the site down, the network blipping): the base gives an unreachable server a long
 				-- grace instead of unloading everyone after 300 s
-				G.cloudy.ggOfflineSince = G.cloudy.ggOfflineSince or os.clock()
+				G.cloudyOfflineSince = G.cloudyOfflineSince or os.clock()
 				if sessionFails >= 3 and not offlineNotified then
 					offlineNotified = true
 					notify("cloudy.gg server unreachable — running offline", 8)
@@ -36205,7 +36559,7 @@ do
 		return try(game.GetService, game, name)
 	end
 	local function snapshot()
-		local st = findGlobal("cloudy.ggState")
+		local st = findGlobal("cloudyState")
 		st = type(st) == "table" and st or {}
 		local cfg = type(st.cfg) == "table" and st.cfg or {}
 		local t = os.clock()
@@ -36418,14 +36772,14 @@ do
 	end
 
 	local function publish()
-		local cfg = findGlobal("cloudy.ggCfg")
+		local cfg = findGlobal("cloudyCfg")
 		local equips = cfg and cfg.skinEquips
 		if type(equips) ~= "table" then
 			return
 		end
 		req("POST", "/api/skins", HttpService:JSONEncode({ userId = tostring(LP.UserId), username = LP.Name, equips = equips }))
 	end
-	-- cloudy.gg's viewmodel hooks read this map and have the game build every other cloudy.gg user's skin and
+	-- cloudy's viewmodel hooks read this map and have the game build every other cloudy.gg user's skin and
 	-- wrap natively (h.sharedEquip); the clone below only covers a model built before the data arrived
 	local function share(players)
 		local map = {}
@@ -36440,7 +36794,7 @@ do
 			end
 		end
 		for _, env in ipairs({ G, _G, type(shared) == "table" and shared or nil }) do
-			pcall(rawset, env, "cloudy.ggSharedSkins", map)
+			pcall(rawset, env, "cloudySharedSkins", map)
 		end
 	end
 	local function pull()
@@ -36468,10 +36822,10 @@ do
 	-- past the server's 90 requests/min session bucket), an unchanged body every 6 s
 	local lastPublished, lastPublishAt = nil, 0
 	local function pbody()
-		local st = findGlobal("cloudy.ggState")
+		local st = findGlobal("cloudyState")
 		-- the edition this copy runs: a Max key on the Normal edition shows no MAX to anyone
 		local body = { userId = tostring(LP.UserId), username = LP.Name, edition = if type(st) == "table" and st.edition == "max" then "max" else "normal" }
-		local b = findGlobal("cloudy.ggMaxBroadcast")
+		local b = findGlobal("cloudyMaxBroadcast")
 		if type(b) == "table" and body.edition == "max" then
 			body.badge = b.badge ~= false
 			body.spoof = type(b.spoof) == "table" and b.spoof or {}
@@ -36494,7 +36848,7 @@ do
 			end
 			presence = byId
 			for _, env in ipairs({ G, _G, type(shared) == "table" and shared or nil }) do
-				pcall(rawset, env, "cloudy.ggSharedPresence", byId)
+				pcall(rawset, env, "cloudySharedPresence", byId)
 			end
 		end
 	end
@@ -36520,7 +36874,7 @@ do
 		return r ~= nil and r ~= false and r.edition == "max", r
 	end
 	-- the MAX mark is the badge over the head (below); the old "MAX" text in front of ESP names is gone
-	local stNow = findGlobal("cloudy.ggState")
+	local stNow = findGlobal("cloudyState")
 	if type(stNow) == "table" and type(stNow.ext) == "table" then
 		stNow.ext.espBadge = nil
 	end
@@ -36590,7 +36944,7 @@ do
 	-- every copy on a Max user's Player locally. The game builds every name it draws (nametag, player list)
 	-- through Utility:GetName(player, name, noPremium), so that one module field carries the name and the
 	-- mark; role icons are the attributes the player list reads (GroupRoleIDs for the RIVALS team,
-	-- IsRobloxEmployee, IsInfluencer), written with the server's value kept for cloudy.ggSpoofReal; labels the
+	-- IsRobloxEmployee, IsInfluencer), written with the server's value kept for cloudySpoofReal; labels the
 	-- game drew before a spoof started (and the colour, which GetName cannot carry) get a pass every 0.5 s.
 	local ID = { util = nil, orig = nil, spoofs = keep(), roleReal = keep(), colored = keep(), renamed = keep() }
 	local GLYPH_VERIFIED, GLYPH_PREMIUM = utf8.char(57344), utf8.char(57345)
@@ -36643,7 +36997,7 @@ do
 	end
 	-- the value a staff check should read: the server's, when we wrote a fake role over it
 	for _, env in ipairs({ G, _G }) do
-		pcall(rawset, env, "cloudy.ggSpoofReal", function(plr, key)
+		pcall(rawset, env, "cloudySpoofReal", function(plr, key)
 			local r = ID.roleReal[plr]
 			if r and r[key] ~= nil then
 				return if r[key] == false then nil else r[key]
@@ -36857,7 +37211,7 @@ do
 			g:Destroy()
 		end
 		g = Instance.new("BillboardGui")
-		g.Name = "cloudy.ggMaxBadge"
+		g.Name = "cloudyMaxBadge"
 		g.Size = UDim2.fromOffset(64, 30)
 		g.StudsOffsetWorldSpace = Vector3.new(0, BADGE_LIFT, 0)
 		g.AlwaysOnTop = true
@@ -36866,7 +37220,7 @@ do
 		g.Adornee = root
 		-- the base's tag (white MAX on a Max-blue gradient with two glints); the gradient must sit on a Frame —
 		-- on a TextLabel it tints the white text too and the badge reads as a plain blue box
-		local stB = findGlobal("cloudy.ggState")
+		local stB = findGlobal("cloudyState")
 		local build = type(stB) == "table" and type(stB.ext) == "table" and stB.ext.maxBadge
 		local chip = type(build) == "function" and select(2, pcall(build, g, 20, true)) or nil
 		if typeof(chip) == "Instance" then
@@ -36933,9 +37287,9 @@ do
 			return
 		end
 		presenceAcc = 0
-		local stS = findGlobal("cloudy.ggState")
+		local stS = findGlobal("cloudyState")
 		local selfMax = type(stS) == "table" and stS.edition == "max"
-		local mine = if selfMax then findGlobal("cloudy.ggMaxBroadcast") else nil
+		local mine = if selfMax then findGlobal("cloudyMaxBroadcast") else nil
 		for _, plr in ipairs(Players:GetPlayers()) do
 			local m, r = isMax(plr)
 			local spoof, badge = m and r.spoof or nil, m and r.badge == true
@@ -37044,7 +37398,7 @@ do
 							local clone = clones[key]
 							if not clone or not clone.Parent then
 								clone = template:Clone()
-								clone.Name = "cloudy.ggShared"
+								clone.Name = "cloudyShared"
 								clone.Parent = workspace.CurrentCamera
 								clones[key] = clone
 								local saved = {}
@@ -37079,406 +37433,3 @@ do
 		end
 	end)
 end
-
--- ENJOY THIS SKIN CHANGER :D
-
-local plrs = game:GetService("Players")
-local reps = game:GetService("ReplicatedStorage")
-local http = game:GetService("HttpService")
-
-local lp = plrs.LocalPlayer
-local lps = lp.PlayerScripts
-local ctrls = lps.Controllers
-local rmods = reps.Modules
-
-local elib = require(rmods:WaitForChild("EnumLibrary", 10))
-if elib then elib:WaitForEnumBuilder() end
-local clib = require(rmods:WaitForChild("CosmeticLibrary", 10))
-local ilib = require(rmods:WaitForChild("ItemLibrary", 10))
-local dctrl = require(ctrls:WaitForChild("PlayerDataController", 10))
-local coss = clib.Cosmetics
-
-local cdata = dctrl.CurrentData
-if not cdata then
-	task.spawn(function()
-		repeat task.wait() until dctrl.CurrentData
-		cdata = dctrl.CurrentData
-	end)
-end
-
-local equip, favs = {}, {}
-local cwep, vprof, lwep
-local lpname = lp.Name
-local fcache = {}
-
-local function banned(n)
-	if type(n) ~= "string" then return true end
-	return n:find("MISSING_") or n:find("Bubblegum") or n:find("Ragdoll") or n:find("Fall Apart") or n:find("Every Finisher Ever")
-end
-
-
-
-local function toenum(n)
-    if not elib or type(n) ~= "string" then
-        return nil
-    end
-
-    local ok, id = pcall(function()
-        return elib:ToEnum(n, true)
-    end)
-
-    if not ok then
-        return nil
-    end
-
-    return id
-end
-
-
-local function clonecos(name, ctype, inv, favonly)
-	if banned(name) then return nil end
-	local base = coss[name]
-	if not base then return nil end
-	local d = table.clone(base)
-	d.Name = name
-	d.Type = d.Type or ctype
-	d.Seed = d.Seed or math.random(1, 1000000)
-
-local eid = toenum(name)
-
-if eid then
-    d.Enum = eid
-    d.ObjectID = d.ObjectID or eid
-else
-    d.Enum = nil
-end
-
-	if inv ~= nil then d.Inverted = inv end
-	if favonly ~= nil then d.OnlyUseFavorites = favonly end
-	return d
-end
-
-local savef = "SkinChanger/config.json"
-
-local function savecfg()
-	if not writefile then return end
-	pcall(function()
-		local cfg = { equipped = {}, favorites = favs }
-		for wep, cos in equip do
-			local slot = {}
-			cfg.equipped[wep] = slot
-			for ct, cd in cos do
-				if cd and cd.Name and not banned(cd.Name) then
-					slot[ct] = { name = cd.Name, seed = cd.Seed, inverted = cd.Inverted }
-				end
-			end
-		end
-		makefolder("SkinChanger")
-		writefile(savef, http:JSONEncode(cfg))
-	end)
-end
-
-local function loadcfg()
-	if not readfile or not isfile or not isfile(savef) then return end
-	pcall(function()
-		local cfg = http:JSONDecode(readfile(savef))
-		if cfg.equipped then
-			for wep, cos in cfg.equipped do
-				equip[wep] = {}
-				for ct, cd in cos do
-					if not banned(cd.name) then
-						local cl = clonecos(cd.name, ct, cd.inverted)
-						if cl then
-							cl.Seed = cd.seed
-							equip[wep][ct] = cl
-						end
-					end
-				end
-			end
-		end
-		favs = cfg.favorites or {}
-	end)
-end
-
-local finv = {}
-local function rebuildinv()
-	table.clear(finv)
-	for name in coss do
-		if not banned(name) then finv[name] = true end
-	end
-	for _, cos in equip do
-		for _, cd in cos do
-			if cd and cd.Name and not banned(cd.Name) then finv[cd.Name] = true end
-		end
-	end
-end
-
-rebuildinv()
-
-local oget = dctrl.Get
-dctrl.Get = function(self, key)
-	local data = oget(self, key)
-	if key == "CosmeticInventory" then
-		local proxy = {}
-		if data then for k, v in data do if not banned(k) then proxy[k] = v end end end
-		for name in finv do proxy[name] = true end
-		return proxy
-	end
-	if key == "FavoritedCosmetics" then
-		local res = data and table.clone(data) or {}
-		for wep, fv in favs do
-			local slot = res[wep] or {}
-			res[wep] = slot
-			for name, isfav in fv do
-				if not banned(name) then slot[name] = isfav end
-			end
-		end
-		return res
-	end
-	return data
-end
-
-local ogetwep = dctrl.GetWeaponData
-dctrl.GetWeaponData = function(self, wname)
-	local data = ogetwep(self, wname)
-	if not data then return nil end
-	local merged = table.clone(data)
-	merged.Name = wname
-	local weq = equip[wname]
-	if weq then for ct, cd in weq do merged[ct] = cd end end
-	return merged
-end
-
-local function saferep(key)
-	pcall(function()
-		if not cdata and dctrl.CurrentData then cdata = dctrl.CurrentData end
-		if cdata then cdata:Replicate(key) end
-	end)
-end
-
-local fctrl
-pcall(function() fctrl = require(ctrls:WaitForChild("FighterController", 10)) end)
-
-local function getewep()
-	if not fctrl then return nil end
-	local fighter = fctrl:GetFighter(lp)
-	if not fighter or not fighter.Items then return nil end
-	for _, item in fighter.Items do
-		if item.IsEquipped then return item.Name end
-	end
-	return nil
-end
-
-if hookmetamethod then
-	local rems = reps:FindFirstChild("Remotes")
-	local drems = rems and rems:FindFirstChild("Data")
-	local eqrem = drems and drems:FindFirstChild("EquipCosmetic")
-	local favrem = drems and drems:FindFirstChild("FavoriteCosmetic")
-	local rrems = rems and rems:FindFirstChild("Replication")
-	local frems = rrems and rrems:FindFirstChild("Fighter")
-	local uirem = frems and frems:FindFirstChild("UseItem")
-
-	if eqrem then
-		local oncall
-		oncall = hookmetamethod(game, "__namecall", function(self, ...)
-			if getnamecallmethod() ~= "FireServer" then return oncall(self, ...) end
-			local args = { ... }
-
-			if uirem and self == uirem and fctrl then
-				pcall(function()
-					local fighter = fctrl:GetFighter(lp)
-					if fighter and fighter.Items then
-						local oid = args[1]
-						for _, item in fighter.Items do
-							if item:Get("ObjectID") == oid then
-								lwep = item.Name
-								break
-							end
-						end
-					end
-				end)
-			end
-
-			if self == eqrem then
-				local wname, ctype, cname, opts = args[1], args[2], args[3], args[4] or {}
-				if not cname or cname == "None" or cname == "" then
-					equip[wname] = equip[wname] or {}
-					equip[wname][ctype] = nil
-					if not next(equip[wname]) then equip[wname] = nil end
-					rebuildinv()
-					task.defer(function()
-						saferep("WeaponInventory")
-						task.wait(0.2)
-						savecfg()
-					end)
-					return oncall(self, ...)
-				end
-				if banned(cname) then return oncall(self, ...) end
-				local rdata = oget(dctrl, "CosmeticInventory")
-				if rdata and type(rdata[cname]) ~= "boolean" and rdata[cname] ~= nil then
-					return oncall(self, ...)
-				end
-				equip[wname] = equip[wname] or {}
-				local cloned = clonecos(cname, ctype, opts.IsInverted, opts.OnlyUseFavorites)
-				if cloned then equip[wname][ctype] = cloned end
-				if ctype == "Finisher" then fcache[wname] = cname end
-				rebuildinv()
-				task.defer(function()
-					saferep("WeaponInventory")
-					task.wait(0.2)
-					savecfg()
-				end)
-				return
-			end
-
-			if self == favrem then
-				local fwep, fname, fstate = args[1], args[2], args[3]
-				if not fname or fname == "None" or fname == "" then return oncall(self, ...) end
-				if banned(fname) then return oncall(self, ...) end
-				favs[fwep] = favs[fwep] or {}
-				favs[fwep][fname] = fstate or nil
-				savecfg()
-				task.spawn(saferep, "FavoritedCosmetics")
-				return
-			end
-
-			return oncall(self, ...)
-		end)
-	end
-end
-
-local citem
-pcall(function() citem = require(lps.Modules.ClientReplicatedClasses.ClientFighter.ClientItem) end)
-
-if citem and citem._CreateViewModel then
-	local ocvm = citem._CreateViewModel
-	citem._CreateViewModel = function(self, vmref)
-		local wname = self.Name
-		local wplr = self.ClientFighter and self.ClientFighter.Player
-		cwep = (wplr == lp) and wname or nil
-		if wplr == lp and equip[wname] and equip[wname].Skin and vmref then
-			local skin = equip[wname].Skin
-			local dk = self:ToEnum("Data")
-			if vmref[dk] then
-				vmref[dk][self:ToEnum("Skin")] = skin
-				vmref[dk][self:ToEnum("Name")] = skin.Name
-			elseif vmref.Data then
-				vmref.Data.Skin = skin
-				vmref.Data.Name = skin.Name
-			end
-		end
-		local res = ocvm(self, vmref)
-		cwep = nil
-		return res
-	end
-end
-
-local vmmod = lps.Modules.ClientReplicatedClasses.ClientFighter.ClientItem:FindFirstChild("ClientViewModel")
-if vmmod then
-	local cvm = require(vmmod)
-	if cvm.GetWrap then
-		local ogw = cvm.GetWrap
-		cvm.GetWrap = function(self)
-			local ci = self.ClientItem
-			local wname = ci and ci.Name
-			local wplr = ci and ci.ClientFighter and ci.ClientFighter.Player
-			local weq = wname and wplr == lp and equip[wname]
-			return (weq and weq.Wrap) or ogw(self)
-		end
-	end
-
-local onew = cvm.new
-
-cvm.new = function(rdata, cliitm)
-    local wplr = cliitm
-        and cliitm.ClientFighter
-        and cliitm.ClientFighter.Player
-
-    local wname = cwep or (cliitm and cliitm.Name)
-    local cos = (wplr == lp) and equip[wname]
-
-    if cos then
-        local ok, err = pcall(function()
-            local rcls = require(reps.Modules.ReplicatedClass)
-            local dk = rcls:ToEnum("Data")
-
-            rdata[dk] = rdata[dk] or {}
-            local slot = rdata[dk]
-
-            for _, ct in ipairs({"Skin", "Wrap", "Charm"}) do
-                local cd = cos[ct]
-
-                if cd then
-                    local key = rcls:ToEnum(ct)
-                    if key then
-                        slot[key] = cd
-                    end
-                end
-            end
-        end)
-
-        if not ok then
-            warn("[SkinChanger] Cosmetic injection error:", err)
-        end
-    end
-
-    local res = onew(rdata, cliitm)
-
-    if cos and cos.Wrap and res._UpdateWrap then
-        local ok, err = pcall(function()
-            res:_UpdateWrap()
-        end)
-
-        if not ok then
-            warn("[SkinChanger] Wrap update error:", err)
-        end
-    end
-
-    return res
-  end
-end
-
-local ogvi = ilib.GetViewModelImageFromWeaponData
-ilib.GetViewModelImageFromWeaponData = function(self, wdata, hires)
-	if not wdata then return ogvi(self, wdata, hires) end
-	local wname = wdata.Name
-	local weq = equip[wname]
-	if weq and weq.Skin and (wdata.Skin == weq.Skin or vprof == lp) then
-		local sinfo = self.ViewModels[weq.Skin.Name]
-		if sinfo then return sinfo[hires and "ImageHighResolution" or "Image"] or sinfo.Image end
-	end
-	return ogvi(self, wdata, hires)
-end
-
-pcall(function()
-	local vpmod = require(lps.Modules.Pages.ViewProfile)
-	if vpmod and vpmod.Fetch then
-		local ofetch = vpmod.Fetch
-		vpmod.Fetch = function(self, tplr)
-			vprof = tplr
-			return ofetch(self, tplr)
-		end
-	end
-end)
-
-local cent
-pcall(function() cent = require(lps.Modules.ClientReplicatedClasses.ClientEntity) end)
-
-if cent and cent._PlayFinisher then
-	local ofin = cent._PlayFinisher
-	cent._PlayFinisher = function(self, fname, ...)
-		local ewep = getewep()
-		local tfin = ewep and (fcache[ewep] or (equip[ewep] and equip[ewep].Finisher and equip[ewep].Finisher.Name))
-		return ofin(self, tfin or fname, ...)
-	end
-end
-
-loadcfg()
-rebuildinv()
-
-for wname, wdata in equip do
-	if wdata.Finisher and wdata.Finisher.Name then
-		fcache[wname] = wdata.Finisher.Name
-	end
-end
-																																																															
