@@ -155,6 +155,7 @@ const C={
   productsTitle:"Our Products",
   /* ---- PRODUCTS: copy a whole { ... }, block to add a new one ---- */
 
+
 products: [
   {
     id: "cloudy",
@@ -213,11 +214,40 @@ products: [
       "No refunds once the key is delivered"
     ],
     discounts: []
+  },
+  {
+    id: "volt",
+    name: "Volt",
+    price: 5.99,
+    image: "assets/volt.png",
+    tag: "Out of Stock",
+    stock: false,
+    info: {
+      "Type": "Internal Executor",
+      "Injection": "Lightning-fast injection",
+      "Stability": "Designed for extreme stability"
+    },
+    note: "The most advanced internal executor. Designed to bypass Byfron with lightning-fast injection and extreme stability.",
+    features: [
+      "Internal executor",
+      "Lightning-fast injection",
+      "Extreme stability",
+      "Designed to bypass Byfron"
+    ],
+    discounts: []
   }
 ],
-  footer:{blurb:"The most advanced Rivals scripts on the market. Instant delivery, secure checkout and real support.",
-    links:[{label:"Discord",href:"https://discord.gg/cloudygg"},{label:"Terms of Service",href:"#"},{label:"Privacy Policy",href:"#"},{label:"Refund Policy",href:"#"}]}
+footer: {
+  blurb: "The most advanced Rivals scripts on the market. Instant delivery, secure checkout and real support.",
+  links: [
+    { label: "Discord", href: "https://discord.gg/cloudygg" },
+    { label: "Terms of Service", href: "#" },
+    { label: "Privacy Policy", href: "#" },
+    { label: "Refund Policy", href: "#" }
+  ]
+}
 };
+  
 /* ==================================================================== */
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],wait=ms=>new Promise(r=>setTimeout(r,ms));
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
