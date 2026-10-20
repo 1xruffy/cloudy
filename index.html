@@ -168,6 +168,7 @@ nav{animation:dn .7s cubic-bezier(.2,.9,.2,1) both}@keyframes dn{from{opacity:0;
 .pd>*{animation:up .55s cubic-bezier(.2,.9,.2,1) backwards}.pd>:nth-child(2){animation-delay:.05s}.pd>:nth-child(3){animation-delay:.1s}.pd>:nth-child(4){animation-delay:.15s}.pd>:nth-child(5){animation-delay:.2s}.pd>:nth-child(6){animation-delay:.25s}.pd>:nth-child(7){animation-delay:.3s}
 .ci{animation:up .4s both}
 .fl a.fa{display:block;color:var(--dim);font-size:.76rem;margin-top:12px;transition:.2s}.fl a.fa:hover{color:var(--ac2)}
+.cfh{display:flex;align-items:center;gap:16px;margin:8px 0 22px}.cfh img{width:76px;height:76px;object-fit:contain;border:1px solid var(--ln);border-radius:14px;padding:8px;background:#000}
 #acb .tx{max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .vid{margin-top:80px;text-align:center}.vid h2{font-size:1.1rem;margin-bottom:22px}
 .vsw{position:relative;--sw:min(280px,58vw);height:calc(var(--sw)*16/9);margin:0 auto}
@@ -244,7 +245,6 @@ const PRODUCTS=[
 const CODES={
   CLOUDY10:10,
   CLOUDY5:5,
-  HEXOISAFEMBOY:25,
 };
 
 /* ========================= CONFIGS ==========================
@@ -259,7 +259,7 @@ const CONFIGS=[
   {of:"cloudy"},
   {of:"philnoob",name:"Philnoob Configs"},
 ];
-const CONFIGS_CARD={name:"Configs",image:"assets/configs.png",tag:"4 types"};
+const CONFIGS_CARD={name:"Configs",image:"assets/configs.png",alts:["assets/Configs.png","assets/configs.webp","assets/configs.jpg","assets/configs.jpeg"],tag:"4 types"};
 const ALL=PRODUCTS.concat(CONFIGS.map(c=>{const b=PRODUCTS.find(p=>p.id===c.of)||{};
   return Object.assign({id:c.of+"-configs",name:(b.name||c.of).replace(/\s*[┃|].*$/,"")+" Configs",price:CONFIG_PRICE,image:b.image,stock:true,cat:"configs",options:CONFIG_TYPES,
    info:{"For":b.name||c.of,"Type":"Config pack","Delivery":"Instant, through a Discord ticket"},note:"Choose your config type, then check out.",features:CONFIG_TYPES.map(t=>t+" config")},c)}));
@@ -318,17 +318,17 @@ const ico={
 const mim=m=>`<img class="mi" src="${m.img?esc(m.img):ico[m.id]}" alt="${esc(m.name)}" data-k="${m.id}" onerror="this.onerror=null;this.src=ico[this.dataset.k]">`;
 
 const ph=n=>"data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#0b1630"/><text x="50" y="68" text-anchor="middle" font-size="54" font-weight="700" fill="#7dd3fc" font-family="Arial,sans-serif">'+((n||"?").trim()[0]||"?").toUpperCase().replace(/[<>&]/g,"?")+'</text></svg>');
-const pim=p=>`<img src="${p.image?esc(p.image):ph(p.name)}" alt="${esc(p.name)}" onerror="this.onerror=null;this.src=ph(this.alt)">`;
+const pim=p=>`<img src="${p.image?esc(p.image):ph(p.name)}" alt="${esc(p.name)}" data-f="${esc((p.alts||[]).join("|"))}" onerror="var f=(this.dataset.f||'').split('|').filter(Boolean);if(f.length){this.dataset.f=f.slice(1).join('|');this.src=f[0]}else{this.onerror=null;this.src=ph(this.alt)}">`;
 const card=(p,i,h)=>`<a class="pc rv${p.stock?"":" oos"}" style="--k:${i}" href="${h}">${p.tag?`<span class="tg${p.stock?"":" r"}">${esc(p.tag)}</span>`:""}<div class="im">${pim(p)}</div><div class="in"><span>${esc(p.name.toUpperCase())}</span><b>${p.from?"From ":""}${money(p.price)}</b></div></a>`;
 const grid=(L,withCfg)=>{let h=L.map((p,i)=>card(p,i,"#/p/"+esc(p.id))).join("");const cf=C.products.filter(p=>p.cat);
- if(withCfg&&cf.length)h+=card({name:CONFIGS_CARD.name,image:CONFIGS_CARD.image,tag:CONFIGS_CARD.tag,stock:true,price:Math.min(...cf.map(p=>p.price)),from:1},L.length,"#/configs");return h};
+ if(withCfg&&cf.length)h+=card({name:CONFIGS_CARD.name,image:CONFIGS_CARD.image,alts:CONFIGS_CARD.alts,tag:CONFIGS_CARD.tag,stock:true,price:Math.min(...cf.map(p=>p.price)),from:1},L.length,"#/configs");return h};
 const yid=u=>{const m=(u||"").match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/);return m?m[1]:""};
 const vidsHtml=()=>{const b=(C.videos||[]).map(yid).filter(Boolean);if(!b.length)return"";const L=[];for(let i=0;i<Math.max(3,b.length);i++)L.push(b[i%b.length]);
  return `<div class="vid rv"><h2>${esc(C.youtubeTitle)}</h2><div class="vsw">${L.map((v,i)=>`<div class="vs"><iframe src="https://www.youtube-nocookie.com/embed/${v}?rel=0&playsinline=1" title="Video ${i+1}" allow="encrypted-media;picture-in-picture" allowfullscreen loading="lazy"></iframe><button class="go" aria-label="Show video ${i+1}"></button></div>`).join("")}</div><div class="vdots">${L.map((v,i)=>`<button class="vdot" aria-label="Video ${i+1}"></button>`).join("")}</div></div>`};
 function bindVids(){const v=$$(".vs");if(!v.length)return;const n=v.length,h=Math.floor(n/2);let a=0;
  const set=()=>{v.forEach((e,i)=>{const d=((i-a+n+h)%n)-h;e.style.setProperty("--d",Math.abs(d)>1?0:d);e.classList.toggle("c",d===0);e.classList.toggle("hd",Math.abs(d)>1)});$$(".vdot").forEach((b,j)=>b.classList.toggle("on",j===a))};
  set();v.forEach((e,i)=>e.querySelector(".go").onclick=()=>{a=i;set()});$$(".vdot").forEach((b,i)=>b.onclick=()=>{a=i;set()})}
-function configs(){return `<div class="w"><a class="bk" href="#/">← Back to store</a><h2 class="t rv" style="margin-top:8px">Configs</h2><p class="rv" style="color:var(--dim);margin:-6px 0 16px;font-size:.82rem">Pick a product, then choose ${esc(CONFIG_TYPES.join(", "))}.</p><div class="gr">${grid(C.products.filter(p=>p.cat))}</div>${tail()}</div>`}
+function configs(){return `<div class="w"><a class="bk" href="#/">← Back to store</a><div class="cfh rv">${pim(CONFIGS_CARD)}<div><h2 class="t" style="margin:0">Configs</h2><p style="color:var(--dim);font-size:.82rem">Pick a product, then choose ${esc(CONFIG_TYPES.join(", "))}.</p></div></div><div class="gr">${grid(C.products.filter(p=>p.cat))}</div>${tail()}</div>`}
 /* head + nav */
 document.title=C.name;$("#nm").textContent=C.name;$("#lnm").textContent=C.name;
 [$("#lgi"),$("#lli")].forEach(i=>{i.src=C.logo;i.onerror=()=>i.remove()});
@@ -447,7 +447,7 @@ function accView(tab){const mb=$("#mb");mb.className="mb sm";
  $$("#mb .tabs button").forEach(b=>b.onclick=()=>accView(b.dataset.t));
  $$("#mb [data-s]").forEach(b=>b.onclick=()=>{const i=$("#"+b.dataset.s);i.type=i.type==="password"?"text":"password";b.textContent=i.type==="password"?"Show":"Hide"});
  const go=up?signup:login;$("#as").onclick=go;$$("#mb input").forEach(i=>i.onkeydown=e=>{if(e.key==="Enter")go()});
- $("#md").classList.add("on");setTimeout(()=>$(up?"#su":"#li").focus(),60)}
+ $("#md").classList.add("on");setTimeout(()=>$(up?"#su":"#li")?.focus(),60)}
 async function login(){const id=$("#li").value.trim().toLowerCase(),pw=$("#lp2").value;
  if(Date.now()<lock)return err("Too many attempts. Try again in "+Math.ceil((lock-Date.now())/1000)+"s");
  if(!id||!pw)return err("Enter your username or email and your password");
