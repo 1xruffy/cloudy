@@ -235,7 +235,12 @@ const PRODUCTS=[
   {id:"volt",name:"Volt ┃ Weekly",price:7.99,image:"assets/volt.png",tag:"Out of Stock",stock:false,
    info:{"Type":"Internal Executor","Injection":"Lightning-fast injection","Stability":"Designed for extreme stability"},
    note:"The most advanced internal executor. Designed to bypass Byfron with lightning-fast injection and extreme stability.",
-   features:["Internal executor","Lightning-fast injection","Extreme stability","Designed to bypass Byfron"]}
+   features:["Internal executor","Lightning-fast injection","Extreme stability","Designed to bypass Byfron"]},
+
+{id:"matcha",name:"Matcha ┃ External",price:7.99,image:"assets/matcha.webp",tag:"Out of Stock",stock:false,
+ info:{"Type":"External Executor","Compatibility":"Windows 10 / 11","Stability":"Designed for reliable performance"},
+ note:"Matcha External is an external executor supported on Windows 10 and Windows 11.",
+ features:["External executor","Windows 10 support","Windows 11 support","Reliable performance"]}
 ];
 
 /* ======================= DISCOUNT CODES =======================
@@ -258,6 +263,7 @@ const CONFIGS=[
   {of:"yabujin"},
   {of:"cloudy"},
   {of:"philnoob",name:"Philnoob Configs"},
+  {of:"matcha",name:"Matcha Configs"},
 ];
 const CONFIGS_CARD={name:"Configs",image:"assets/configs.png",alts:["assets/Configs.png","assets/configs.webp","assets/configs.jpg","assets/configs.jpeg"],tag:"4 types"};
 const ALL=PRODUCTS.concat(CONFIGS.map(c=>{const b=PRODUCTS.find(p=>p.id===c.of)||{};
